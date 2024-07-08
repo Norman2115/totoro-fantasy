@@ -1,6 +1,4 @@
-# Totoro Fantasy
-
-# Little Girl's Adventure - Animated Short Story
+# Totoro Fantasy - Animated Short Story
 
 ## Project Overview
 This project is a simple animated short story inspired by "My Neighbor Totoro". The story follows a little girl who, after an argument with her mother, accidentally steps into a portal that teleports her to a strange and magical world. In this world, she encounters Totoro, who helps her return home.
