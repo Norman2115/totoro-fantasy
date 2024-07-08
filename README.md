@@ -24,9 +24,12 @@ This project is part of the **Graphic Animation Course (MMD2205)** for the **Bac
 ## Tools and Technologies
 - **Programming Language**: C++
 - **Graphics Library**: OpenGL and GLUT (OpenGL Utility Toolkit)
-- **Audio**: [Specify any audio library if used, e.g., OpenAL]
 
 ## Installation
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/little-girl-adventure.git
+
+## Acknowledgements
+- Studio Ghibli for the inspiration from "My Neighbor Totoro".
+- Any libraries, frameworks, or resources used in the project.
