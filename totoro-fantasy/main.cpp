@@ -11,8 +11,8 @@ static void init() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    DayCloudOne cloud;
-    cloud.draw(0, 0);
+    DayCloudTwo cloud;
+    cloud.draw(0, 0, 1);
     glFlush();
 }
 
