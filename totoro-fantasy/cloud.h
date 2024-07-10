@@ -2,16 +2,19 @@
 #include <gl/glut.h>
 #include <iostream>
 #include "Circle.h"
+#include "Colors.h"
+#include "Color.h"
 
 class Cloud
 {
 private:
-    virtual void draw(float x, float y, float size) = 0;
+    virtual void draw(float x, float y, float size, Color color) = 0;
 };
 
 class DayCloudOne : public Cloud {
 public:
-    void draw(float x, float y, float size) override {
+    void draw(float x, float y, float size, Color color) override {
+        glColor3f(color.getR(), color.getG(), color.getB());
         float radius = 0.25 * size;
         Circle::draw(x, y + 0.7 * radius, radius);
         Circle::draw(x - 1.2 * radius, y - 0.01 * radius, radius);
@@ -44,7 +47,8 @@ public:
 
 class DayCloudTwo : public Cloud {
 public:
-    void draw(float x, float y, float size) override {
+    void draw(float x, float y, float size, Color color) override {
+        glColor3f(color.getR(), color.getG(), color.getB());
         float radius1 = 0.25 * size;
         float radius2 = 0.275 * size;
         Circle::draw(x, y + 0.5 * radius1, radius1);
@@ -73,7 +77,8 @@ public:
 
 class DayCloudThree : public Cloud {
 public:
-    void draw(float x, float y, float size) override {
+    void draw(float x, float y, float size, Color color) override {
+        glColor3f(color.getR(), color.getG(), color.getB());
         float radius1 = 0.25 * size;
         float radius2 = 0.275 * size;
         float radius3 = 0.3 * size;
