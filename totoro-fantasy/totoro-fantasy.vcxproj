@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Color.h" />
