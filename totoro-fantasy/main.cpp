@@ -13,7 +13,7 @@ static void init() {
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     DayCloudTwo cloud;
-    cloud.draw(0, 0, 1, Colors::DAY_DARK_CLOUD);
+    cloud.draw(0, 0, 1, Colors::NIGHT_DARK_CLOUD);
     glFlush();
 }
 
