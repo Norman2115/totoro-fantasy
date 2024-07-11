@@ -130,12 +130,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="Background.h" />
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Sun.h" />
