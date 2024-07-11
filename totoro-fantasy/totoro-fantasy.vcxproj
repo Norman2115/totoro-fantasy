@@ -136,7 +136,9 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Moon.h" />
     <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="Sun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
