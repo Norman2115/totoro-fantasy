@@ -80,13 +80,18 @@ static void displayScene11() {
     glFlush();
 }
 
+static void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glFlush();
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(1920, 1080);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene1); 
+    glutDisplayFunc(display);
     glutMainLoop();
 
     return 0;
