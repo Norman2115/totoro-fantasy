@@ -4,6 +4,7 @@
 #include "Cloud.h"
 #include "Colors.h"
 #include "Background.h"
+#include "Character.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
