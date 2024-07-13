@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Color.h" />
