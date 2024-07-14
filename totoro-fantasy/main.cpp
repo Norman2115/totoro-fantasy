@@ -10,11 +10,12 @@ static void init() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
+
 }
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene1_11(); 
+    Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     glFlush();
@@ -76,7 +77,7 @@ static void displayScene10() {
 
 static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene1_11();
+    Background::Scene11();
     glFlush();
 }
 
