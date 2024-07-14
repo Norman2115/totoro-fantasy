@@ -441,16 +441,20 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
         
-
         // Ground
-        glColor3f(0.39, 0.64, 0.24);
+        glColor3f(0.67, 0.97, 0.5);
         glBegin(GL_QUADS);
         glVertex2f(0.0f, 0.0f);
         glVertex2f(1920.0f, 0.0f);
-        glVertex2f(1920.0f, 200.0f);
-        glVertex2f(0.0f, 200.0f);
+        glVertex2f(1920.0f, 250.0f);
+        glVertex2f(0.0f, 250.0f);
         glEnd();
 
+        glColor3f(0.0f, 0.6f, 0.0f);
+        glBegin(GL_LINES);
+        glVertex2f(0.0f, 250.0f);
+        glVertex2f(1920.0f, 250.0f);
+        glEnd();
     }
 
 };

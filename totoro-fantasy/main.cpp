@@ -5,6 +5,7 @@
 #include "Colors.h"
 #include "Background.h"
 #include "Character.h"
+#include "Elements.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
