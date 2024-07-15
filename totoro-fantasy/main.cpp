@@ -9,6 +9,8 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
+#include "Ellipse.h"
+#include "Catbus.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -89,12 +91,13 @@ static void displayScene11() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glFlush();
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(1920, 1080);
+    glutInitWindowSize(500, 500);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
