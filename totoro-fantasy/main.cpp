@@ -13,6 +13,7 @@
 #include "Catbus.h"
 #include "Totoro.h"
 #include "Rainbow.h"
+#include "Mushroom3.h"
 
 
 static void init() {
@@ -26,6 +27,8 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
+    mushroom3 mushroom;
+    mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
     glFlush();
@@ -126,7 +129,7 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutDisplayFunc(displayScene1); // Change this to display the scene you want
     glutFullScreen(); // Make the window full screen
     glutMainLoop();
 
