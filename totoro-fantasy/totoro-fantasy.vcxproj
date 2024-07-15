@@ -141,6 +141,7 @@
     <ClInclude Include="House.h" />
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Sun.h" />
+    <ClInclude Include="totoro.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
