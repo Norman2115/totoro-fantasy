@@ -12,8 +12,6 @@ public:
         glTranslatef(x, y, 0.0f);
         glScalef(size, size, 1.0f);
 
-        glClear(GL_COLOR_BUFFER_BIT);
-
         // House Body (dark blue) with half the previous width
         glColor3f(0.0f, 0.0f, 0.545f);
         glBegin(GL_QUADS);
@@ -127,7 +125,14 @@ public:
     void init() {
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glMatrixMode(GL_PROJECTION);
-        gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+        glLoadIdentity();
+        float aspectRatio = 1920.0f / 1080.0f;
+        if (aspectRatio > 1.0f) {
+            gluOrtho2D(-aspectRatio, aspectRatio, -1.0, 1.0);
+        }
+        else {
+            gluOrtho2D(-1.0, 1.0, -1.0 / aspectRatio, 1.0 / aspectRatio);
+        }
     }
 };
 

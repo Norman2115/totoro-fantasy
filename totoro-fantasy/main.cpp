@@ -22,7 +22,7 @@ static void displayScene1() {
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     House house;
-    house.draw(-0.7f, 0.0f, 1.3f);
+    house.draw(200.0f, 450.0f, 500.0f);
     glFlush();
 }
 
@@ -89,6 +89,8 @@ static void displayScene11() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    House house;
+    house.draw(200.0f, 540.0f, 500.0f);
     glFlush();
 }
 
@@ -98,7 +100,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene1);
     glutMainLoop();
 
     return 0;
