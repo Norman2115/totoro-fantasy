@@ -2,6 +2,8 @@
 #include <iostream>
 #include <gl/glut.h>
 #include "Cloud.h"
+#include "Sun.h"
+#include "Moon.h"
 #include "Colors.h"
 #include "Background.h"
 #include "Character.h"
@@ -11,7 +13,6 @@ static void init() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
-
 }
 
 static void displayScene1() {
