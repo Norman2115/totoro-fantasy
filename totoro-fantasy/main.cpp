@@ -8,6 +8,7 @@
 #include "Background.h"
 #include "Character.h"
 #include "Elements.h"
+#include "House.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -20,6 +21,8 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
+    House house;
+    house.display();
     glFlush();
 }
 
@@ -80,6 +83,7 @@ static void displayScene10() {
 static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
+
     glFlush();
 }
 
