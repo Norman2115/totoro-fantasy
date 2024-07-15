@@ -8,10 +8,7 @@ public:
     House() {}
 
     void display() {
-        glClear(GL_COLOR_BUFFER_BIT);
 
-        // Set background color (light green)
-        glClearColor(0.678f, 1.0f, 0.184f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // House Body (dark blue) with half the previous width
