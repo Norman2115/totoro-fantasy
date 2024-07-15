@@ -78,7 +78,7 @@ public:
         glColor3f(0.39, 0.64, 0.24);
         Circle::draw(-500.0f, -2390.0f, 2700.0f);
 
-        glColor3f(0.0f, 0.0f, 0.0f);
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_LOOP);
         float radius = 2200.0f; 
         for (int i = 0; i <= 360; ++i) {
@@ -209,7 +209,7 @@ public:
         glVertex2f(0.0f, 250.0f);
         glEnd();
 
-        glColor3f(0.0f, 0.6f, 0.0f); 
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINES);
         glVertex2f(0.0f, 250.0f);
         glVertex2f(1920.0f, 250.0f);
@@ -379,7 +379,7 @@ public:
         glColor3f(0.44, 0.74, 0.27);
         Circle::draw(550.0f, -2500.0f, 2700.0f);
 
-        glColor3f(0.0f, 0.0f, 0.0f);
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_LOOP);
         float radius = 2000.0f;
         for (int i = 0; i <= 360; ++i) {
@@ -416,7 +416,7 @@ public:
         glColor3f(0.39, 0.64, 0.24);
         Circle::draw(-10.0f, -1500.0f, 2000.0f);
 
-        glColor3f(0.0f, 0.0f, 0.0f);
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_LOOP);
         float radius = 2000.0f;
         for (int i = 0; i <= 360; ++i) {
@@ -450,7 +450,7 @@ public:
         glVertex2f(0.0f, 250.0f);
         glEnd();
 
-        glColor3f(0.0f, 0.6f, 0.0f);
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINES);
         glVertex2f(0.0f, 250.0f);
         glVertex2f(1920.0f, 250.0f);

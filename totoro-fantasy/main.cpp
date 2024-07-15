@@ -12,6 +12,7 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
+#include "Rainbow.h"
 
 
 static void init() {
@@ -27,6 +28,7 @@ static void displayScene1() {
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
+    glFlush();
 }
 
 static void displayScene2() {
@@ -44,6 +46,16 @@ static void displayScene3() {
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene4();
+    GrassTwo grass;
+    grass.draw(1080, 245, 100, Colors::GRASS_DAY);
+    GrassOne grass1;
+    grass1.draw(980, 245, 100, Colors::GRASS_DAY);
+    RainbowOne rainbow;
+    rainbow.draw(1280, 800, 200, Colors::RAINBOW);
+    DayCloudOne cloud;
+    cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
+    DayCloudTwo cloud1;
+    cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     glFlush();
 }
 
@@ -118,7 +130,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(windowPosX, windowPosY);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene7);
+    glutDisplayFunc(displayScene4);
     glutMainLoop();
 
     return 0;
