@@ -9,6 +9,8 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
+#include "Totoro.h"
+
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -23,7 +25,6 @@ static void displayScene1() {
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
-    glFlush();
 }
 
 static void displayScene2() {
@@ -59,6 +60,9 @@ static void displayScene6() {
 static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
+    Totoro totoro;
+    totoro.init();
+    totoro.draw(0.0f, 0.0f, 0.5f);
     glFlush();
 }
 
@@ -89,8 +93,7 @@ static void displayScene11() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    House house;
-    house.draw(200.0f, 540.0f, 500.0f);
+
     glFlush();
 }
 
@@ -100,7 +103,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(displayScene7);
     glutMainLoop();
 
     return 0;
