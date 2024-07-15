@@ -2,6 +2,8 @@
 #include <iostream>
 #include <gl/glut.h>
 #include "Cloud.h"
+#include "Sun.h"
+#include "Moon.h"
 #include "Colors.h"
 
 static void init() {
@@ -12,8 +14,8 @@ static void init() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    DayCloudTwo cloud;
-    cloud.draw(0, 0, 1, Colors::DAY_CLOUD);
+    DayMoonOne moon;
+    moon.draw(0, 0, 1, Colors::NIGHT_FULL_MOON);
     glFlush();
 }
 
