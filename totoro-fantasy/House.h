@@ -13,7 +13,7 @@ public:
         glScalef(size, size, 1.0f);
 
         // House Body (dark blue) with half the previous width
-        glColor3f(0.0f, 0.0f, 0.545f);
+        glColor3f(0.3176f, 0.2941f, 0.1373f);
         glBegin(GL_QUADS);
         glVertex2f(-0.25f, -0.5f); // left-bottom
         glVertex2f(0.25f, -0.5f);  // right-bottom
@@ -22,7 +22,7 @@ public:
         glEnd();
 
         // Right Rectangle (half the width, half the height) with darker blue
-        glColor3f(0.0f, 0.0f, 0.3f);
+        glColor3f(0.5059f, 0.4667f, 0.2157f);
         glBegin(GL_QUADS);
         glVertex2f(0.25f, -0.5f);  // left-bottom
         glVertex2f(0.5f, -0.5f);   // right-bottom
@@ -30,16 +30,16 @@ public:
         glVertex2f(0.25f, -0.15f); // left-top
         glEnd();
 
-        // Brown Triangle on top of the smaller rectangle
-        glColor3f(0.545f, 0.271f, 0.075f);
+        //  Triangle on top of the smaller rectangle
+        glColor3f(0.7216f, 0.0000f, 0.0000f);
         glBegin(GL_TRIANGLES);
         glVertex2f(0.25f, -0.15f); // bottom-left
         glVertex2f(0.5f, -0.15f);  // bottom-right
         glVertex2f(0.375f, 0.1f);  // top-center
         glEnd();
 
-        // Black Rhomboid slanted at the same angle as the triangle and connected to it
-        glColor3f(0.0f, 0.0f, 0.0f);
+        // Rhomboid slanted at the same angle as the triangle and connected to it
+        glColor3f(0.5451f, 0.0f, 0.0f);
         glBegin(GL_QUADS);
         glVertex2f(-0.1f, 0.1f);   // top-left
         glVertex2f(0.375f, 0.1f);  // top-right
@@ -50,7 +50,7 @@ public:
         glLineWidth(2.0f);
 
         // Window 1 (left)
-        glColor3f(1.0f, 1.0f, 0.0f);  // yellow color
+        glColor3f(0.8902f, 0.7098f, 0.0196f);  // yellow color
         glBegin(GL_QUADS);
         glVertex2f(-0.19f, -0.3f); // left-bottom
         glVertex2f(-0.04f, -0.3f); // right-bottom
@@ -72,7 +72,7 @@ public:
         glEnd();
 
         // Window 2 (right)
-        glColor3f(1.0f, 1.0f, 0.0f);  // yellow color
+        glColor3f(0.8902f, 0.7098f, 0.0196f);  // yellow color
         glBegin(GL_QUADS);
         glVertex2f(0.04f, -0.3f);  // left-bottom
         glVertex2f(0.19f, -0.3f); // right-bottom
@@ -110,7 +110,7 @@ public:
         glEnd();
 
         // Lane adjusted for the centered door position
-        glColor3f(0.4f, 0.6f, 0.8f); // light blue color
+        glColor3f(0.0157f, 0.1647f, 0.1686f);
         glBegin(GL_QUADS);
         glVertex2f(0.325f, -0.5f); // left-bottom
         glVertex2f(0.425f, -0.5f); // right-bottom
