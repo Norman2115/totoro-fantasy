@@ -118,19 +118,16 @@ int main(int argc, char** argv) {
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
 
-    // Define window width and height
-    int windowWidth = 1980;
-    int windowHeight = 1080;
+    // Use screen width and height directly
+    glutInitWindowSize(screenWidth, screenHeight);
 
-    // Calculate window position to center it on the screen
-    int windowPosX = (screenWidth - windowWidth) / 2;
-    int windowPosY = (screenHeight - windowHeight) / 2;
+    // Center the window on the screen
+    glutInitWindowPosition(0, 0); // Position at top-left corner for full screen
 
-    glutInitWindowSize(windowWidth, windowHeight);
-    glutInitWindowPosition(windowPosX, windowPosY);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4);
+    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutFullScreen(); // Make the window full screen
     glutMainLoop();
 
     return 0;

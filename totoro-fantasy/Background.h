@@ -261,6 +261,12 @@ public:
             glVertex2f(0.0f, 250.0f);
             glEnd();
 
+            glColor3f(0.22, 0.3, 0.17);
+            glBegin(GL_LINES);
+            glVertex2f(0.0f, 250.0f);
+            glVertex2f(1920.0f, 250.0f);
+            glEnd();
+
             glFlush();
             glutSwapBuffers();
 
