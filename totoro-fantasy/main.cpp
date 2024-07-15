@@ -9,8 +9,13 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
+<<<<<<< HEAD
 #include "Ellipse.h"
 #include "Catbus.h"
+=======
+#include "Totoro.h"
+
+>>>>>>> 9342016c32c2b100eba11f6b1ce3e36c2267e741
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -24,8 +29,7 @@ static void displayScene1() {
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     House house;
-    house.draw(-0.7f, 0.0f, 1.3f);
-    glFlush();
+    house.draw(200.0f, 450.0f, 500.0f);
 }
 
 static void displayScene2() {
@@ -61,6 +65,9 @@ static void displayScene6() {
 static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
+    Totoro totoro;
+    totoro.init();
+    totoro.draw(0.0f, 0.0f, 0.5f);
     glFlush();
 }
 
@@ -101,7 +108,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene7);
     glutMainLoop();
 
     return 0;
