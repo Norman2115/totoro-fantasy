@@ -9,8 +9,13 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
+<<<<<<< HEAD
+#include "Ellipse.h"
+#include "Catbus.h"
+=======
 #include "Totoro.h"
 
+>>>>>>> 9342016c32c2b100eba11f6b1ce3e36c2267e741
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -99,7 +104,7 @@ static void display() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(1920, 1080);
+    glutInitWindowSize(500, 500);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();

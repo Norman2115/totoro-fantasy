@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Catbus.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cloud.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Elements.h" />
+    <ClInclude Include="Ellipse.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Sun.h" />
