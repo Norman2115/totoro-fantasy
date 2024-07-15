@@ -7,7 +7,10 @@ class House {
 public:
     House() {}
 
-    void display() {
+    void draw(float x, float y, float size) {
+        glPushMatrix();
+        glTranslatef(x, y, 0.0f);
+        glScalef(size, size, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -113,10 +116,11 @@ public:
         glBegin(GL_QUADS);
         glVertex2f(0.325f, -0.5f); // left-bottom
         glVertex2f(0.425f, -0.5f); // right-bottom
-        glVertex2f(0.525f, -0.9f); // right-top
-        glVertex2f(0.225f, -0.9f); // left-top
+        glVertex2f(0.9f, -0.9f); // right-top
+        glVertex2f(0.45f, -0.9f); // left-top
         glEnd();
 
+        glPopMatrix();
         glFlush();
     }
 
