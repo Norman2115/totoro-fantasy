@@ -9,13 +9,10 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
-<<<<<<< HEAD
 #include "Ellipse.h"
 #include "Catbus.h"
-=======
 #include "Totoro.h"
 
->>>>>>> 9342016c32c2b100eba11f6b1ce3e36c2267e741
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -104,8 +101,21 @@ static void display() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(500, 500);
-    glutInitWindowPosition(50, 50);
+
+    // Get screen width and height
+    int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
+    int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
+
+    // Define window width and height
+    int windowWidth = 1980;
+    int windowHeight = 1080;
+
+    // Calculate window position to center it on the screen
+    int windowPosX = (screenWidth - windowWidth) / 2;
+    int windowPosY = (screenHeight - windowHeight) / 2;
+
+    glutInitWindowSize(windowWidth, windowHeight);
+    glutInitWindowPosition(windowPosX, windowPosY);
     glutCreateWindow("Little Girl's Adventure");
     init();
     glutDisplayFunc(displayScene7);
