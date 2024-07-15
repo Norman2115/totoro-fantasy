@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Colors.h"
 #include "Color.h"
+#include "Circle.h"
 
 class Elements
 {
@@ -105,7 +106,7 @@ public:
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
 
-        glColor3f(0.0, 0.0, 0.0);
+        glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.14 * size, y - 0.08 * size);  
         glVertex2f(x - 0.172 * size, y + 0.11 * size);   
@@ -129,4 +130,50 @@ public:
     }
 };
 
+class GrassTwo : public Elements {
+public:
+    void draw(float x, float y, float size, Color color) {
+        glColor3f(color.getR(), color.getG(), color.getB());
 
+        glBegin(GL_POLYGON);
+        glVertex2f(x - 0.4 * size, y - 0.1 * size); 
+        glVertex2f(x - 0.433 * size, y + 0.1 * size);  
+        glVertex2f(x - 0.336 * size, y + 0.08 * size);  
+        glVertex2f(x - 0.26 * size, y + 0.01 * size);   
+        glVertex2f(x - 0.11 * size, y + 0.19 * size); 
+        glVertex2f(x + 0.04 * size, y + 0.27 * size);  
+        glVertex2f(x + 0.02 * size, y + 0.22 * size);  
+        glVertex2f(x + 0 * size, y + 0.1 * size);    
+        glVertex2f(x + 0.008 * size, y + 0.034 * size);    
+        glVertex2f(x + 0.05 * size, y + 0.047 * size); 
+        glVertex2f(x + 0.122 * size, y + 0.08 * size);  
+        glVertex2f(x + 0.109 * size, y + 0.038 * size);       
+        glVertex2f(x + 0.24 * size, y + 0.07 * size);   
+        glVertex2f(x + 0.345 * size, y + 0.114 * size); 
+        glVertex2f(x + 0.3 * size, y + 0 * size);       
+        glVertex2f(x + 0.28 * size, y - 0.06 * size);    
+        glVertex2f(x + 0.3 * size, y - 0.1 * size);   
+        glEnd();
+
+        glColor3f(0.22, 0.3, 0.17);
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(x - 0.4 * size, y - 0.1 * size);
+        glVertex2f(x - 0.433 * size, y + 0.1 * size);
+        glVertex2f(x - 0.336 * size, y + 0.08 * size);
+        glVertex2f(x - 0.26 * size, y + 0.01 * size);
+        glVertex2f(x - 0.11 * size, y + 0.19 * size);
+        glVertex2f(x + 0.04 * size, y + 0.27 * size);
+        glVertex2f(x + 0.02 * size, y + 0.22 * size);
+        glVertex2f(x + 0 * size, y + 0.1 * size);
+        glVertex2f(x + 0.008 * size, y + 0.034 * size);
+        glVertex2f(x + 0.05 * size, y + 0.047 * size);
+        glVertex2f(x + 0.122 * size, y + 0.08 * size);
+        glVertex2f(x + 0.109 * size, y + 0.038 * size);
+        glVertex2f(x + 0.24 * size, y + 0.07 * size);
+        glVertex2f(x + 0.345 * size, y + 0.114 * size);
+        glVertex2f(x + 0.3 * size, y + 0 * size);
+        glVertex2f(x + 0.28 * size, y - 0.06 * size);
+        glVertex2f(x + 0.3 * size, y - 0.1 * size);
+        glEnd();
+    }
+};
