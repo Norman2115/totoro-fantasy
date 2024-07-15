@@ -16,6 +16,7 @@ public:
     static const Color ROCK;
     static const Color GRASS_DAY;
     static const Color GRASS_NIGHT;
+    static const Color MUSHROOM_1;
 };
 
 const Color Colors::DAY_CLOUD{ 0.75f, 0.85f, 1.0f };
@@ -25,6 +26,7 @@ const Color Colors::NIGHT_DARK_CLOUD{ 0.05f, 0.1f, 0.15f };
 const Color Colors::DAY_SUN{ 1.0f, 1.0f, 0.0f };
 const Color Colors::NIGHT_CRESCENT_MOON{ 1.0f, 1.0f, 0.0f };
 const Color Colors::NIGHT_FULL_MOON{ 1.0f, 1.0f, 0.0f };
+const Color Colors::MUSHROOM_1{ 238.0f / 255.0f, 75.0f / 255.0f, 43.0f / 255.0f };
 
 const Color Colors::ROCK{ 0.37f, 0.38f, 0.38f };
 

@@ -10,6 +10,7 @@
 #include "Elements.h"
 #include "House.h"
 #include "Totoro.h"
+#include "Mushroom1.h"
 
 
 static void init() {
@@ -23,6 +24,8 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
+    mushroom1 mushroom;
+    mushroom.draw(1080, 900, 150, Colors::MUSHROOM_1);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
 }
@@ -103,7 +106,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene7);
+    glutDisplayFunc(displayScene1);
     glutMainLoop();
 
     return 0;
