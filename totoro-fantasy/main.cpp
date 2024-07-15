@@ -22,7 +22,7 @@ static void displayScene1() {
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     House house;
-    house.draw(-0.7f, 0.0f, 1.3f);
+    //house.draw(-0.7f, 0.0f, 1.3f);
     glFlush();
 }
 
