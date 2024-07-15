@@ -1,5 +1,6 @@
 #ifndef HOUSE_H
 #define HOUSE_H
+//help
 
 #include <GL/glut.h>
 
