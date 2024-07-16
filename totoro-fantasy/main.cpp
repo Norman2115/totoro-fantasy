@@ -12,6 +12,7 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
+#include "Mushroom1.h"
 #include "Rainbow.h"
 #include "Portal.h"
 
@@ -30,7 +31,17 @@ static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
     DayCloudTwo cloud;
+
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
+
+    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
+    // mushroom3 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
+    // mushroom2 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
+    // mushroom1 mushroom;
+    // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
+
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
 
@@ -68,6 +79,8 @@ static void displayScene4() {
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
+    mushroom1 mushroom;
+    mushroom.draw(180, 930, 150, Colors::MUSHROOM_1);
     glFlush();
     glutSwapBuffers();
 }
