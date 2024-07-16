@@ -8,6 +8,7 @@
 #include <chrono>
 #include "Constants.h"
 #include "Circle.h"
+#include "Elements.h"
 
 class Background {
 private:
@@ -53,6 +54,7 @@ public:
         glVertex2f(1920.0f, 200.0f);
         glVertex2f(0.0f, 200.0f);
         glEnd();  
+
     }
 
     static void Scene2() {
