@@ -12,9 +12,10 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
+#include "Mushroom2.h"
+#include "Mushroom1.h"
 #include "Rainbow.h"
 #include "Mushroom3.h"
-
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -27,8 +28,12 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
-    mushroom3 mushroom;
-    mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
+    // mushroom3 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
+    // mushroom2 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
+    // mushroom1 mushroom;
+    // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
     glFlush();
@@ -59,6 +64,8 @@ static void displayScene4() {
     cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
     DayCloudTwo cloud1;
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    DaySunOne sun;
+    sun.draw(180, 930, 150, Colors::DAY_SUN);
     glFlush();
 }
 
@@ -129,8 +136,8 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene1); // Change this to display the scene you want
-    glutFullScreen(); // Make the window full screen
+    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutFullScreen();
     glutMainLoop();
 
     return 0;
