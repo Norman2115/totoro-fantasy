@@ -12,10 +12,9 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
-#include "Mushroom2.h"
 #include "Mushroom1.h"
 #include "Rainbow.h"
-#include "Mushroom3.h"
+
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -66,6 +65,8 @@ static void displayScene4() {
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
+    mushroom1 mushroom;
+    mushroom.draw(180, 930, 150, Colors::MUSHROOM_1);
     glFlush();
 }
 

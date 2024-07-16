@@ -62,9 +62,6 @@
     <ClInclude Include="totoro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mushroom2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mushroom1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ellipse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mushroom3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
