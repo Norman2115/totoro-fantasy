@@ -107,6 +107,8 @@ static void displayScene11() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    DayMoonOne moon;
+    moon.draw(0, 0, 1, Colors::NIGHT_FULL_MOON);
     glFlush();
 }
 
