@@ -9,13 +9,9 @@
 #include "Character.h"
 #include "Elements.h"
 #include "House.h"
-<<<<<<< HEAD
 #include "Ellipse.h"
 #include "Catbus.h"
-=======
 #include "Totoro.h"
-
->>>>>>> 9342016c32c2b100eba11f6b1ce3e36c2267e741
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -34,7 +30,7 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene2(); 
+    Background::Scene2();
     glFlush();
 }
 
@@ -65,9 +61,9 @@ static void displayScene6() {
 static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
-    Totoro totoro;
-    totoro.init();
-    totoro.draw(0.0f, 0.0f, 0.5f);
+    // Totoro totoro;
+    // totoro.init();
+    // totoro.draw(1000, 500, 1.0f);
     glFlush();
 }
 
@@ -104,7 +100,7 @@ static void display() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(1920, 1080);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("Little Girl's Adventure");
     init();
