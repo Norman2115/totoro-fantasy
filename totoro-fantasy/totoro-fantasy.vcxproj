@@ -142,7 +142,11 @@
     <ClInclude Include="Ellipse.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="Moon.h" />
+
+    <ClInclude Include="Portal.h" />
+
     <ClInclude Include="Mushroom1.h" />
+
     <ClInclude Include="Rainbow.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="totoro.h" />
