@@ -15,6 +15,8 @@ public:
     static const Color ROCK;
     static const Color GRASS_DAY;
     static const Color GRASS_NIGHT;
+
+    static const Color RAINBOW;
 };
 
 const Color Colors::DAY_CLOUD{ 0.75f, 0.85f, 1.0f };
@@ -29,5 +31,5 @@ const Color Colors::ROCK{ 0.37f, 0.38f, 0.38f };
 const Color Colors::GRASS_DAY{ 0.67, 0.97, 0.5 };
 const Color Colors::GRASS_NIGHT{ 0.39, 0.64, 0.24 };
 
-
+const Color Colors::RAINBOW{ 0, 0 ,0 };
 // Define colors here
