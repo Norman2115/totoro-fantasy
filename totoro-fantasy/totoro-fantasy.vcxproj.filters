@@ -50,5 +50,35 @@
     <ClInclude Include="Elements.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Catbus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellipse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="House.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="totoro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rainbow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Catbus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellipse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
