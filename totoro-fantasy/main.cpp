@@ -13,7 +13,8 @@
 #include "Catbus.h"
 #include "Totoro.h"
 #include "Mushroom2.h"
-
+#include "Mushroom1.h"
+#include "Rainbow.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -26,10 +27,13 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
-    mushroom2 mushroom;
-    mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
+    // mushroom2 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
+    // mushroom1 mushroom;
+    // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
+    glFlush();
 }
 
 static void displayScene2() {
@@ -47,6 +51,18 @@ static void displayScene3() {
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene4();
+    GrassTwo grass;
+    grass.draw(1080, 245, 100, Colors::GRASS_DAY);
+    GrassOne grass1;
+    grass1.draw(980, 245, 100, Colors::GRASS_DAY);
+    RainbowOne rainbow;
+    rainbow.draw(1280, 800, 200, Colors::RAINBOW);
+    DayCloudOne cloud;
+    cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
+    DayCloudTwo cloud1;
+    cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    DaySunOne sun;
+    sun.draw(180, 930, 150, Colors::DAY_SUN);
     glFlush();
 }
 
@@ -109,19 +125,16 @@ int main(int argc, char** argv) {
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
 
-    // Define window width and height
-    int windowWidth = 1980;
-    int windowHeight = 1080;
+    // Use screen width and height directly
+    glutInitWindowSize(screenWidth, screenHeight);
 
-    // Calculate window position to center it on the screen
-    int windowPosX = (screenWidth - windowWidth) / 2;
-    int windowPosY = (screenHeight - windowHeight) / 2;
+    // Center the window on the screen
+    glutInitWindowPosition(0, 0); // Position at top-left corner for full screen
 
-    glutInitWindowSize(windowWidth, windowHeight);
-    glutInitWindowPosition(windowPosX, windowPosY);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutFullScreen();
     glutMainLoop();
 
     return 0;
