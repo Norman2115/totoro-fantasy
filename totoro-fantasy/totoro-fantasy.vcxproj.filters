@@ -71,5 +71,14 @@
     <ClInclude Include="Rainbow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Catbus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellipse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

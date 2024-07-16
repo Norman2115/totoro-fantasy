@@ -15,6 +15,7 @@
 #include "Mushroom2.h"
 #include "Mushroom1.h"
 #include "Rainbow.h"
+#include "Mushroom3.h"
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -27,6 +28,8 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
+    // mushroom3 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
     // mushroom2 mushroom;
     // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
     // mushroom1 mushroom;
