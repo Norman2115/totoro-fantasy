@@ -12,14 +12,14 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
-#include "Mushroom1.h"
 #include "Rainbow.h"
 #include "Portal.h"
 
 Portal portal;
+Totoro totoro;
 
 static void init() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set background color to white
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
@@ -31,17 +31,7 @@ static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
     DayCloudTwo cloud;
-
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
-
-    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
-    // mushroom3 mushroom;
-    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
-    // mushroom2 mushroom;
-    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
-    // mushroom1 mushroom;
-    // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
-
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
 
@@ -79,8 +69,6 @@ static void displayScene4() {
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
-    mushroom1 mushroom;
-    mushroom.draw(180, 930, 150, Colors::MUSHROOM_1);
     glFlush();
     glutSwapBuffers();
 }
@@ -102,9 +90,7 @@ static void displayScene6() {
 static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
-    Totoro totoro;
-    totoro.init();
-    totoro.draw(0.0f, 0.0f, 0.5f);
+    totoro.draw(960.0f, 370.0f, 300.0f); // Draw Totoro at center with larger size
     glFlush();
     glutSwapBuffers();
 }
@@ -158,7 +144,7 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene3);
+    glutDisplayFunc(displayScene7);
     portal.startTimer(); // Start the timer within the portal class
     glutFullScreen();
     glutMainLoop();
