@@ -271,6 +271,41 @@ public:
             glVertex2f(1920.0f, 250.0f);
             glEnd();
 
+
+            //Lower Level
+            GrassLineTwo grass1;
+            grass1.draw(200, 220, 45, Colors::GRASS_NIGHT);
+            GrassLineOne grass3;
+            grass3.draw(280, 230, 55, Colors::GRASS_NIGHT);
+            GrassLineTwo grass5;
+            grass5.draw(30, 218, 46, Colors::GRASS_NIGHT);
+            GrassLineOne grass7;
+            grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
+            GrassLineOne grass8;
+            grass8.draw(190, 80, 59, Colors::GRASS_NIGHT);
+            GrassLineOne grass9;
+            grass9.draw(760, 190, 61, Colors::GRASS_NIGHT);
+            GrassLineOne grass10;
+            grass10.draw(1230, 44, 62, Colors::GRASS_NIGHT);
+            GrassLineOne grass11;
+            grass11.draw(1450, 90, 59, Colors::GRASS_NIGHT);
+            GrassLineTwo grass12;
+            grass12.draw(350, 160, 46, Colors::GRASS_NIGHT);
+            GrassLineTwo grass13;
+            grass13.draw(550, 190, 44, Colors::GRASS_NIGHT);
+            GrassLineTwo grass14;
+            grass14.draw(900, 120, 43, Colors::GRASS_NIGHT);
+            GrassLineTwo grass15;
+            grass15.draw(1200, 200, 44, Colors::GRASS_NIGHT);
+            GrassLineTwo grass16;
+            grass16.draw(1800, 110, 46, Colors::GRASS_NIGHT);
+            GrassLineTwo grass17;
+            grass17.draw(1600, 220, 47, Colors::GRASS_NIGHT);
+            GrassLineOne grass18;
+            grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
+            GrassLineTwo grass19;
+            grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
+
             glFlush();
             glutSwapBuffers();
 
@@ -329,7 +364,7 @@ public:
         drawStars(100, true);
 
         // Ground
-        glColor3f(0.44, 0.74, 0.27);
+        glColor3f(0.39, 0.64, 0.24);
         glBegin(GL_QUADS);
         glVertex2f(0.0f, 0.0f);
         glVertex2f(1920.0f, 0.0f);
@@ -354,7 +389,7 @@ public:
         drawStars(80, true);
 
         // Ground
-        glColor3f(0.44, 0.74, 0.27);
+        glColor3f(0.39, 0.64, 0.24);
         Circle::draw(1700.0f, -2750.0f, 3200.0f);
     }
 
@@ -382,11 +417,11 @@ public:
         glEnd();
 
         // Right Hill
-        glColor3f(0.44, 0.74, 0.27);
+        glColor3f(0.39, 0.64, 0.24);
         Circle::draw(2800.0f, -1500.0f, 2000.0f);
 
         //Left Hill
-        glColor3f(0.44, 0.74, 0.27);
+        glColor3f(0.39, 0.64, 0.24);
         Circle::draw(550.0f, -2500.0f, 2700.0f);
 
         glColor3f(0.22, 0.3, 0.17);
@@ -403,39 +438,49 @@ public:
 
     static void Scene10() {
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Sky
         glBegin(GL_POLYGON);
-        glColor3f(0, 0, 0);
-        glVertex2f(0.0f, 200.0f);
-        glColor3f(0, 0, 0);
-        glVertex2f(1920.0f, 200.0f);
-        glColor3f(0.06, 0.07, 0.19);
+        glColor3f(1, 1, 1);
+        glVertex2f(0.0f, 0.0f);
+        glColor3f(1, 1, 1);
+        glVertex2f(1920.0f, 0.0f);
+        glColor3f(0.7, 0.87, 1);
         glVertex2f(1920.0f, 1080.0f);
-        glColor3f(0.06, 0.07, 0.19);
+        glColor3f(0.7, 0.87, 1);
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        drawStars(75, false);
-
-
         // Right Hill
-        glColor3f(0.39, 0.64, 0.24);
+        glColor3f(0.67, 0.97, 0.5);
         Circle::draw(2000.0f, -2500.0f, 2700.0f);
 
+        glColor3f(0.22, 0.3, 0.17);
+        glBegin(GL_LINE_LOOP);
+        float rightHillRadius = 2700.0f;
+        for (int i = 0; i <= 360; ++i) {
+            float angle = static_cast<float>(i) * Constants::PI / 180.0f;
+            float x = 2000.0f + rightHillRadius * cosf(angle);
+            float y = -2500.0f + rightHillRadius * sinf(angle);
+            glVertex2f(x, y);
+        }
+        glEnd();
 
         // Left Hill
-        glColor3f(0.39, 0.64, 0.24);
+        glColor3f(0.67, 0.97, 0.5);
         Circle::draw(-10.0f, -1500.0f, 2000.0f);
 
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_LOOP);
-        float radius = 2000.0f;
+        float leftHillRadius = 2000.0f;
         for (int i = 0; i <= 360; ++i) {
             float angle = static_cast<float>(i) * Constants::PI / 180.0f;
-            float x = -10.0f + radius * cosf(angle);
-            float y = -1500.0f + radius * sinf(angle);
+            float x = -10.0f + leftHillRadius * cosf(angle);
+            float y = -1500.0f + leftHillRadius * sinf(angle);
             glVertex2f(x, y);
         }
         glEnd();
+
     }
 
     static void Scene11() {
@@ -466,6 +511,5 @@ public:
         glVertex2f(1920.0f, 250.0f);
         glEnd();
     }
-
 };
 
