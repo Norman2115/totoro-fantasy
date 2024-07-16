@@ -12,6 +12,7 @@
 #include "Ellipse.h"
 #include "Catbus.h"
 #include "Totoro.h"
+#include "Mushroom2.h"
 #include "Mushroom1.h"
 #include "Rainbow.h"
 
@@ -26,8 +27,10 @@ static void displayScene1() {
     Background::Scene1(); 
     DayCloudTwo cloud;
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
-    mushroom1 mushroom;
-    mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
+    // mushroom2 mushroom;
+    // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
+    // mushroom1 mushroom;
+    // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
     glFlush();
