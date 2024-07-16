@@ -14,18 +14,26 @@
 #include "Totoro.h"
 #include "Mushroom1.h"
 #include "Rainbow.h"
+#include "Portal.h"
 
+Portal portal;
 
 static void init() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene1(); 
+    Background::Scene1();
     DayCloudTwo cloud;
+
+    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
+
     cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD); 
     // mushroom3 mushroom;
     // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_3);
@@ -33,21 +41,27 @@ static void displayScene1() {
     // mushroom.draw(1080, 900, 150, Colors::MUSHROOM_2);
     // mushroom1 mushroom;
     // mushroom.draw(1080.0, 900.0, 150.0, Colors::MUSHROOM_1);
+
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
+
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene2(); 
+    Background::Scene2();
+
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
-    glFlush();
+    portal.draw(1000.0f, 400.0f, 100.0f, 160.0f);  // Call the draw method of the portal with parameters
+    glutSwapBuffers(); // Swap the buffers for double buffering
 }
 
 static void displayScene4() {
@@ -68,18 +82,21 @@ static void displayScene4() {
     mushroom1 mushroom;
     mushroom.draw(180, 930, 150, Colors::MUSHROOM_1);
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene5();
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene6() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene7() {
@@ -89,42 +106,46 @@ static void displayScene7() {
     totoro.init();
     totoro.draw(0.0f, 0.0f, 0.5f);
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene8() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene9() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
     glFlush();
+    glutSwapBuffers();
 }
 
 static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
-
     glFlush();
+    glutSwapBuffers();
 }
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glFlush();
+    glutSwapBuffers();
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use double buffering
     // Get screen width and height
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
@@ -137,7 +158,8 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutDisplayFunc(displayScene3);
+    portal.startTimer(); // Start the timer within the portal class
     glutFullScreen();
     glutMainLoop();
 
