@@ -15,9 +15,9 @@ class DayMoonOne : public Moon
 public:
     void draw(float x, float y, float size, Color color) override
     {
-      
+
         glColor3f(color.getR(), color.getG(), color.getB()); 
-        float smallRadius = 0.15f * size;
+        float smallRadius = 0.35f * size;
         Circle::draw(x - 0.1f, y - 0.25f, smallRadius); 
     }
 
