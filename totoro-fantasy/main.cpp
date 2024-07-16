@@ -56,6 +56,8 @@ static void displayScene4() {
     cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
     DayCloudTwo cloud1;
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    DaySunOne sun;
+    sun.draw(180, 930, 150, Colors::DAY_SUN);
     glFlush();
 }
 
@@ -107,8 +109,7 @@ static void displayScene11() {
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    DayMoonOne moon;
-    moon.draw(0, 0, 1, Colors::NIGHT_FULL_MOON);
+
     glFlush();
 }
 
@@ -128,7 +129,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     glutDisplayFunc(displayScene4); // Change this to display the scene you want
-    glutFullScreen(); // Make the window full screen
+    glutFullScreen();
     glutMainLoop();
 
     return 0;
