@@ -19,13 +19,11 @@ Portal portal;
 Totoro totoro;
 
 static void init() {
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set background color to white
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
+
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -79,7 +77,8 @@ static void displayScene1() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene2() {
@@ -87,7 +86,8 @@ static void displayScene2() {
     Background::Scene2();
 
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene3() {
@@ -109,21 +109,24 @@ static void displayScene4() {
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene5();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene6() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene7() {
@@ -131,46 +134,52 @@ static void displayScene7() {
     Background::Scene6_7();
     totoro.draw(960.0f, 370.0f, 300.0f); // Draw Totoro at center with larger size
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene8() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene9() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
     glFlush();
-    glutSwapBuffers();
+    glutSwapBuffers(); // Swap the buffers for double buffering
+
 }
 
 static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glFlush();
-    glutSwapBuffers();
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use double buffering
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use double buffering
+
     // Get screen width and height
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
@@ -183,8 +192,8 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene7);
-    portal.startTimer(); // Start the timer within the portal class
+    glutDisplayFunc(displayScene2); // Change this to display the scene you want
+    portal.startTimer(); // Start the timer within the portal class
     glutFullScreen();
     glutMainLoop();
 

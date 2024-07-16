@@ -13,6 +13,7 @@
 class Background {
 private:
     static void drawStars(int numStars, bool isFantasy = false) {
+        /*
         srand(static_cast<unsigned>(time(0)));
         if (isFantasy) {
             glColor3f(1, 0.11, 0.94);
@@ -28,6 +29,7 @@ private:
             glVertex2f(x, y);
         }
         glEnd();
+        */
     }
 
 public:
