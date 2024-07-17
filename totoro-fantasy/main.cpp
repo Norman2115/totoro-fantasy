@@ -248,11 +248,11 @@ static void displayScene4() {
     island2.draw(1500, 600, 200, Colors::ISLAND_DAY);
 
     mushroom1 mushroom1;
-    mushroom1.draw(900, 700, 250, Colors::MUSHROOM_1);
+    mushroom1.draw(900, 700, 250, Colors::MUSHROOM_DAY);
     mushroom2 mushroom2;
-    mushroom2.draw(300, 700, 250, Colors::MUSHROOM_1);
+    mushroom2.draw(300, 700, 250, Colors::MUSHROOM_DAY);
     mushroom3 mushroom3;
-    mushroom3.draw(700, 700, 250, Colors::MUSHROOM_1);
+    mushroom3.draw(700, 700, 250, Colors::MUSHROOM_DAY);
 
     glFlush();
     glutSwapBuffers(); 

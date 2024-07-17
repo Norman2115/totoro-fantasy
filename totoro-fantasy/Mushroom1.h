@@ -25,7 +25,6 @@ public:
         glEnd();
 
         glColor3f(0.0f, 0.0f, 0.0f); 
-        glLineWidth(2.0f); 
         glBegin(GL_LINE_LOOP);
         glVertex2f(x - 0.25 * size, y - 0.5 * size);
         glVertex2f(x + 0.25 * size, y - 0.5 * size);
@@ -35,7 +34,7 @@ public:
         glEnd();
 
 
-        glColor3f(0.82f, 0.15f, 0.24f);
+        glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
@@ -43,7 +42,13 @@ public:
         }
         glEnd();
 
-        
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+        for (int i = 0; i <= 180; i++) {
+            float rad = i * 3.14159 / 180;
+            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0 + sin(rad) * 0.5 * size);
+        }
+        glEnd();
 
         glColor3f(1.0f, 1.0f, 1.0f);
         drawCircle(x - 0.35 * size, y + 0.2 * size, 0.07 * size);//first
@@ -80,7 +85,6 @@ public:
         glEnd();
 
         glColor3f(0.0f, 0.0f, 0.0f); 
-        glLineWidth(2.0f);
         glBegin(GL_LINE_LOOP);
         glVertex2f(x - 0.15 * size, y - 0.5 * size);
         glVertex2f(x + 0.15 * size, y - 0.5 * size);
@@ -89,7 +93,7 @@ public:
         glEnd();
 
 
-        glColor3f(128.0f / 255.0f, 0.0f / 255.0f, 32.0f / 255.0f);
+        glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
@@ -97,6 +101,13 @@ public:
         }
         glEnd();
 
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+        for (int i = 0; i <= 180; i++) {
+            float rad = i * 3.14159 / 180;
+            glVertex2f(x + cos(rad) * 0.4 * size, y - 1.0 + sin(rad) * 0.55 * size);
+        }
+        glEnd();
 
         glColor3f(1.0f, 1.0f, 1.0f);
         drawCircle(x - 0.20 * size, y + 0.32 * size, 0.05 * size);
@@ -133,7 +144,6 @@ public:
         glEnd();
 
         glColor3f(0.0f, 0.0f, 0.0f); 
-        glLineWidth(2.0f); 
         glBegin(GL_LINE_LOOP);
         glVertex2f(x - 0.35 * size, y - 0.35 * size);
         glVertex2f(x + 0.35 * size, y - 0.35 * size);
@@ -142,7 +152,7 @@ public:
         glEnd();
 
 
-        glColor3f(128.0f / 255.0f, 0.0f / 255.0f, 32.0f / 255.0f);
+        glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
@@ -150,6 +160,13 @@ public:
         }
         glEnd();
 
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+        for (int i = 0; i <= 180; i++) {
+            float rad = i * 3.14159 / 180;
+            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0 + sin(rad) * 0.5 * size);
+        }
+        glEnd();
 
         glColor3f(1.0f, 1.0f, 1.0f);
         drawCircle(x - 0.05 * size, y + 0.35 * size, 0.07 * size);
