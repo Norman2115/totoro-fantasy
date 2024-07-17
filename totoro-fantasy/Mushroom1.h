@@ -126,8 +126,8 @@ public:
 
         glColor3f(1.0f, 1.0f, 1.0f);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.35 * size, y - 0.5 * size);
-        glVertex2f(x + 0.35 * size, y - 0.5 * size);
+        glVertex2f(x - 0.35 * size, y - 0.35 * size);
+        glVertex2f(x + 0.35 * size, y - 0.35 * size);
         glVertex2f(x + 0.35 * size, y);
         glVertex2f(x - 0.35 * size, y);
         glEnd();
@@ -135,8 +135,8 @@ public:
         glColor3f(0.0f, 0.0f, 0.0f); 
         glLineWidth(2.0f); 
         glBegin(GL_LINE_LOOP);
-        glVertex2f(x - 0.35 * size, y - 0.5 * size);
-        glVertex2f(x + 0.35 * size, y - 0.5 * size);
+        glVertex2f(x - 0.35 * size, y - 0.35 * size);
+        glVertex2f(x + 0.35 * size, y - 0.35 * size);
         glVertex2f(x + 0.35 * size, y);
         glVertex2f(x - 0.35 * size, y);
         glEnd();
