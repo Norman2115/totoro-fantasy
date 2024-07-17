@@ -14,6 +14,7 @@
 #include "Totoro.h"
 #include "Rainbow.h"
 #include "Portal.h"
+#include "Island.h"
 
 Portal portal;
 Totoro totoro;
@@ -228,6 +229,10 @@ static void displayScene4() {
     grass19.draw(1830, 30, 46, Colors::GRASS_DAY);
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
+
+    IslandOne island;
+    island.draw(700, 700, 250, Colors::ISLAND_DAY);
+
 
     glFlush();
     glutSwapBuffers(); 
@@ -523,7 +528,7 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene7); // Change this to display the scene you want
+    glutDisplayFunc(displayScene4); // Change this to display the scene you want
     portal.startTimer(); // Start the timer within the portal class
     glutFullScreen();
     glutMainLoop();
