@@ -137,6 +137,12 @@ static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
 
+    TreeOne tree1;
+    tree1.draw(100, 250, 400, Colors::TREE_NIGHT);
+    TreeTwo tree2;
+    tree2.draw(490, 250, 500, Colors::TREE_NIGHT);
+
+
     //Upper Level
     SmallRockOne rock1;
     rock1.draw(1800, 210, 150, Colors::ROCK);
@@ -183,7 +189,9 @@ static void displayScene3() {
     GrassTwo grass19;
     grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
 
+
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
+
 
     glFlush();
     glutSwapBuffers(); 
@@ -548,7 +556,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene11); // Change this to display the scene you want
+    glutDisplayFunc(displayScene3); 
     portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();
