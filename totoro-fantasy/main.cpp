@@ -20,6 +20,8 @@
 Portal portal;
 Totoro totoro;
 
+Catbus catbus{ 500, 250, 600, false };
+
 static void init() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -86,7 +88,7 @@ static void displayScene1() {
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene2();
-
+  
     //Upper Level
     GrassTwo grass1;
     grass1.drawWithRotation(1550, 388, 57, 9, Colors::GRASS_NIGHT);
@@ -173,7 +175,7 @@ static void displayScene3() {
 
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
 
-
+    glFlush();
     glutSwapBuffers(); 
 }
 
@@ -250,7 +252,7 @@ static void displayScene5() {
 static void displayScene6() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
-
+  
     //Upper Level
     GrassTwo grass1;
     grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
@@ -292,7 +294,6 @@ static void displayScene6() {
     grass19.draw(1830, 30, 46, Colors::GRASS_NIGHT);
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
-
 
     glFlush();
     glutSwapBuffers(); 
@@ -346,7 +347,6 @@ static void displayScene7() {
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     totoro.draw(960.0f, 450.0f, 300.0f);
-
 
     glFlush();
     glutSwapBuffers(); 
@@ -511,6 +511,13 @@ static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glFlush();
 }
+
+static void updateCatbusFrame(int value) {
+    catbus.updateFrame();
+    glutPostRedisplay();
+    glutTimerFunc(30, updateCatbusFrame, 0);
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); 
