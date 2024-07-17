@@ -28,7 +28,7 @@ public:
 
         for (int i = 0; i < numColors; ++i) {
             glColor3f(colors[i].getR(), colors[i].getG(), colors[i].getB());
-            SemiCircle::draw(x, y, radius - (i * (radius / numColors)), true); 
+            SemiCircle::draw(x, y, radius - (i * (radius / numColors)), 180.0f, false); 
         }
     }
 };

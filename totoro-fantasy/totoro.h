@@ -208,20 +208,6 @@ public:
         glEnd();
 
         glPopMatrix();
-        glFlush();
-    }
-
-    void init() {
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        float aspectRatio = 1920.0f / 1080.0f;
-        if (aspectRatio > 1.0f) {
-            gluOrtho2D(-aspectRatio, aspectRatio, -1.0, 1.0);
-        }
-        else {
-            gluOrtho2D(-1.0, 1.0, -1.0 / aspectRatio, 1.0 / aspectRatio);
-        }
     }
 };
 
