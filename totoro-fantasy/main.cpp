@@ -32,8 +32,6 @@ static void init() {
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
-    DayCloudTwo cloud;
-    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
     House house;
     house.draw(200.0f, 450.0f, 500.0f);
 
@@ -80,6 +78,16 @@ static void displayScene1() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
+    FullMoon moon;
+    moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
+
+
+    DayCloudTwo cloud;
+    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
+    DayCloudOne cloud;
+    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);    
+    DayCloudTwo cloud;
+    cloud.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
     glFlush();
     glutSwapBuffers(); 
 
@@ -527,7 +535,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0); 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4); 
+    glutDisplayFunc(displayScene1); 
     portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();
