@@ -17,6 +17,8 @@
 #include "Rainbow.h"
 #include "Mushroom3.h"
 
+Catbus catbus{ 500, 250, 600, false };
+
 static void init() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -48,6 +50,7 @@ static void displayScene2() {
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
+
     glFlush();
 }
 
@@ -78,6 +81,7 @@ static void displayScene5() {
 static void displayScene6() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
+    catbus.drawStandstillView();
     glFlush();
 }
 
@@ -111,7 +115,6 @@ static void displayScene10() {
 static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
-
     glFlush();
 }
 
@@ -119,6 +122,12 @@ static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glFlush();
+}
+
+static void updateCatbusFrame(int value) {
+    catbus.updateFrame();
+    glutPostRedisplay();
+    glutTimerFunc(30, updateCatbusFrame, 0);
 }
 
 int main(int argc, char** argv) {
@@ -136,7 +145,8 @@ int main(int argc, char** argv) {
 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4); // Change this to display the scene you want
+    glutDisplayFunc(displayScene6); // Change this to display the scene you want
+    // glutTimerFunc(30, updateCatbusFrame, 0);
     glutFullScreen();
     glutMainLoop();
 
