@@ -13,6 +13,7 @@
 #include "Catbus.h"
 #include "Totoro.h"
 #include "Rainbow.h"
+#include "Tree.h";
 #include "Portal.h"
 #include "Island.h"
 
@@ -232,7 +233,6 @@ static void displayScene4() {
 
     IslandOne island;
     island.draw(700, 700, 250, Colors::ISLAND_DAY);
-
 
     glFlush();
     glutSwapBuffers(); 
@@ -510,11 +510,10 @@ static void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glFlush();
 }
-
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
 
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use double buffering
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use doubleÂ buffering
 
     // Get screen width and height
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
@@ -529,7 +528,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     glutDisplayFunc(displayScene4); // Change this to display the scene you want
-    portal.startTimer(); // Start the timer within the portal class
+    portal.startTimer(); // Start the timer within the portalÂ class
     glutFullScreen();
     glutMainLoop();
 

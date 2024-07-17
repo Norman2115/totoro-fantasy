@@ -18,19 +18,28 @@ public:
     }
 };
 
+
+
 class SemiCircle {
 public:
-    static void draw(float cx, float cy, float radius, bool isClockwise) {
+    static void draw(float cx, float cy, float radius, float rotationAngle, bool isClockwise) {
+        glPushMatrix();
+        glTranslatef(cx, cy, 0.0);  
+        glRotatef(rotationAngle, 0.0f, 0.0f, 1.0f);  
+
         glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(cx, cy);
-        int startAngle = isClockwise ? 0 : 180;
-        int endAngle = isClockwise ? 180 : 360;
-        for (int i = startAngle; i <= endAngle; i++) {
+        glVertex2f(0.0f, 0.0f);  // Center point
+        float startAngle = isClockwise ? 0.0f : 180.0f;
+        float endAngle = isClockwise ? 180.0f : 360.0f;
+        for (float i = startAngle; i <= endAngle; i += 1.0f) {
             float theta = i * Constants::PI / 180.0f;
             float x = cos(theta) * radius;
             float y = sin(theta) * radius;
-            glVertex2f(x + cx, y + cy);
+            glVertex2f(x, y);
         }
         glEnd();
+
+        glPopMatrix();
     }
 };
+
