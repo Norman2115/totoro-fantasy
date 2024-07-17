@@ -146,6 +146,7 @@
     <ClInclude Include="Rainbow.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="totoro.h" />
+    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

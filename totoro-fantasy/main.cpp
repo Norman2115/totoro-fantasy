@@ -14,6 +14,7 @@
 #include "Totoro.h"
 #include "Mushroom1.h"
 #include "Rainbow.h"
+#include "Tree.h";
 
 
 static void init() {
@@ -66,7 +67,11 @@ static void displayScene4() {
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
     mushroom1 mushroom;
-    mushroom.draw(180, 930, 150, Colors::MUSHROOM_1);
+    mushroom.draw(500, 930, 150, Colors::MUSHROOM_1);
+    TreeOne tree;
+    tree.draw(500, 500, 150, Colors::TREE_STEM);
+    FullMoon fullmoon;
+    fullmoon.draw(200, 200, 150, Colors::NIGHT_FULL_MOON);
     glFlush();
 }
 
@@ -121,7 +126,6 @@ static void display() {
 
     glFlush();
 }
-
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
 
@@ -138,7 +142,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     glutDisplayFunc(displayScene4); // Change this to display the scene you want
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
 
     return 0;
