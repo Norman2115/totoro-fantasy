@@ -233,12 +233,13 @@ static void displayScene4() {
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
-    IslandOne island;
-    island.draw(700, 700, 250, Colors::ISLAND_DAY);
+    IslandOne island1;
+    island1.draw(700, 700, 250, Colors::ISLAND_DAY);
+    IslandTwo island2;
+    island2.draw(1500, 600, 200, Colors::ISLAND_DAY);
 
     glFlush();
     glutSwapBuffers(); 
-
 }
 
 static void displayScene5() {
@@ -519,25 +520,15 @@ static void updateCatbusFrame(int value) {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); // Use double buffering
-
-    // Get screen width and height
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); 
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
-
-    // Use screen width and height directly
     glutInitWindowSize(screenWidth, screenHeight);
-
-    // Center the window on the screen
-    glutInitWindowPosition(0, 0); // Position at top-left corner for full screen
-
+    glutInitWindowPosition(0, 0); 
     glutCreateWindow("Little Girl's Adventure");
     init();
-
-    glutDisplayFunc(displayScene4); // Change this to display the scene you want
-    portal.startTimer(); // Start the timer within the portal class
-  
+    glutDisplayFunc(displayScene4); 
+    portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();
 
