@@ -16,6 +16,7 @@
 #include "Tree.h";
 #include "Portal.h"
 #include "Island.h"
+#include "Mushroom1.h"
 
 Portal portal;
 Totoro totoro;
@@ -233,6 +234,13 @@ static void displayScene4() {
 
     IslandOne island;
     island.draw(700, 700, 250, Colors::ISLAND_DAY);
+
+    mushroom1 mushroom1;
+    mushroom1.draw(900, 700, 250, Colors::MUSHROOM_1);
+    mushroom2 mushroom2;
+    mushroom2.draw(300, 700, 250, Colors::MUSHROOM_1);
+    mushroom3 mushroom3;
+    mushroom3.draw(700, 700, 250, Colors::MUSHROOM_1);
 
     glFlush();
     glutSwapBuffers(); 
