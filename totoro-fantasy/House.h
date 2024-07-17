@@ -103,11 +103,13 @@ public:
         glEnd();
 
         // Doorknob on the centered door
+        glPushAttrib(GL_POINT_BIT);
         glColor3f(1.0f, 1.0f, 1.0f); // white color
         glPointSize(5.0);
         glBegin(GL_POINTS);
         glVertex2f(0.41f, -0.43f);
         glEnd();
+        glPopAttrib();
 
         // Lane adjusted for the centered door position
         glColor3f(0.0157f, 0.1647f, 0.1686f);

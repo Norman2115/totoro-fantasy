@@ -13,9 +13,10 @@
 #include "Catbus.h"
 #include "Totoro.h"
 #include "Rainbow.h"
-#include "Tree.h";
+#include "Tree.h"
 #include "Portal.h"
 #include "Island.h"
+#include "Flower.h"
 #include "Mushroom1.h"
 
 Portal portal;
@@ -518,6 +519,9 @@ static void displayScene11() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
+    Flower flower;
+    flower.draw(200, 200, 200, 40, Colors::DAY_CLOUD);
+
     glFlush();
     glutSwapBuffers();
 
@@ -543,7 +547,8 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0); 
     glutCreateWindow("Little Girl's Adventure");
     init();
-    glutDisplayFunc(displayScene4); 
+
+    glutDisplayFunc(displayScene11); // Change this to display the scene you want
     portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();

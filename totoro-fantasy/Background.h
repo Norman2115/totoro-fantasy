@@ -9,28 +9,10 @@
 #include "Constants.h"
 #include "Circle.h"
 #include "Elements.h"
+#include "Star.h"
 
 class Background {
 private:
-    static void drawStars(int numStars, bool isFantasy = false) {
-        /*
-        srand(static_cast<unsigned>(time(0)));
-        if (isFantasy) {
-            glColor3f(1, 0.11, 0.94);
-        }
-        else {
-            glColor3f(1, 1, 1); 
-        }
-
-        glBegin(GL_POINTS);
-        for (int i = 0; i < numStars; ++i) {
-            float x = static_cast<float>(rand() % 1920);
-            float y = static_cast<float>(rand() % 1080);
-            glVertex2f(x, y);
-        }
-        glEnd();
-        */
-    }
 
 public:
     static void Scene1() {
@@ -46,7 +28,7 @@ public:
         glVertex2f(0.0f, 1080.0f);  
         glEnd();
 
-        drawStars(100, false);  
+        Star::draw(false);
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);
@@ -72,7 +54,7 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        drawStars(110, false);
+        Star::draw(false);
 
         // Main Hill 
         glColor3f(0.39, 0.64, 0.24);
@@ -107,7 +89,7 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        drawStars(130, false);
+        Star::draw(false);
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);
@@ -361,7 +343,7 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        drawStars(100, true);
+        Star::draw(true);
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);
@@ -386,7 +368,7 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        drawStars(80, true);
+        Star::draw(true);
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);
@@ -396,7 +378,7 @@ public:
     static void Scene9() {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        drawStars(150, true);
+        Star::draw(true);
 
         glBegin(GL_POLYGON);
         glColor3f(0, 0, 0);
