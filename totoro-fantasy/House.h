@@ -7,7 +7,7 @@ class House {
 public:
     House() {}
 
-    void draw(float x, float y, float size) {
+    void draw(float x, float y, float size, bool isPath) {
         glPushMatrix();
         glTranslatef(x, y, 0.0f);
         glScalef(size, size, 1.0f);
@@ -111,14 +111,18 @@ public:
         glEnd();
         glPopAttrib();
 
-        // Lane adjusted for the centered door position
-        glColor3f(0.0157f, 0.1647f, 0.1686f);
-        glBegin(GL_QUADS);
-        glVertex2f(0.325f, -0.5f); // left-bottom
-        glVertex2f(0.425f, -0.5f); // right-bottom
-        glVertex2f(0.9f, -0.9f); // right-top
-        glVertex2f(0.45f, -0.9f); // left-top
-        glEnd();
+        if (isPath)
+        {
+            // Lane adjusted for the centered door position
+            glColor3f(0.0157f, 0.1647f, 0.1686f);
+            glBegin(GL_QUADS);
+            glVertex2f(0.325f, -0.5f); // left-bottom
+            glVertex2f(0.425f, -0.5f); // right-bottom
+            glVertex2f(0.9f, -0.9f); // right-top
+            glVertex2f(0.45f, -0.9f); // left-top
+            glEnd();
+        }
+
 
         glPopMatrix();
         glFlush();

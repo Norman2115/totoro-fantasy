@@ -35,7 +35,7 @@ static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
     House house;
-    house.draw(200.0f, 450.0f, 500.0f);
+    house.draw(200.0f, 450.0f, 500.0f, true);
 
     //Upper Level
     GrassTwo grass1;
@@ -98,6 +98,11 @@ static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene2();
   
+    TreeOne tree1;
+    tree1.draw(1800, 250, 400, Colors::TREE_NIGHT);
+    TreeTwo tree2;
+    tree2.draw(1700, 250, 500, Colors::TREE_NIGHT);
+
     //Upper Level
     GrassTwo grass1;
     grass1.drawWithRotation(1550, 388, 57, 9, Colors::GRASS_NIGHT);
@@ -106,27 +111,39 @@ static void displayScene2() {
     GrassTwo grass3;
     grass3.drawWithRotation(600, 45, 55,33, Colors::GRASS_NIGHT);
     GrassTwo grass4;
-    grass4.drawWithRotation(400, 157, 40, 340, Colors::GRASS_NIGHT);
+    grass4.drawWithRotation(400, 157, 20, 340, Colors::GRASS_NIGHT);
     GrassTwo grass5;
-    grass5.drawWithRotation(30, 258, 40, 345, Colors::GRASS_NIGHT);
+    grass5.drawWithRotation(30, 258, 20, 345, Colors::GRASS_NIGHT);
     GrassOne grass9;
     grass9.drawWithRotation(1750, 400, 65, 1, Colors::GRASS_NIGHT);
     GrassOne grass10;
     grass10.drawWithRotation(900, 208, 60, 22, Colors::GRASS_NIGHT);
     GrassOne grass11;
-    grass11.drawWithRotation(550, 98, 50, 335, Colors::GRASS_NIGHT);    
+    grass11.drawWithRotation(550, 98, 30, 335, Colors::GRASS_NIGHT);    
 
     //Lower Level
     GrassOne grass12;
-    grass12.drawWithRotation(90, 40, 46, 330, Colors::GRASS_NIGHT);  
+    grass12.drawWithRotation(90, 40, 30, 330, Colors::GRASS_NIGHT);  
     GrassTwo grass7;
-    grass7.drawWithRotation(440, 85, 46, 335, Colors::GRASS_NIGHT);
+    grass7.drawWithRotation(440, 85, 20, 335, Colors::GRASS_NIGHT);
     GrassOne grass13;
     grass13.drawWithRotation(950, 85, 46, 30, Colors::GRASS_NIGHT);
     GrassTwo grass14;
     grass14.drawWithRotation(1400, 250, 43, 13, Colors::GRASS_NIGHT);
     GrassTwo grass8;
     grass8.drawWithRotation(1800, 200, 50, 10, Colors::GRASS_NIGHT);
+
+    FullMoon moon;
+    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
+
+    House house;
+    house.draw(20.0f, 350.0f, 250, false);
+    GrassTwo grass15;
+    grass15.drawWithRotation(65, 227, 20, 0, Colors::GRASS_NIGHT);
+    GrassOne grass16;
+    grass16.drawWithRotation(10, 227, 20, 0, Colors::GRASS_NIGHT);
+    GrassOne grass17;
+    grass17.drawWithRotation(145, 225, 20, 0, Colors::GRASS_NIGHT);
 
     glFlush();
     glutSwapBuffers(); 
@@ -555,7 +572,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene1); 
+    glutDisplayFunc(displayScene2); 
     portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();
