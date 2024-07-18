@@ -223,10 +223,19 @@ static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
 
-    TreeOne tree1;
-    tree1.draw(100, 250, 400, Colors::TREE_NIGHT);
+    TreeTwo tree3;
+    tree3.draw(1850, 280, 420, Colors::TREE_NIGHT);
+    TreeOne tree4;
+    tree4.draw(1400, 240, 390, Colors::TREE_NIGHT);
+
+    TreeTwo tree1;
+    tree1.draw(600, 250, 380, Colors::TREE_NIGHT);
     TreeTwo tree2;
-    tree2.draw(490, 250, 500, Colors::TREE_NIGHT);
+    tree2.draw(-15, 250, 380, Colors::TREE_NIGHT);
+
+    Background::Cave();
+
+
 
 
     //Upper Level
@@ -274,7 +283,8 @@ static void displayScene3() {
     grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
     GrassTwo grass19;
     grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
-
+    GrassOne grass20;
+    grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
 
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
 
@@ -695,7 +705,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene3);
 
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);

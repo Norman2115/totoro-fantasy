@@ -100,19 +100,23 @@ public:
         glVertex2f(0.0f, 250.0f);
         glEnd();
 
-        // Cave
+
+    }
+
+    static void Cave() {
+
         glColor3f(0.37, 0.38, 0.38);
         glBegin(GL_POLYGON);
-        glVertex2f(1200.0f, 220.0f); 
+        glVertex2f(1200.0f, 220.0f);
         glVertex2f(1230.0f, 400.0f);
-        glVertex2f(1350.0f, 570.0f); 
-        glVertex2f(1410.0f, 600.0f); 
-        glVertex2f(1500.0f, 700.0f); 
-        glVertex2f(1600.0f, 700.0f); 
-        glVertex2f(1700.0f, 690.0f); 
-        glVertex2f(1740.0f, 580.0f); 
-        glVertex2f(1880.0f, 460.0f); 
-        glVertex2f(1920.0f, 220.0f); 
+        glVertex2f(1350.0f, 570.0f);
+        glVertex2f(1410.0f, 600.0f);
+        glVertex2f(1500.0f, 700.0f);
+        glVertex2f(1600.0f, 700.0f);
+        glVertex2f(1700.0f, 690.0f);
+        glVertex2f(1740.0f, 580.0f);
+        glVertex2f(1880.0f, 460.0f);
+        glVertex2f(1920.0f, 220.0f);
         glEnd();
 
         glColor3f(0.0f, 0.0f, 0.0f);
@@ -155,8 +159,6 @@ public:
         glVertex2f(1930.0f, 200.0f);
         glVertex2f(1810.0f, 200.0f);
         glEnd();
-
-
     }
 
     static void Scene4() {
