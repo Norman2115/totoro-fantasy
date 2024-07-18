@@ -51,13 +51,13 @@ static void displayScene1() {
 
     //Upper Level
     GrassTwo grass1;
-    grass1.draw(200, 200, 45, Colors::GRASS_NIGHT);
+    grass1.draw(200, 203, 45, Colors::GRASS_NIGHT);
     GrassTwo grass2;
-    grass2.draw(460, 199, 47, Colors::GRASS_NIGHT);
+    grass2.draw(400, 203, 47, Colors::GRASS_NIGHT);
     GrassTwo grass3;
     grass3.draw(1200, 200, 46, Colors::GRASS_NIGHT);
     GrassOne grass4;
-    grass4.draw(260, 200, 55, Colors::GRASS_NIGHT);
+    grass4.draw(260, 203, 55, Colors::GRASS_NIGHT);
     GrassOne grass5;
     grass5.draw(760, 200, 60, Colors::GRASS_NIGHT);
     GrassOne grass6;
@@ -67,7 +67,7 @@ static void displayScene1() {
     GrassTwo grass8;
     grass8.draw(830, 198, 46, Colors::GRASS_NIGHT);
     GrassTwo grass9;
-    grass9.draw(30, 198, 46, Colors::GRASS_NIGHT);
+    grass9.draw(30, 203, 46, Colors::GRASS_NIGHT);
     //Lower Level
     GrassOne grass10;
     grass10.draw(50, 100, 60, Colors::GRASS_NIGHT);
@@ -80,9 +80,7 @@ static void displayScene1() {
     GrassOne grass14;
     grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
     GrassTwo grass15;
-    grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);    
-    GrassTwo grass16;
-    grass16.draw(540, 140, 44, Colors::GRASS_NIGHT);    
+    grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);      
     GrassTwo grass17;
     grass17.draw(890, 65, 43, Colors::GRASS_NIGHT);    
     GrassTwo grass18;
@@ -103,7 +101,6 @@ static void displayScene1() {
     cloud3.draw(1600, 800, 150, Colors::NIGHT_CLOUD);
 
     girl.drawFrontView();
-
     glFlush();
     glutSwapBuffers(); 
 
