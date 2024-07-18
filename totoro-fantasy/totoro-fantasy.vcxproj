@@ -146,9 +146,11 @@
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Mushroom1.h" />
+    <ClInclude Include="Rain.h" />
     <ClInclude Include="Rainbow.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="Sun.h" />
+    <ClInclude Include="Thunder.h" />
     <ClInclude Include="totoro.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>

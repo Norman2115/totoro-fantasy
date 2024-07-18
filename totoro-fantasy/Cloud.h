@@ -11,13 +11,22 @@ protected:
     float posX;
     float posY;
     float size;
-    Color color;
+    Color originalColor;
+    Color currentColor;
 
 public:
     Cloud(float x, float y, float size, Color color)
-        : posX(x), posY(y), size(size), color(color) {}
+        : posX(x), posY(y), size(size), originalColor(color), currentColor(color) {}
 
     virtual void draw() = 0;
+
+    void setColor(Color color) {
+        currentColor = color;
+    }
+
+    Color getOriginalColor() const {
+        return originalColor;
+    }
 
     void move(float speed, bool movingRight) {
         if (movingRight) {
@@ -38,7 +47,7 @@ public:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(size, size, 1.0f);
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor3f(currentColor.getR(), currentColor.getG(), currentColor.getB());
         float radius = 0.25;
         Circle::draw(0.0f, 0.7f * radius, radius);
         Circle::draw(-1.2f * radius, -0.01f * radius, radius);
@@ -60,7 +69,7 @@ public:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(size, size, 1.0f);
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor3f(currentColor.getR(), currentColor.getG(), currentColor.getB());
         float radius1 = 0.25;
         float radius2 = 0.275;
         Circle::draw(0.0f, 0.5f * radius1, radius1);
@@ -83,7 +92,7 @@ public:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(size, size, 1.0f);
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor3f(currentColor.getR(), currentColor.getG(), currentColor.getB());
         float radius1 = 0.25;
         float radius2 = 0.275;
         float radius3 = 0.3;

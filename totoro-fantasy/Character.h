@@ -2,6 +2,7 @@
 #include <gl/glut.h>
 #include "Constants.h"
 #include "Colors.h"
+#include "Constants.h"
 
 class Character
 {
@@ -50,6 +51,24 @@ public:
         posX += speed;
     }
 
+    float getCurrentAngle() const {
+        return currentAngle;
+    }
+
+    void setCurrentAngle(float angle) {
+        currentAngle = angle;
+    }
+
+    void moveInArc(float speed, float angleIncrement) {
+        float centerX = 1800.0f;
+        float centerY = -1800.0f;
+        float radius = 2000.0f;
+
+        currentAngle -= angleIncrement * speed;
+        posX = centerX + radius * cos(currentAngle);
+        posY = centerY + radius * sin(currentAngle);
+    }
+
     void updateFrame() {
         currentFrame = (currentFrame + 1) % 4;
     }
@@ -58,11 +77,12 @@ protected:
     float posX;
     float posY;
     float characterSize;
+    float currentAngle;
     int currentFrame;
     bool movingRight;
 
-    Character(float startX, float startY, float size)
-        : posX(startX), posY(startY), characterSize(size), currentFrame(0), movingRight(true) {
+    Character(float startX, float startY, float size, float currentAngle)
+        : posX(startX), posY(startY), characterSize(size), currentAngle(currentAngle), currentFrame(0), movingRight(true) {
     }
 
     void drawFrontView() {
@@ -226,8 +246,8 @@ private:
     }
 
 public:
-    LittleGirl(float startX, float startY, float size, bool crying)
-        : Character(startX, startY, size), isCrying(crying) {
+    LittleGirl(float startX, float startY, float size, float currentAngle, bool crying)
+        : Character(startX, startY, size, currentAngle), isCrying(crying) {
     }
 
     bool getCrying() const {

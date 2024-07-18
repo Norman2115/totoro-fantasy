@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
 #include <gl/glut.h>
+#include <vector>
 #include "Cloud.h"
 #include "Sun.h"
 #include "Moon.h"
@@ -18,25 +19,39 @@
 #include "Island.h"
 #include "Flower.h"
 #include "Mushroom1.h"
+#include "Thunder.h"
+#include "Rain.h"
 
 /////   Declare global variables    /////
 
 Portal portal;
 Totoro totoro;
-LittleGirl girl(500, 150, 180, false);
+LittleGirl girl(500, 150, 180, 0, false);
 Catbus catbus{ 500, 180, 600, false };
+Rain rain{ 500 };
 
-DayCloudTwo cloud1_scene1{ 1080, 900, 150, Colors::NIGHT_CLOUD };
-DayCloudOne cloud2_scene1{ 400, 850, 150, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud3_scene1{ 1600, 800, 150, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene1{
+    new DayCloudTwo(1080, 900, 150, Colors::NIGHT_CLOUD),
+    new DayCloudOne(400, 850, 150, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(1600, 800, 150, Colors::NIGHT_CLOUD)
+};
 
-DayCloudOne cloud1_scene2{ 1080, 810, 120, Colors::NIGHT_CLOUD };
-DayCloudOne cloud2_scene2{ 400, 850, 120, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud3_scene2{ 1700, 880, 120, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud4_scene2{ 150, 750, 120, Colors::NIGHT_CLOUD };
+Thunder thunderScene1(clouds_scene1, 2.0f);
+
+std::vector<Cloud*> clouds_scene2{
+    new DayCloudOne(1080, 810, 120, Colors::NIGHT_CLOUD),
+    new DayCloudOne(400, 850, 120, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(1700, 880, 120, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(150, 750, 120, Colors::NIGHT_CLOUD)
+};
+
+Thunder thunderScene2(clouds_scene2, 2.0f);
 
 bool isScene1End = false;
+bool isScene2End = false;
 int currentScene = 1;
+bool thunderTriggeredOnScene2 = false;
+bool isScene2ArcAngleInitialized = false;
 
 /////   Declare states  /////
 
@@ -61,9 +76,9 @@ static void init() {
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
+
     House house;
     house.draw(200.0f, 550.0f, 700.0f, true);
-
 
     //Upper Level
     GrassTwo grass1;
@@ -109,9 +124,9 @@ static void displayScene1() {
     FullMoon moon;
     moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
 
-    cloud1_scene1.draw();
-    cloud2_scene1.draw();
-    cloud3_scene1.draw();
+    for (auto cloud : clouds_scene1) {
+        cloud->draw();
+    }
 
     switch (currentState) {
         case FRONT_VIEW:
@@ -122,7 +137,7 @@ static void displayScene1() {
             girl.drawSideView();
             break;
     }
-  
+
     glFlush();
     glutSwapBuffers();
 }
@@ -133,10 +148,9 @@ static void displayScene2() {
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
 
-    cloud1_scene2.draw();
-    cloud2_scene2.draw();
-    cloud3_scene2.draw();
-    cloud4_scene2.draw();   
+    for (auto cloud : clouds_scene2) {
+        cloud->draw();
+    }
 
     TreeOne tree1;
     tree1.draw(1900, 380, 300, Colors::TREE_NIGHT);
@@ -195,6 +209,8 @@ static void displayScene2() {
     TreeTwo tree6;
     tree6.draw(1450, 250, 260, Colors::TREE_NIGHT);
 
+    girl.drawSideView();
+
     //Third Layer
     TreeTwo tree7;
     tree7.draw(1120, 170, 230, Colors::TREE_NIGHT);
@@ -215,6 +231,8 @@ static void displayScene2() {
     TreeOne tree11;
     tree11.draw(1720, -210, 255, Colors::TREE_NIGHT);
 
+    rain.renderRain();
+
     glFlush();
     glutSwapBuffers(); 
 }
@@ -234,9 +252,6 @@ static void displayScene3() {
     tree2.draw(-15, 250, 380, Colors::TREE_NIGHT);
 
     Background::Cave();
-
-
-
 
     //Upper Level
     SmallRockOne rock1;
@@ -636,9 +651,11 @@ static void display() {
     }
     else if (currentScene == 2) {
         displayScene2();
+    } 
+    else if (currentScene == 3) {
+        displayScene3();
     }
 }
-
 
 /////   Declare update functions  /////
 
@@ -656,18 +673,46 @@ static void changeGirlStateAfterDelay(int value) {
     glutPostRedisplay();
 }
 
-static void updateGirlPosition(int value) {
-    if (currentState == MOVING) {
-        girl.move(3.0f);
+static void triggerThunder(int value) {
+    if (currentScene == 1) {
+        thunderScene1.startThunder();
     }
+    else if (currentScene == 2 && !thunderTriggeredOnScene2) {
+        thunderScene2.startThunder();
+        thunderTriggeredOnScene2 = true;
+    }
+    glutPostRedisplay();
+}
 
-    if (girl.getPosX() > 1920) {
-        isScene1End = true;
-        currentScene = 2;
+static void updateGirlPosition(int value) {
+    if (currentScene == 1) {
+        if (currentState == MOVING) {
+            girl.move(3.0f);
+        }
+
+        if (girl.getPosX() > 1920) {
+            isScene1End = true;
+            currentScene = 2;
+            triggerThunder(0);
+        }
+    }
+    else if (currentScene == 2) {
+        currentState = MOVING;
+
+        if (!isScene2ArcAngleInitialized) {
+            girl.setCurrentAngle(2.2f);
+            isScene2ArcAngleInitialized = true;
+        }
+
+        girl.moveInArc(0.05f, 0.05f);
+
+        if (girl.getPosX() > 1920) {
+            isScene2End = true;
+            currentScene = 3;
+        }
     }
 
     glutPostRedisplay();
-    // Set up next position update in 16 ms (approx. 60 FPS)
     glutTimerFunc(16, updateGirlPosition, 0);
 }
 
@@ -676,17 +721,43 @@ static void updateGirlFrame(int value) {
         girl.updateFrame();
     }
     glutPostRedisplay();
-    // Set up next frame update in 250 ms
     glutTimerFunc(250, updateGirlFrame, 0);
 }
 
 static void updateCloudPosition(int value) {
-    cloud1_scene1.move(0.1f, false);
-    cloud2_scene1.move(0.1f, true);
-    cloud3_scene1.move(0.1f, true);
+    if (currentScene == 1) {
+        clouds_scene1.at(0)->move(0.1f, false);
+        clouds_scene1.at(1)->move(0.1f, true);
+        clouds_scene1.at(2)->move(0.1f, true);
+    }
+    else if (currentScene == 2) {
+        clouds_scene2.at(0)->move(0.1f, true);
+        clouds_scene2.at(1)->move(0.1f, true);
+        clouds_scene2.at(2)->move(0.1f, false);
+        clouds_scene2.at(3)->move(0.1f, true);
+    }
 
     glutPostRedisplay();
     glutTimerFunc(16, updateCloudPosition, 0);
+}
+
+static void updateThunderEffect(int value) {
+    if (currentScene == 1) {
+        thunderScene1.update();
+    }
+    else if (currentScene == 2) {
+        thunderScene2.update();
+    }
+    glutPostRedisplay();
+    glutTimerFunc(100, updateThunderEffect, 0);
+}
+
+static void updateRain(int value) {
+    if (currentScene == 2) {
+        rain.updateRain();
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateRain, 0);
 }
 
 static void updateCatbusFrame(int value) {
@@ -705,14 +776,17 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene3);
+    glutDisplayFunc(display);
 
     portal.startTimer(); 
-    glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
-    glutTimerFunc(2000, changeGirlStateAfterDelay, 1);
+    glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
+    glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
     glutTimerFunc(16, updateGirlPosition, 0);
     glutTimerFunc(250, updateGirlFrame, 0);
     glutTimerFunc(16, updateCloudPosition, 0);
+    glutTimerFunc(3000, triggerThunder, 0);
+    glutTimerFunc(100, updateThunderEffect, 0);
+    glutTimerFunc(16, updateRain, 0);
 
     glutFullScreen();
     glutMainLoop();

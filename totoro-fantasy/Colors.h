@@ -26,6 +26,7 @@ public:
 
     static const Color ISLAND_DAY;
     static const Color ISLAND_NIGHT;
+    static const Color THUNDER_CLOUD;
 };
 
 const Color Colors::DAY_CLOUD{ 0.75f, 0.85f, 1.0f };
@@ -44,5 +45,6 @@ const Color Colors::GRASS_NIGHT{ 0.39, 0.64, 0.24 };
 const Color Colors::RAINBOW{ 0, 0 ,0 };
 const Color Colors::ISLAND_DAY{ 0.67, 0.97, 0.5 };
 const Color Colors::ISLAND_NIGHT{ 0.39, 0.64, 0.24 };
+const Color Colors::THUNDER_CLOUD{ 0.85, 0.82, 0.1 };
 
 // Define colors here
