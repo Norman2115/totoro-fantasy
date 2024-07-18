@@ -98,8 +98,8 @@ public:
         glBegin(GL_QUADS);
         glVertex2f(0.325f, -0.5f); // left-bottom
         glVertex2f(0.425f, -0.5f); // right-bottom
-        glVertex2f(0.425f, -0.35f); // right-top
-        glVertex2f(0.325f, -0.35f); // left-top
+        glVertex2f(0.425f, -0.31f); // right-top
+        glVertex2f(0.325f, -0.31f); // left-top
         glEnd();
 
         // Doorknob on the centered door
@@ -107,7 +107,7 @@ public:
         glColor3f(1.0f, 1.0f, 1.0f); // white color
         glPointSize(5.0);
         glBegin(GL_POINTS);
-        glVertex2f(0.41f, -0.43f);
+        glVertex2f(0.41f, -0.41f);
         glEnd();
         glPopAttrib();
 

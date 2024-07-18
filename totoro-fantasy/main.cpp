@@ -19,10 +19,20 @@
 #include "Flower.h"
 #include "Mushroom1.h"
 
+/////   Declare global variables    /////
+
 Portal portal;
 Totoro totoro;
+LittleGirl girl(200, 200, 150, false);
+Catbus catbus{ 500, 180, 600, false };
 
-Catbus catbus{ 500, 250, 600, false };
+/////   Declare states  /////
+
+enum LittleGirlState {
+    FRONT_VIEW,
+    SIDE_VIEW,
+    MOVING
+};
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -30,12 +40,14 @@ static void init() {
     gluOrtho2D(0.0, 1920.0, 0.0, 1080.0);
 }
 
+/////   Declare scenes  /////
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene1();
     House house;
-    house.draw(200.0f, 450.0f, 500.0f, true);
+    house.draw(200.0f, 550.0f, 700.0f, true);
+
 
     //Upper Level
     GrassTwo grass1;
@@ -89,6 +101,9 @@ static void displayScene1() {
     cloud2.draw(400, 850, 150, Colors::NIGHT_CLOUD);    
     DayCloudTwo cloud3;
     cloud3.draw(1600, 800, 150, Colors::NIGHT_CLOUD);
+
+    girl.drawFrontView();
+
     glFlush();
     glutSwapBuffers(); 
 
@@ -144,6 +159,7 @@ static void displayScene2() {
     grass16.drawWithRotation(10, 227, 20, 0, Colors::GRASS_NIGHT);
     GrassOne grass17;
     grass17.drawWithRotation(145, 225, 20, 0, Colors::GRASS_NIGHT);
+    girl.drawFrontView();
 
     glFlush();
     glutSwapBuffers(); 
@@ -556,6 +572,10 @@ static void display() {
     glFlush();
 }
 
+
+/////   Declare update functions  /////
+
+
 static void updateCatbusFrame(int value) {
     catbus.updateFrame();
     glutPostRedisplay();
@@ -572,8 +592,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene2); 
-    portal.startTimer(); 
+    glutDisplayFunc(displayScene1); 
+    // portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();
 
