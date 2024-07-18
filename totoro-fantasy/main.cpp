@@ -27,6 +27,7 @@
 Portal portal;
 Totoro totoro;
 LittleGirl girl(500, 150, 180, 0, false);
+// TotoroSide totoroSide;
 Catbus catbus{ 500, 180, 600, false };
 Rain rain{ 500 };
 
@@ -46,6 +47,28 @@ std::vector<Cloud*> clouds_scene2{
 };
 
 Thunder thunderScene2(clouds_scene2, 2.0f);
+
+DayCloudOne cloud1_scene3{ 200, 850, 150, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud2_scene3{ 700, 860, 150, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud3_scene3{ 1800, 870, 150, Colors::NIGHT_CLOUD };
+
+// Static (Rainbow)
+DayCloudOne cloud1_scene4(1290, 745, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud2_scene4(1510, 745, 140, Colors::DAY_CLOUD);
+
+DayCloudTwo cloud3_scene4(140, 850, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud4_scene4(1940, 800, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud5_scene4(760, 700, 40, Colors::DAY_CLOUD);
+DayCloudTwo cloud6_scene4(1760, 600, 30, Colors::DAY_CLOUD);
+
+DayCloudTwo cloud1_scene6{ 1080, 950, 130, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud2_scene6{ 400, 900, 130, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene6{ 1600, 850, 130, Colors::NIGHT_CLOUD };
+
+DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
+
 
 bool isScene1End = false;
 bool isScene2End = false;
@@ -240,16 +263,25 @@ static void displayScene2() {
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
+  
+    FullMoon moon;
+    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
 
+    cloud1_scene3.draw();
+    cloud2_scene3.draw();
+    cloud3_scene3.draw();
+
+    //First Layer
     TreeTwo tree3;
     tree3.draw(1850, 280, 420, Colors::TREE_NIGHT);
     TreeOne tree4;
-    tree4.draw(1400, 240, 390, Colors::TREE_NIGHT);
-
+    tree4.draw(1400, 260, 390, Colors::TREE_NIGHT);
     TreeTwo tree1;
-    tree1.draw(600, 250, 380, Colors::TREE_NIGHT);
+    tree1.draw(400, 250, 400, Colors::TREE_NIGHT);
     TreeTwo tree2;
-    tree2.draw(-15, 250, 380, Colors::TREE_NIGHT);
+    tree2.draw(-15, 250, 360, Colors::TREE_NIGHT);
+    TreeOne tree5;
+    tree5.draw(620, 250, 350, Colors::TREE_NIGHT);
 
     Background::Cave();
 
@@ -270,6 +302,16 @@ static void displayScene3() {
     grass6.draw(1150, 250, 46, Colors::GRASS_NIGHT);
     SmallRockTwo rock2;
     rock2.draw(1190, 235, 150, Colors::ROCK);
+
+    //Second Layer
+    TreeTwo tree6;
+    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
+    GrassOne grass21;
+    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
+    TreeTwo tree7;
+    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
+    GrassTwo grass22;
+    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
 
     //Lower Level
     GrassOne grass7;
@@ -301,7 +343,32 @@ static void displayScene3() {
     GrassOne grass20;
     grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
 
+    //Third Layer
+    TreeTwo tree8;
+    tree8.draw(900, 150, 350, Colors::TREE_NIGHT);
+    GrassOne grass23;
+    grass23.draw(875, 152, 45, Colors::GRASS_NIGHT);
+    TreeTwo tree9;
+    tree9.draw(500, 90, 360, Colors::TREE_NIGHT);
+    GrassTwo grass24;
+    grass24.draw(515, 91, 30, Colors::GRASS_NIGHT);
+
+    //Fourth Layer
+    TreeOne tree10;
+    tree10.draw(100, -200, 360, Colors::TREE_NIGHT);
+    TreeTwo tree11;
+    tree11.draw(630, -240, 370, Colors::TREE_NIGHT);    
+    TreeTwo tree12;
+    tree12.draw(980, -320, 360, Colors::TREE_NIGHT);
+    TreeTwo tree13;
+    tree13.draw(420, -470, 360, Colors::TREE_NIGHT);
+    TreeTwo tree14;
+    tree14.draw(1900, -400, 360, Colors::TREE_NIGHT);
+
+
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
+
+
 
 
     glFlush();
@@ -311,14 +378,46 @@ static void displayScene3() {
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene4();
-    RainbowOne rainbow;
-    rainbow.draw(1280, 800, 200, Colors::RAINBOW);
-    //DayCloudOne cloud;
-    //cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
-    //DayCloudTwo cloud1;
-    //cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    RainbowOne rainbow;   
+    
     DaySunOne sun;
-    sun.draw(180, 930, 150, Colors::DAY_SUN);
+    sun.draw(160, 930, 110, Colors::DAY_SUN);
+
+    rainbow.draw(1400, 745, 200, Colors::RAINBOW);
+    cloud1_scene4.draw();
+    cloud2_scene4.draw();
+    cloud3_scene4.draw();
+    cloud4_scene4.draw();
+
+
+    portal.draw(200, 500, 150.0f, 75.0f);
+
+    IslandOne island1;
+    island1.draw(700, 700, 250, Colors::ISLAND_DAY);
+    IslandTwo island2;
+    island2.draw(1800, 600, 200, Colors::ISLAND_DAY);
+
+    cloud5_scene4.draw();
+    cloud6_scene4.draw();
+
+    mushroomThree mushroom2;
+    mushroom2.draw(1800, 250, 300, Colors::MUSHROOM_DAY, true);
+
+    mushroomOne mushroom3;
+    mushroom3.draw(1700, 250, 100, Colors::MUSHROOM_DAY, true);
+
+    mushroomOne mushroom5;
+    mushroom5.draw(1000, 250, 300, Colors::MUSHROOM_DAY, true);
+    mushroomOne mushroom6;
+    mushroom6.draw(1100, 250, 140, Colors::MUSHROOM_DAY, true);
+
+
+    mushroomOne mushroom4;
+    mushroom4.draw(720, 768, 30, Colors::MUSHROOM_DAY, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(680, 768, 10, Colors::MUSHROOM_DAY, false);
+    mushroomThree mushroom8;
+    mushroom8.draw(1790, 640, 30, Colors::MUSHROOM_DAY, false);
 
     //Upper Level
     GrassOne grass1;
@@ -362,18 +461,6 @@ static void displayScene4() {
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
-    IslandOne island1;
-    island1.draw(700, 700, 250, Colors::ISLAND_DAY);
-    IslandTwo island2;
-    island2.draw(1500, 600, 200, Colors::ISLAND_DAY);
-
-    mushroom1 mushroom1;
-    mushroom1.draw(900, 700, 250, Colors::MUSHROOM_DAY);
-    mushroom2 mushroom2;
-    mushroom2.draw(300, 700, 250, Colors::MUSHROOM_DAY);
-    mushroom3 mushroom3;
-    mushroom3.draw(700, 700, 250, Colors::MUSHROOM_DAY);
-
     glFlush();
     glutSwapBuffers(); 
 }
@@ -388,6 +475,33 @@ static void displayScene5() {
 static void displayScene6() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
+
+    FullMoon moon1;
+    moon1.draw(130, 950, 140, Colors::NIGHT_FULL_MOON);
+    FullMoon moon2;
+    moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON);
+
+    cloud1_scene6.draw();
+    cloud2_scene6.draw();
+    cloud3_scene6.draw();
+
+    mushroomThree mushroom5;
+    mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom6;
+    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom7;
+    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
+
+    mushroomThree mushroom1;
+    mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom2;
+    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);   
+    mushroomThree mushroom4;
+    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom3;
+    mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
+
+
   
     //Upper Level
     GrassTwo grass1;
@@ -440,6 +554,31 @@ static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
+    FullMoon moon1;
+    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON);
+    FullMoon moon2;
+    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON);
+
+    cloud1_scene7.draw();
+    cloud2_scene7.draw();
+    cloud3_scene7.draw();
+
+    mushroomThree mushroom5;
+    mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom6;
+    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom7;
+    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
+
+    mushroomThree mushroom1;
+    mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom2;
+    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom4;
+    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom3;
+    mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
+
     //Upper Level
     GrassTwo grass1;
     grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
@@ -482,7 +621,8 @@ static void displayScene7() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
-    totoro.draw(960.0f, 450.0f, 300.0f);
+    //totoro.draw(960.0f, 450.0f, 300.0f);
+    //totoroSide.draw(700.0f, 300.0f, 300.0f);
 
     glFlush();
     glutSwapBuffers(); 
@@ -656,6 +796,13 @@ static void display() {
         displayScene3();
     }
 }
+
+//// Timer function to update the frame
+//void totoroTimer(int value) {
+//    totoroSide.updateFrame();
+//    glutPostRedisplay();
+//    glutTimerFunc(100, totoroTimer, 0); // Call timer function every 100 milliseconds
+//}
 
 /////   Declare update functions  /////
 

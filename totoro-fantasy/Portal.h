@@ -90,7 +90,7 @@ public:
         }
         if (glowAngle > 360.0f) {
             glowAngle -= 360.0f;
-        }
+        }\
         glutPostRedisplay();
     }
 
