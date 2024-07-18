@@ -18,6 +18,7 @@
 #include "Island.h"
 #include "Flower.h"
 #include "Mushroom1.h"
+#include "BusSignBoard.h"
 
 Portal portal;
 Totoro totoro;
@@ -139,8 +140,9 @@ static void displayScene3() {
 
     TreeOne tree1;
     tree1.draw(100, 250, 400, Colors::TREE_NIGHT);
-    TreeTwo tree2;
-    tree2.draw(490, 250, 500, Colors::TREE_NIGHT);
+    TreeTwo tree;
+    tree.draw(490, 250, 500, Colors::TREE_NIGHT);
+    
 
 
     //Upper Level
@@ -208,6 +210,7 @@ static void displayScene4() {
     cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
+    
 
     //Upper Level
     GrassOne grass1;
@@ -418,6 +421,9 @@ static void displayScene8() {
     GrassOne grass16;
     grass16.drawWithRotation(1850, 100, 58, 357, Colors::GRASS_NIGHT);
 
+    BusSignBoard signboard;
+    signboard.draw(700, 500, 500, Colors::BUS_SIGNBOARD);
+
     glFlush();
     glutSwapBuffers(); 
 
@@ -556,9 +562,9 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene3); 
+    glutDisplayFunc(displayScene8); 
     portal.startTimer(); 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
 
     return 0;

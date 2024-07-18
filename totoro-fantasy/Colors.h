@@ -13,6 +13,7 @@ public:
     static const Color NIGHT_FULL_MOON;
     static const Color TREE_DAY;
     static const Color TREE_NIGHT;
+    static const Color BUS_SIGNBOARD;
 
 
     static const Color MUSHROOM_DAY;
@@ -38,6 +39,7 @@ const Color Colors::TREE_DAY{0.26, 0.62, 0.16 };
 const Color Colors::TREE_NIGHT{ 0.13, 0.36, 0.07 };
 const Color Colors::MUSHROOM_DAY{ 0.95, 0.09, 0.21 };
 const Color Colors::MUSHROOM_NIGHT{0.57, 0.11, 0.17 };
+const Color Colors::BUS_SIGNBOARD{ 0.55f, 0.27f, 0.07f };
 const Color Colors::ROCK{ 0.37f, 0.38f, 0.38f };
 const Color Colors::GRASS_DAY{ 0.67, 0.97, 0.5 };
 const Color Colors::GRASS_NIGHT{ 0.39, 0.64, 0.24 };
