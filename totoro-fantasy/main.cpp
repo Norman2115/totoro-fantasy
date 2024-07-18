@@ -23,7 +23,7 @@
 
 Portal portal;
 Totoro totoro;
-LittleGirl girl(500, 150, 180, false);
+LittleGirl girl(500, 150, 180, 0, false);
 Catbus catbus{ 500, 180, 600, false };
 
 DayCloudTwo cloud1_scene1{ 1080, 900, 150, Colors::NIGHT_CLOUD };
@@ -36,7 +36,7 @@ DayCloudTwo cloud3_scene2{ 1700, 880, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene2{ 150, 750, 120, Colors::NIGHT_CLOUD };
 
 bool isScene1End = false;
-int currentScene = 1;
+int currentScene = 2;
 
 /////   Declare states  /////
 
@@ -139,13 +139,13 @@ static void displayScene2() {
     cloud4_scene2.draw();   
 
     TreeOne tree1;
-    tree1.draw(1900, 380, 300, Colors::TREE_NIGHT);
+    tree1.draw(1900, 380, 300, 0.1, Colors::TREE_NIGHT);
     TreeTwo tree2;
-    tree2.draw(1582, 385, 280, Colors::TREE_NIGHT);
+    tree2.draw(1582, 385, 280, 0.1, Colors::TREE_NIGHT);
     GrassOne grass21;
     grass21.draw(1613, 386, 40, Colors::GRASS_NIGHT);
     TreeTwo tree3;
-    tree3.draw(1300, 320, 250, Colors::TREE_NIGHT);
+    tree3.draw(1300, 320, 250, 0.1, Colors::TREE_NIGHT);
     GrassTwo grass20;
     grass20.draw(1317, 322, 30, Colors::GRASS_NIGHT);
 
@@ -191,29 +191,31 @@ static void displayScene2() {
 
     //Second Layer
     TreeTwo tree5;
-    tree5.draw(1750, 210, 280, Colors::TREE_NIGHT);
+    tree5.draw(1750, 210, 280, 0.2, Colors::TREE_NIGHT);
     TreeTwo tree6;
-    tree6.draw(1450, 250, 260, Colors::TREE_NIGHT);
+    tree6.draw(1450, 250, 260, 0.2, Colors::TREE_NIGHT);
 
     //Third Layer
     TreeTwo tree7;
-    tree7.draw(1120, 170, 230, Colors::TREE_NIGHT);
+    tree7.draw(1120, 170, 230, 0.3, Colors::TREE_NIGHT);
     TreeTwo tree8;
-    tree8.draw(1550, 150, 220, Colors::TREE_NIGHT);
+    tree8.draw(1550, 150, 220, 0.3, Colors::TREE_NIGHT);
     GrassOne grass22;
     grass22.draw(1568, 153, 50, Colors::GRASS_NIGHT);
     TreeTwo tree9;
-    tree9.draw(1850, 80, 210, Colors::TREE_NIGHT);
+    tree9.draw(1850, 80, 210, 0.3, Colors::TREE_NIGHT);
     GrassTwo grass23;
     grass23.draw(1840, 82, 30, Colors::GRASS_NIGHT);
 
     //Fourth Layer
     TreeTwo tree10;
-    tree10.draw(1470, -60, 225, Colors::TREE_NIGHT);
+    tree10.draw(1470, -60, 225, 0.4, Colors::TREE_NIGHT);
     TreeOne tree4;
-    tree4.draw(1200, -150, 250, Colors::TREE_NIGHT);
+    tree4.draw(1200, -150, 250, 0.4, Colors::TREE_NIGHT);
     TreeOne tree11;
-    tree11.draw(1720, -210, 255, Colors::TREE_NIGHT);
+    tree11.draw(1720, -210, 255, 0.4, Colors::TREE_NIGHT);
+
+    girl.drawSideView();
 
     glFlush();
     glutSwapBuffers(); 
@@ -222,11 +224,6 @@ static void displayScene2() {
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
-
-    TreeOne tree1;
-    tree1.draw(100, 250, 400, Colors::TREE_NIGHT);
-    TreeTwo tree2;
-    tree2.draw(490, 250, 500, Colors::TREE_NIGHT);
 
 
     //Upper Level
@@ -647,13 +644,20 @@ static void changeGirlStateAfterDelay(int value) {
 }
 
 static void updateGirlPosition(int value) {
-    if (currentState == MOVING) {
-        girl.move(3.0f);
-    }
+    if (currentScene == 1) {
+        if (currentState == MOVING) {
+            girl.move(3.0f); // Linear movement
+        }
 
-    if (girl.getPosX() > 1920) {
-        isScene1End = true;
-        currentScene = 2;
+        if (girl.getPosX() > 1920) {
+            isScene1End = true;
+            currentScene = 2;
+        }
+
+    }
+    else if (currentScene == 2) {
+        currentState = MOVING;
+        girl.moveInArc(0.0f, 0.05f); // Arc movement
     }
 
     glutPostRedisplay();
@@ -671,9 +675,17 @@ static void updateGirlFrame(int value) {
 }
 
 static void updateCloudPosition(int value) {
-    cloud1_scene1.move(0.1f, false);
-    cloud2_scene1.move(0.1f, true);
-    cloud3_scene1.move(0.1f, true);
+    if (currentScene == 1) {
+        cloud1_scene1.move(0.1f, false);
+        cloud2_scene1.move(0.1f, true);
+        cloud3_scene1.move(0.1f, true);
+    }
+    else {
+        cloud1_scene2.move(0.1f, true);
+        cloud2_scene2.move(0.1f, true);
+        cloud3_scene2.move(0.1f, false);
+        cloud4_scene2.move(0.1f, true);
+    }
 
     glutPostRedisplay();
     glutTimerFunc(16, updateCloudPosition, 0);
