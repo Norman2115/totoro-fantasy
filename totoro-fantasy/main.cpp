@@ -342,6 +342,8 @@ static void displayScene3() {
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
 
 
+
+
     glFlush();
     glutSwapBuffers(); 
 }
@@ -371,6 +373,24 @@ static void displayScene4() {
     cloud5_scene4.draw();
     cloud6_scene4.draw();
 
+    mushroomThree mushroom2;
+    mushroom2.draw(1800, 250, 300, Colors::MUSHROOM_DAY, true);
+
+    mushroomOne mushroom3;
+    mushroom3.draw(1700, 250, 100, Colors::MUSHROOM_DAY, true);
+
+    mushroomOne mushroom5;
+    mushroom5.draw(1000, 250, 300, Colors::MUSHROOM_DAY, true);
+    mushroomOne mushroom6;
+    mushroom6.draw(1100, 250, 140, Colors::MUSHROOM_DAY, true);
+
+
+    mushroomOne mushroom4;
+    mushroom4.draw(720, 768, 30, Colors::MUSHROOM_DAY, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(680, 768, 10, Colors::MUSHROOM_DAY, false);
+    mushroomThree mushroom8;
+    mushroom8.draw(1790, 640, 30, Colors::MUSHROOM_DAY, false);
 
     //Upper Level
     GrassOne grass1;
