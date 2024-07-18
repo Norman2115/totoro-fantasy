@@ -50,16 +50,6 @@ public:
         posX += speed;
     }
 
-    void moveInArc(float speed, float angleIncrement) {
-        float centerX = 1800.0f;
-        float centerY = -1800.0f;
-        float radius = 2000.0f;
-
-        currentAngle += angleIncrement;
-        posX = centerX + radius * cos(currentAngle);
-        posY = centerY + radius * sin(currentAngle);
-    }
-
     void updateFrame() {
         currentFrame = (currentFrame + 1) % 4;
     }
@@ -67,13 +57,12 @@ public:
 protected:
     float posX;
     float posY;
-    float currentAngle;
     float characterSize;
     int currentFrame;
     bool movingRight;
 
-    Character(float startX, float startY, float size, float currentAngle)
-        : posX(startX), posY(startY), characterSize(size), currentFrame(0), movingRight(true), currentAngle(currentAngle) {
+    Character(float startX, float startY, float size)
+        : posX(startX), posY(startY), characterSize(size), currentFrame(0), movingRight(true) {
     }
 
     void drawFrontView() {
@@ -237,8 +226,8 @@ private:
     }
 
 public:
-    LittleGirl(float startX, float startY, float size, float currentAngle, bool crying)
-        : Character(startX, startY, size, currentAngle), isCrying(crying) {
+    LittleGirl(float startX, float startY, float size, bool crying)
+        : Character(startX, startY, size), isCrying(crying) {
     }
 
     bool getCrying() const {
