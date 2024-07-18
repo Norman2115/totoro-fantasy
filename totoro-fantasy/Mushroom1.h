@@ -8,56 +8,64 @@
 class Mushroom1
 {
 private:
-    virtual void draw(float x, float y, float size, Color color) = 0;
+    virtual void draw(float x, float y, float size, Color color, bool Line) = 0;
 };
 
-class mushroom1 : public Mushroom1
+class mushroomOne : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color) override
+    void draw(float x, float y, float size, Color color, bool Line) override
     {
-        glColor3f(1.0f, 1.0f, 1.0f);
+        // mushroom stem
+        glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.25 * size, y - 0.5 * size);
-        glVertex2f(x + 0.25 * size, y - 0.5 * size);
-        glVertex2f(x + 0.25 * size, y);
         glVertex2f(x - 0.25 * size, y);
+        glVertex2f(x + 0.25 * size, y);
+        glVertex2f(x + 0.25 * size, y + 0.5 * size);
+        glVertex2f(x - 0.25 * size, y + 0.5 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); 
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(x - 0.25 * size, y - 0.5 * size);
-        glVertex2f(x + 0.25 * size, y - 0.5 * size);
-        glVertex2f(x + 0.25 * size, y);
-        glVertex2f(x - 0.25 * size, y);
-        
-        glEnd();
+        if (Line)
+        {
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x - 0.25 * size, y);
+            glVertex2f(x + 0.25 * size, y);
+            glVertex2f(x + 0.25 * size, y + 0.5 * size);
+            glVertex2f(x - 0.25 * size, y + 0.5 * size);
+            glEnd();
+        }
 
 
+        // mushroom top
         glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0 + sin(rad) * 0.5 * size);
+            glVertex2f(x + cos(rad) * 0.5 * size, y + 0.5 * size + sin(rad) * 0.5 * size);
         }
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glBegin(GL_LINE_LOOP);
-        for (int i = 0; i <= 180; i++) {
-            float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0 + sin(rad) * 0.5 * size);
-        }
-        glEnd();
 
+        if (Line)
+        {
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            for (int i = 0; i <= 180; i++) {
+                float rad = i * 3.14159 / 180;
+                glVertex2f(x + cos(rad) * 0.5 * size, y + 0.5 * size + sin(rad) * 0.5 * size);
+            }
+            glEnd();
+        }
+
+        // mushroom spots
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.35 * size, y + 0.2 * size, 0.07 * size);//first
-        drawCircle(x - 0.1 * size , y + 0.35 * size, 0.07 * size);
-        drawCircle(x + 0.35 * size, y + 0.15 * size, 0.07 * size);//forth
-        drawCircle(x + 0.1 * size, y + 0.25 * size, 0.07 * size);// third
-        drawCircle(x - 0.1 * size, y + 0.09 * size, 0.07 * size);//second
-
-        
+        drawCircle(x - 0.35 * size, y + 0.7 * size, 0.07 * size);
+        drawCircle(x - 0.1 * size, y + 0.85 * size, 0.07 * size);
+        drawCircle(x + 0.35 * size, y + 0.65 * size, 0.07 * size);
+        drawCircle(x + 0.1 * size, y + 0.75 * size, 0.07 * size);
+        drawCircle(x - 0.1 * size, y + 0.59 * size, 0.07 * size);
+    
     }
 
     void drawCircle(float cx, float cy, float r) {
@@ -70,51 +78,59 @@ public:
     }
 };
 
-class mushroom2 : public Mushroom1
+class mushroomTwo : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color)
+    void draw(float x, float y, float size, Color color, bool Line)
     {
-
-        glColor3f(1.0f, 1.0f, 1.0f);
+        // Stem
+        glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.15 * size, y - 0.5 * size);
-        glVertex2f(x + 0.15 * size, y - 0.5 * size);
-        glVertex2f(x + 0.15 * size, y);
         glVertex2f(x - 0.15 * size, y);
+        glVertex2f(x + 0.15 * size, y);
+        glVertex2f(x + 0.15 * size, y + 0.5 * size);
+        glVertex2f(x - 0.15 * size, y + 0.5 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); 
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(x - 0.15 * size, y - 0.5 * size);
-        glVertex2f(x + 0.15 * size, y - 0.5 * size);
-        glVertex2f(x + 0.15 * size, y);
-        glVertex2f(x - 0.15 * size, y);
-        glEnd();
+        if (Line)
+        {
+            // Stem outline
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x - 0.15 * size, y);
+            glVertex2f(x + 0.15 * size, y);
+            glVertex2f(x + 0.15 * size, y + 0.5 * size);
+            glVertex2f(x - 0.15 * size, y + 0.5 * size);
+            glEnd();
+        }
 
-
+        // Cap
         glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.4 * size, y - 1.0 + sin(rad) * 0.55 * size);
+            glVertex2f(x + cos(rad) * 0.4 * size, y + 0.5 * size + sin(rad) * 0.55 * size);
         }
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glBegin(GL_LINE_LOOP);
-        for (int i = 0; i <= 180; i++) {
-            float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.4 * size, y - 1.0 + sin(rad) * 0.55 * size);
+        if (Line)
+        {
+            // Cap outline
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            for (int i = 0; i <= 180; i++) {
+                float rad = i * 3.14159 / 180;
+                glVertex2f(x + cos(rad) * 0.4 * size, y + 0.5 * size + sin(rad) * 0.55 * size);
+            }
+            glEnd();
         }
-        glEnd();
 
+        // Cap circles
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.20 * size, y + 0.32 * size, 0.05 * size);
-        drawCircle(x - 0.01 * size, y + 0.35 * size, 0.08 * size);
-        drawCircle(x - 0.30 * size, y + 0.13 * size, 0.055 * size);
-        drawCircle(x + 0.24 * size, y + 0.20 * size, 0.09 * size);
-       
+        drawCircle(x - 0.20 * size, y + 0.82 * size, 0.05 * size);
+        drawCircle(x - 0.01 * size, y + 0.85 * size, 0.08 * size);
+        drawCircle(x - 0.30 * size, y + 0.63 * size, 0.055 * size);
+        drawCircle(x + 0.24 * size, y + 0.70 * size, 0.09 * size);
     }
 
     void drawCircle(float cx, float cy, float r) {
@@ -129,52 +145,62 @@ public:
     }
 };
 
-class mushroom3 : public Mushroom1
+class mushroomThree : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color)
+    void draw(float x, float y, float size, Color color, bool Line)
     {
-
-        glColor3f(1.0f, 1.0f, 1.0f);
+        // Stem
+        glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.35 * size, y - 0.35 * size);
-        glVertex2f(x + 0.35 * size, y - 0.35 * size);
-        glVertex2f(x + 0.35 * size, y);
         glVertex2f(x - 0.35 * size, y);
+        glVertex2f(x + 0.35 * size, y);
+        glVertex2f(x + 0.35 * size, y + 0.35 * size);
+        glVertex2f(x - 0.35 * size, y + 0.35 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); 
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(x - 0.35 * size, y - 0.35 * size);
-        glVertex2f(x + 0.35 * size, y - 0.35 * size);
-        glVertex2f(x + 0.35 * size, y);
-        glVertex2f(x - 0.35 * size, y);
-        glEnd();
+        if (Line)
+        {
+            // Stem outline
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x - 0.35 * size, y);
+            glVertex2f(x + 0.35 * size, y);
+            glVertex2f(x + 0.35 * size, y + 0.35 * size);
+            glVertex2f(x - 0.35 * size, y + 0.35 * size);
+            glEnd();
 
+        }
 
+        // Cap
         glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0  + sin(rad) * 0.5 * size);
+            glVertex2f(x + cos(rad) * 0.5 * size, y + 0.35 * size + sin(rad) * 0.5 * size);
         }
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glBegin(GL_LINE_LOOP);
-        for (int i = 0; i <= 180; i++) {
-            float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y - 1.0 + sin(rad) * 0.5 * size);
+        if (Line)
+        {
+            // Cap outline
+            glColor3f(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINE_LOOP);
+            for (int i = 0; i <= 180; i++) {
+                float rad = i * 3.14159 / 180;
+                glVertex2f(x + cos(rad) * 0.5 * size, y + 0.35 * size + sin(rad) * 0.5 * size);
+            }
+            glEnd();
         }
-        glEnd();
 
+        // Cap circles
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.05 * size, y + 0.35 * size, 0.07 * size);
-        drawCircle(x - 0.2 * size, y + 0.09 * size, 0.05 * size);
-        drawCircle(x + 0.35 * size, y + 0.2 * size, 0.05 * size);
-        drawCircle(x + 0.15 * size, y + 0.3 * size, 0.05 * size);
-        drawCircle(x - 0.25 * size, y + 0.3 * size, 0.05 * size);
-        drawCircle(x + 0.10 * size, y + 0.1 * size, 0.05 * size);
+        drawCircle(x - 0.05 * size, y + 0.7 * size, 0.07 * size);
+        drawCircle(x - 0.2 * size, y + 0.44 * size, 0.05 * size);
+        drawCircle(x + 0.35 * size, y + 0.55 * size, 0.05 * size);
+        drawCircle(x + 0.15 * size, y + 0.65 * size, 0.05 * size);
+        drawCircle(x - 0.25 * size, y + 0.65 * size, 0.05 * size);
+        drawCircle(x + 0.10 * size, y + 0.45 * size, 0.05 * size);
     }
 
     void drawCircle(float cx, float cy, float r) {
