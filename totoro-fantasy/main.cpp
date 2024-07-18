@@ -35,6 +35,11 @@ DayCloudOne cloud2_scene2{ 400, 850, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud3_scene2{ 1700, 880, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene2{ 150, 750, 120, Colors::NIGHT_CLOUD };
 
+DayCloudOne cloud1_scene3{ 200, 850, 150, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud2_scene3{ 700, 860, 150, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud3_scene3{ 1800, 870, 150, Colors::NIGHT_CLOUD };
+
+
 bool isScene1End = false;
 int currentScene = 1;
 
@@ -222,21 +227,27 @@ static void displayScene2() {
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
+  
+    FullMoon moon;
+    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
 
+    cloud1_scene3.draw();
+    cloud2_scene3.draw();
+    cloud3_scene3.draw();
+
+    //First Layer
     TreeTwo tree3;
     tree3.draw(1850, 280, 420, Colors::TREE_NIGHT);
     TreeOne tree4;
-    tree4.draw(1400, 240, 390, Colors::TREE_NIGHT);
-
+    tree4.draw(1400, 260, 390, Colors::TREE_NIGHT);
     TreeTwo tree1;
-    tree1.draw(600, 250, 380, Colors::TREE_NIGHT);
+    tree1.draw(400, 250, 400, Colors::TREE_NIGHT);
     TreeTwo tree2;
-    tree2.draw(-15, 250, 380, Colors::TREE_NIGHT);
+    tree2.draw(-15, 250, 360, Colors::TREE_NIGHT);
+    TreeOne tree5;
+    tree5.draw(620, 250, 350, Colors::TREE_NIGHT);
 
     Background::Cave();
-
-
-
 
     //Upper Level
     SmallRockOne rock1;
@@ -255,6 +266,16 @@ static void displayScene3() {
     grass6.draw(1150, 250, 46, Colors::GRASS_NIGHT);
     SmallRockTwo rock2;
     rock2.draw(1190, 235, 150, Colors::ROCK);
+
+    //Second Layer
+    TreeTwo tree6;
+    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
+    GrassOne grass21;
+    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
+    TreeTwo tree7;
+    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
+    GrassTwo grass22;
+    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
 
     //Lower Level
     GrassOne grass7;
@@ -285,6 +306,29 @@ static void displayScene3() {
     grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
     GrassOne grass20;
     grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
+
+    //Third Layer
+    TreeTwo tree8;
+    tree8.draw(900, 150, 350, Colors::TREE_NIGHT);
+    GrassOne grass23;
+    grass23.draw(875, 152, 45, Colors::GRASS_NIGHT);
+    TreeTwo tree9;
+    tree9.draw(500, 90, 360, Colors::TREE_NIGHT);
+    GrassTwo grass24;
+    grass24.draw(515, 91, 30, Colors::GRASS_NIGHT);
+
+    //Fourth Layer
+    TreeOne tree10;
+    tree10.draw(100, -200, 360, Colors::TREE_NIGHT);
+    TreeTwo tree11;
+    tree11.draw(630, -240, 370, Colors::TREE_NIGHT);    
+    TreeTwo tree12;
+    tree12.draw(980, -320, 360, Colors::TREE_NIGHT);
+    TreeTwo tree13;
+    tree13.draw(420, -470, 360, Colors::TREE_NIGHT);
+    TreeTwo tree14;
+    tree14.draw(1900, -400, 360, Colors::TREE_NIGHT);
+
 
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
 
