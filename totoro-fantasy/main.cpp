@@ -30,6 +30,11 @@ DayCloudTwo cloud1_scene1{ 1080, 900, 150, Colors::NIGHT_CLOUD };
 DayCloudOne cloud2_scene1{ 400, 850, 150, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud3_scene1{ 1600, 800, 150, Colors::NIGHT_CLOUD };
 
+DayCloudOne cloud1_scene2{ 1080, 810, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene2{ 400, 850, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud3_scene2{ 1700, 880, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud4_scene2{ 150, 750, 120, Colors::NIGHT_CLOUD };
+
 bool isScene1End = false;
 int currentScene = 1;
 
@@ -128,14 +133,10 @@ static void displayScene2() {
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
 
-    DayCloudOne cloud1;
-    cloud1.draw(1080, 810, 120, Colors::NIGHT_CLOUD);
-    DayCloudOne cloud2;
-    cloud2.draw(400, 850, 120, Colors::NIGHT_CLOUD);
-    DayCloudTwo cloud3;
-    cloud3.draw(1700, 880, 120, Colors::NIGHT_CLOUD);
-    DayCloudTwo cloud4;
-    cloud4.draw(150, 750, 120, Colors::NIGHT_CLOUD);
+    cloud1_scene2.draw();
+    cloud2_scene2.draw();
+    cloud3_scene2.draw();
+    cloud4_scene2.draw();   
 
     TreeOne tree1;
     tree1.draw(1900, 380, 300, Colors::TREE_NIGHT);
@@ -694,7 +695,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(display);
 
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
