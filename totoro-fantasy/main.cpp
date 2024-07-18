@@ -23,6 +23,7 @@
 
 Portal portal;
 Totoro totoro;
+TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, false);
 Catbus catbus{ 500, 180, 600, false };
 
@@ -603,6 +604,7 @@ static void displayScene7() {
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     totoro.draw(960.0f, 450.0f, 300.0f);
+    totoroSide.draw(700.0f, 300.0f, 300.0f);
 
     glFlush();
     glutSwapBuffers(); 
@@ -774,6 +776,12 @@ static void display() {
     }
 }
 
+// Timer function to update the frame
+void totoroTimer(int value) {
+    totoroSide.updateFrame();
+    glutPostRedisplay();
+    glutTimerFunc(100, totoroTimer, 0); // Call timer function every 100 milliseconds
+}
 
 /////   Declare update functions  /////
 
@@ -840,8 +848,9 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
+    glutDisplayFunc(displayScene7);
+    glutTimerFunc(100, totoroTimer, 0);
     glutDisplayFunc(displayScene6);
-
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(2000, changeGirlStateAfterDelay, 1);
@@ -849,7 +858,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(250, updateGirlFrame, 0);
     glutTimerFunc(16, updateCloudPosition, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
 
     return 0;
