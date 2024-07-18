@@ -46,6 +46,14 @@ public:
         movingRight = moving;
     }
 
+    void move(float speed) {
+        posX += speed;
+    }
+
+    void updateFrame() {
+        currentFrame = (currentFrame + 1) % 4;
+    }
+
 protected:
     float posX;
     float posY;
@@ -58,6 +66,7 @@ protected:
     }
 
     void drawFrontView() {
+        glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
@@ -95,6 +104,7 @@ protected:
         glVertex2f(0.025f, 0.0f);
         glVertex2f(0.075f, -0.025f);
         glEnd();
+        glPopMatrix();
     }
 
     void drawSideView() {
@@ -204,17 +214,6 @@ protected:
             glEnd();
         }
         glPopMatrix();
-    }
-
-    void move(float speed) {
-        posX += speed;
-        if (posX > 1.0f) {
-            posX = -1.0f;
-        }
-    }
-
-    void updateFrame() {
-        currentFrame = (currentFrame + 1) % 4;
     }
 };
 
