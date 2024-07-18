@@ -39,6 +39,15 @@ DayCloudOne cloud1_scene3{ 200, 850, 150, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene3{ 700, 860, 150, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud3_scene3{ 1800, 870, 150, Colors::NIGHT_CLOUD };
 
+// Static (Rainbow)
+DayCloudOne cloud1_scene4(1290, 745, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud2_scene4(1510, 745, 140, Colors::DAY_CLOUD);
+
+DayCloudTwo cloud3_scene4(140, 850, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud4_scene4(1940, 800, 130, Colors::DAY_CLOUD);
+DayCloudTwo cloud5_scene4(760, 700, 40, Colors::DAY_CLOUD);
+DayCloudTwo cloud6_scene4(1760, 600, 30, Colors::DAY_CLOUD);
+
 
 bool isScene1End = false;
 int currentScene = 1;
@@ -340,14 +349,28 @@ static void displayScene3() {
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene4();
-    RainbowOne rainbow;
-    rainbow.draw(1280, 800, 200, Colors::RAINBOW);
-    //DayCloudOne cloud;
-    //cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
-    //DayCloudTwo cloud1;
-    //cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    RainbowOne rainbow;   
+    
     DaySunOne sun;
-    sun.draw(180, 930, 150, Colors::DAY_SUN);
+    sun.draw(160, 930, 110, Colors::DAY_SUN);
+
+    rainbow.draw(1400, 745, 200, Colors::RAINBOW);
+    cloud1_scene4.draw();
+    cloud2_scene4.draw();
+    cloud3_scene4.draw();
+    cloud4_scene4.draw();
+
+
+    portal.draw(200, 500, 150.0f, 75.0f);
+
+    IslandOne island1;
+    island1.draw(700, 700, 250, Colors::ISLAND_DAY);
+    IslandTwo island2;
+    island2.draw(1800, 600, 200, Colors::ISLAND_DAY);
+
+    cloud5_scene4.draw();
+    cloud6_scene4.draw();
+
 
     //Upper Level
     GrassOne grass1;
@@ -390,18 +413,6 @@ static void displayScene4() {
     grass19.draw(1830, 30, 46, Colors::GRASS_DAY);
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
-
-    IslandOne island1;
-    island1.draw(700, 700, 250, Colors::ISLAND_DAY);
-    IslandTwo island2;
-    island2.draw(1500, 600, 200, Colors::ISLAND_DAY);
-
-    mushroom1 mushroom1;
-    mushroom1.draw(900, 700, 250, Colors::MUSHROOM_DAY);
-    mushroom2 mushroom2;
-    mushroom2.draw(300, 700, 250, Colors::MUSHROOM_DAY);
-    mushroom3 mushroom3;
-    mushroom3.draw(700, 700, 250, Colors::MUSHROOM_DAY);
 
     glFlush();
     glutSwapBuffers(); 
@@ -749,7 +760,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene3);
+    glutDisplayFunc(displayScene4);
 
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
