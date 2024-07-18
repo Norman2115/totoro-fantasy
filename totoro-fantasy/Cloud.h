@@ -7,92 +7,98 @@
 
 class Cloud
 {
-private:
-    virtual void draw(float x, float y, float size, Color color) = 0;
+protected:
+    float posX;
+    float posY;
+    float size;
+    Color color;
+
+public:
+    Cloud(float x, float y, float size, Color color)
+        : posX(x), posY(y), size(size), color(color) {}
+
+    virtual void draw() = 0;
+
+    void move(float speed, bool movingRight) {
+        if (movingRight) {
+            posX += speed;
+        }
+        else {
+            posX -= speed;
+        }
+    }
 };
 
 class DayCloudOne : public Cloud {
 public:
-    void draw(float x, float y, float size, Color color) override {
+    DayCloudOne(float x, float y, float size, Color color)
+        : Cloud(x, y, size, color) {}
+
+    void draw() override {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        glScalef(size, size, 1.0f);
         glColor3f(color.getR(), color.getG(), color.getB());
-        float radius = 0.25 * size;
-        Circle::draw(x, y + 0.7 * radius, radius);
-        Circle::draw(x - 1.2 * radius, y - 0.01 * radius, radius);
-        Circle::draw(x + 1.1 * radius, y + 0.4 * radius, radius);
-        Circle::draw(x - 2.4 * radius, y - 0.6 * radius, radius);
-        Circle::draw(x - 0.8 * radius, y - 0.6 * radius, radius);
-        Circle::draw(x + 0.7 * radius, y - 0.6 * radius, radius);
-        Circle::draw(x + 2.0 * radius, y - 0.6 * radius, radius);
+        float radius = 0.25;
+        Circle::draw(0.0f, 0.7f * radius, radius);
+        Circle::draw(-1.2f * radius, -0.01f * radius, radius);
+        Circle::draw(1.1f * radius, 0.4f * radius, radius);
+        Circle::draw(-2.4f * radius, -0.6f * radius, radius);
+        Circle::draw(-0.8f * radius, -0.6f * radius, radius);
+        Circle::draw(0.7f * radius, -0.6f * radius, radius);
+        Circle::draw(2.0f * radius, -0.6f * radius, radius);
+        glPopMatrix();
     }
 };
-
-/*
-    void draw(float x, float y) override {
-        // Circle 1
-        Circle::draw(x, y + 0.175, 0.25 * size);
-        // Circle 2
-        Circle::draw(x - 0.3, y - 0.0025, 0.25);
-        // Circle 3
-        Circle::draw(x + 0.275, y + 0.1, 0.25 * size);
-        // Circle 4
-        Circle::draw(x - 0.6 * size, y - 0.15 * size, 0.25 * size);
-        // Circle 5
-        Circle::draw(x - 0.2 * size, y - 0.15 * size, 0.25 * size);
-        // Circle 6
-        Circle::draw(x + 0.175 * size, y - 0.15 * size, 0.25 * size);
-        // Circle 7
-        Circle::draw(x + 0.5 * size, y - 0.15 * size, 0.25 * size);
-    }
-*/
 
 class DayCloudTwo : public Cloud {
 public:
-    void draw(float x, float y, float size, Color color) override {
+    DayCloudTwo(float x, float y, float size, Color color)
+        : Cloud(x, y, size, color) {}
+
+    void draw() override {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        glScalef(size, size, 1.0f);
         glColor3f(color.getR(), color.getG(), color.getB());
-        float radius1 = 0.25 * size;
-        float radius2 = 0.275 * size;
-        Circle::draw(x, y + 0.5 * radius1, radius1);
-        Circle::draw(x + 1.1 * radius1, y + 0.3 * radius1, radius1);
-        Circle::draw(x + 1.7 * radius1, y - 0.2 * radius1, radius1);
-        Circle::draw(x + 0.4 * radius2, y - 0.5 * radius2, radius2);
-        Circle::draw(x - 1.0 * radius1, y - 0.3 * radius1, radius1);
-        Circle::draw(x - 2.0 * radius1, y, radius1);
-        Circle::draw(x - 0.9 * radius1, y + 0.2 * radius1, radius1);
+        float radius1 = 0.25;
+        float radius2 = 0.275;
+        Circle::draw(0.0f, 0.5f * radius1, radius1);
+        Circle::draw(1.1f * radius1, 0.3f * radius1, radius1);
+        Circle::draw(1.7f * radius1, -0.2f * radius1, radius1);
+        Circle::draw(0.4f * radius2, -0.5f * radius2, radius2);
+        Circle::draw(-1.0f * radius1, -0.3f * radius1, radius1);
+        Circle::draw(-2.0f * radius1, 0.0f, radius1);
+        Circle::draw(-0.9f * radius1, 0.2f * radius1, radius1);
+        glPopMatrix();
     }
 };
 
-/*
-    void draw(float x, float y, float size) override {
-        float radius1 = 0.25 * size;
-        float radius2 = 0.275 * size;
-        Circle::draw(x, y + 0.25 * radius1, radius1);
-        Circle::draw(x + 0.275 * radius1, y + 0.15 * radius1, radius1);
-        Circle::draw(x + 0.425 * radius1, y - 0.1 * radius1, radius1);
-        Circle::draw(x + 0.1 * radius2, y - 0.25 * radius2, radius2);
-        Circle::draw(x - 0.25 * radius1, y - 0.15 * radius1, radius1);
-        Circle::draw(x - 0.5 * radius1, y, radius1);
-        Circle::draw(x - 0.225 * radius1, y + 0.1 * radius1, radius1);
-    }
-*/
-
 class DayCloudThree : public Cloud {
 public:
-    void draw(float x, float y, float size, Color color) override {
+    DayCloudThree(float x, float y, float size, Color color)
+        : Cloud(x, y, size, color) {}
+
+    void draw() override {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        glScalef(size, size, 1.0f);
         glColor3f(color.getR(), color.getG(), color.getB());
-        float radius1 = 0.25 * size;
-        float radius2 = 0.275 * size;
-        float radius3 = 0.3 * size;
-        Circle::draw(x, y + 0.45 * radius2, radius2);
-        Circle::draw(x + 1.3 * radius1, y + 0.5 * radius1, radius1);
-        Circle::draw(x + 2.3 * radius1, y + 0.7 * radius1, radius1);
-        Circle::draw(x + 3.3 * radius1, y, radius1);
-        Circle::draw(x + 2.6 * radius1, y - 0.9 * radius1, radius1);
-        Circle::draw(x + 1.6 * radius1, y - 1.2 * radius1, radius1);
-        Circle::draw(x + 0.25 * radius3, y - 1 * radius3, radius3);
-        Circle::draw(x - 1 * radius1, y - 1 * radius1, radius1);
-        Circle::draw(x - 2.3 * radius1, y - 1 * radius1, radius1);
-        Circle::draw(x - 3.2 * radius1, y - 0.3 * radius1, radius1);
-        Circle::draw(x - 2.3 * radius1, y + 0.4 * radius1, radius1);
-        Circle::draw(x - 1.2 * radius1, y + 0.8 * radius1, radius1);
+        float radius1 = 0.25;
+        float radius2 = 0.275;
+        float radius3 = 0.3;
+        Circle::draw(0.0f, 0.45f * radius2, radius2);
+        Circle::draw(1.3f * radius1, 0.5f * radius1, radius1);
+        Circle::draw(2.3f * radius1, 0.7f * radius1, radius1);
+        Circle::draw(3.3f * radius1, 0.0f, radius1);
+        Circle::draw(2.6f * radius1, -0.9f * radius1, radius1);
+        Circle::draw(1.6f * radius1, -1.2f * radius1, radius1);
+        Circle::draw(0.25f * radius3, -1.0f * radius3, radius3);
+        Circle::draw(-1.0f * radius1, -1.0f * radius1, radius1);
+        Circle::draw(-2.3f * radius1, -1.0f * radius1, radius1);
+        Circle::draw(-3.2f * radius1, -0.3f * radius1, radius1);
+        Circle::draw(-2.3f * radius1, 0.4f * radius1, radius1);
+        Circle::draw(-1.2f * radius1, 0.8f * radius1, radius1);
+        glPopMatrix();
     }
 };
