@@ -716,20 +716,11 @@ static void display() {
     }
 }
 
-void display1() {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Draw Totoro side view at the center of the window with a size of 1.0
-    totoroSide.draw(0.0f, 0.0f, 1.0f);
-
-    glFlush();
-    glutSwapBuffers();
-}
 // Timer function to update the frame
-void timer(int value) {
+void totoroTimer(int value) {
     totoroSide.updateFrame();
     glutPostRedisplay();
-    glutTimerFunc(100, timer, 0); // Call timer function every 100 milliseconds
+    glutTimerFunc(100, totoroTimer, 0); // Call timer function every 100 milliseconds
 }
 
 /////   Declare update functions  /////
@@ -798,7 +789,7 @@ int main(int argc, char** argv) {
     init();
 
     glutDisplayFunc(displayScene7);
-    glutTimerFunc(100, timer, 0);
+    glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(2000, changeGirlStateAfterDelay, 1);
