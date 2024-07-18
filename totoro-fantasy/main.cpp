@@ -23,8 +23,15 @@
 
 Portal portal;
 Totoro totoro;
-LittleGirl girl(200, 200, 150, false);
+LittleGirl girl(500, 150, 180, false);
 Catbus catbus{ 500, 180, 600, false };
+
+DayCloudTwo cloud1_scene1{ 1080, 900, 150, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene1{ 400, 850, 150, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud3_scene1{ 1600, 800, 150, Colors::NIGHT_CLOUD };
+
+bool isScene1End = false;
+int currentScene = 1;
 
 /////   Declare states  /////
 
@@ -33,6 +40,10 @@ enum LittleGirlState {
     SIDE_VIEW,
     MOVING
 };
+
+LittleGirlState currentState = FRONT_VIEW;
+
+///// Init function /////
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -72,38 +83,43 @@ static void displayScene1() {
     GrassOne grass10;
     grass10.draw(50, 100, 60, Colors::GRASS_NIGHT);
     GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);    
+    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
     GrassOne grass12;
-    grass12.draw(750, 160, 61, Colors::GRASS_NIGHT);    
+    grass12.draw(750, 160, 61, Colors::GRASS_NIGHT);
     GrassOne grass13;
-    grass13.draw(1240, 30, 62, Colors::GRASS_NIGHT);    
+    grass13.draw(1240, 30, 62, Colors::GRASS_NIGHT);
     GrassOne grass14;
     grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
     GrassTwo grass15;
     grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);      
     GrassTwo grass17;
-    grass17.draw(890, 65, 43, Colors::GRASS_NIGHT);    
+    grass17.draw(890, 65, 43, Colors::GRASS_NIGHT);
     GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);    
+    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
     GrassTwo grass19;
-    grass19.draw(1830, 90, 46, Colors::GRASS_NIGHT);  
+    grass19.draw(1830, 90, 46, Colors::GRASS_NIGHT);
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     FullMoon moon;
     moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
 
-    DayCloudTwo cloud1;
-    cloud1.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
-    DayCloudOne cloud2;
-    cloud2.draw(400, 850, 150, Colors::NIGHT_CLOUD);    
-    DayCloudTwo cloud3;
-    cloud3.draw(1600, 800, 150, Colors::NIGHT_CLOUD);
+    cloud1_scene1.draw();
+    cloud2_scene1.draw();
+    cloud3_scene1.draw();
 
-    girl.drawFrontView();
+    switch (currentState) {
+        case FRONT_VIEW:
+            girl.drawFrontView();
+            break;
+        case SIDE_VIEW:
+        case MOVING:
+            girl.drawSideView();
+            break;
+    }
+  
     glFlush();
-    glutSwapBuffers(); 
-
+    glutSwapBuffers();
 }
 
 static void displayScene2() {
@@ -231,10 +247,10 @@ static void displayScene4() {
     Background::Scene4();
     RainbowOne rainbow;
     rainbow.draw(1280, 800, 200, Colors::RAINBOW);
-    DayCloudOne cloud;
-    cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
-    DayCloudTwo cloud1;
-    cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
+    //DayCloudOne cloud;
+    //cloud.draw(1180, 800, 130, Colors::DAY_CLOUD);
+    //DayCloudTwo cloud1;
+    //cloud1.draw(1390, 800, 140, Colors::DAY_CLOUD);
     DaySunOne sun;
     sun.draw(180, 930, 150, Colors::DAY_SUN);
 
@@ -561,17 +577,66 @@ static void displayScene11() {
 
     glFlush();
     glutSwapBuffers();
-
 }
 
 static void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glFlush();
+    if (currentScene == 1) {
+        displayScene1();
+    }
+    else if (currentScene == 2) {
+        displayScene2();
+    }
 }
 
 
 /////   Declare update functions  /////
 
+static void changeGirlStateAfterDelay(int value) {
+    switch (currentState) {
+        case FRONT_VIEW:
+            currentState = SIDE_VIEW;
+            break;
+        case SIDE_VIEW:
+            currentState = MOVING;
+            break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
+}
+
+static void updateGirlPosition(int value) {
+    if (currentState == MOVING) {
+        girl.move(3.0f);
+    }
+
+    if (girl.getPosX() > 1920) {
+        isScene1End = true;
+        currentScene = 2;
+    }
+
+    glutPostRedisplay();
+    // Set up next position update in 16 ms (approx. 60 FPS)
+    glutTimerFunc(16, updateGirlPosition, 0);
+}
+
+static void updateGirlFrame(int value) {
+    if (currentState == MOVING) {
+        girl.updateFrame();
+    }
+    glutPostRedisplay();
+    // Set up next frame update in 250 ms
+    glutTimerFunc(250, updateGirlFrame, 0);
+}
+
+static void updateCloudPosition(int value) {
+    cloud1_scene1.move(0.1f, false);
+    cloud2_scene1.move(0.1f, true);
+    cloud3_scene1.move(0.1f, true);
+
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCloudPosition, 0);
+}
 
 static void updateCatbusFrame(int value) {
     catbus.updateFrame();
@@ -589,8 +654,15 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene1); 
-    // portal.startTimer(); 
+    glutDisplayFunc(display);
+
+    portal.startTimer(); 
+    glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
+    glutTimerFunc(2000, changeGirlStateAfterDelay, 1);
+    glutTimerFunc(16, updateGirlPosition, 0);
+    glutTimerFunc(250, updateGirlFrame, 0);
+    glutTimerFunc(16, updateCloudPosition, 0);
+
     glutFullScreen();
     glutMainLoop();
 
