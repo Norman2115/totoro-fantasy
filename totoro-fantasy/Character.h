@@ -5,25 +5,59 @@
 
 class Character
 {
-protected:
-    virtual void drawSideView() = 0;
-    virtual void drawFrontView() = 0;
-};
+public:
+    float getPosX() const {
+        return posX;
+    }
 
-class LittleGirl : public Character {
-private:
+    void setPosX(float x) {
+        posX = x;
+    }
+
+    float getPosY() const {
+        return posY;
+    }
+
+    void setPosY(float y) {
+        posY = y;
+    }
+
+    float getCharacterSize() const {
+        return characterSize;
+    }
+
+    void setCharacterSize(float size) {
+        characterSize = size;
+    }
+
+    int getCurrentFrame() const {
+        return currentFrame;
+    }
+
+    void setCurrentFrame(int frame) {
+        currentFrame = frame;
+    }
+
+    bool getMovingRight() const {
+        return movingRight;
+    }
+
+    void setMovingRight(bool moving) {
+        movingRight = moving;
+    }
+
+protected:
     float posX;
     float posY;
     float characterSize;
     int currentFrame;
     bool movingRight;
 
-public:
-    LittleGirl(float startX, float startY, float size)
+    Character(float startX, float startY, float size)
         : posX(startX), posY(startY), characterSize(size), currentFrame(0), movingRight(true) {
     }
 
-    void drawFrontView() override {
+    void drawFrontView() {
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
@@ -63,7 +97,7 @@ public:
         glEnd();
     }
 
-    void drawSideView() override {
+    void drawSideView() {
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
@@ -181,5 +215,38 @@ public:
 
     void updateFrame() {
         currentFrame = (currentFrame + 1) % 4;
+    }
+};
+
+class LittleGirl : public Character {
+private:
+    bool isCrying;
+
+    void drawCryingEffect() {
+
+    }
+
+public:
+    LittleGirl(float startX, float startY, float size, bool crying)
+        : Character(startX, startY, size), isCrying(crying) {
+    }
+
+    bool getCrying() const {
+        return isCrying;
+    }
+
+    void setCrying(bool crying) {
+        isCrying = crying;
+    }
+
+    void drawFrontView() {
+        Character::drawFrontView();
+        if (isCrying) {
+            drawCryingEffect();
+        }
+    }
+
+    void drawSideView() {
+        Character::drawSideView();
     }
 };
