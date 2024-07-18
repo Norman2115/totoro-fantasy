@@ -125,11 +125,29 @@ static void displayScene1() {
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene2();
-  
+    FullMoon moon;
+    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
+
+    DayCloudOne cloud1;
+    cloud1.draw(1080, 810, 120, Colors::NIGHT_CLOUD);
+    DayCloudOne cloud2;
+    cloud2.draw(400, 850, 120, Colors::NIGHT_CLOUD);
+    DayCloudTwo cloud3;
+    cloud3.draw(1700, 880, 120, Colors::NIGHT_CLOUD);
+    DayCloudTwo cloud4;
+    cloud4.draw(150, 750, 120, Colors::NIGHT_CLOUD);
+
     TreeOne tree1;
-    tree1.draw(1800, 250, 400, Colors::TREE_NIGHT);
+    tree1.draw(1900, 380, 300, Colors::TREE_NIGHT);
     TreeTwo tree2;
-    tree2.draw(1700, 250, 500, Colors::TREE_NIGHT);
+    tree2.draw(1582, 385, 280, Colors::TREE_NIGHT);
+    GrassOne grass21;
+    grass21.draw(1613, 386, 40, Colors::GRASS_NIGHT);
+    TreeTwo tree3;
+    tree3.draw(1300, 320, 250, Colors::TREE_NIGHT);
+    GrassTwo grass20;
+    grass20.draw(1317, 322, 30, Colors::GRASS_NIGHT);
+
 
     //Upper Level
     GrassTwo grass1;
@@ -161,9 +179,6 @@ static void displayScene2() {
     GrassTwo grass8;
     grass8.drawWithRotation(1800, 200, 50, 10, Colors::GRASS_NIGHT);
 
-    FullMoon moon;
-    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
-
     House house;
     house.draw(20.0f, 350.0f, 250, false);
     GrassTwo grass15;
@@ -172,7 +187,32 @@ static void displayScene2() {
     grass16.drawWithRotation(10, 227, 20, 0, Colors::GRASS_NIGHT);
     GrassOne grass17;
     grass17.drawWithRotation(145, 225, 20, 0, Colors::GRASS_NIGHT);
-    girl.drawFrontView();
+
+    //Second Layer
+    TreeTwo tree5;
+    tree5.draw(1750, 210, 280, Colors::TREE_NIGHT);
+    TreeTwo tree6;
+    tree6.draw(1450, 250, 260, Colors::TREE_NIGHT);
+
+    //Third Layer
+    TreeTwo tree7;
+    tree7.draw(1120, 170, 230, Colors::TREE_NIGHT);
+    TreeTwo tree8;
+    tree8.draw(1550, 150, 220, Colors::TREE_NIGHT);
+    GrassOne grass22;
+    grass22.draw(1568, 153, 50, Colors::GRASS_NIGHT);
+    TreeTwo tree9;
+    tree9.draw(1850, 80, 210, Colors::TREE_NIGHT);
+    GrassTwo grass23;
+    grass23.draw(1840, 82, 30, Colors::GRASS_NIGHT);
+
+    //Fourth Layer
+    TreeTwo tree10;
+    tree10.draw(1470, -60, 225, Colors::TREE_NIGHT);
+    TreeOne tree4;
+    tree4.draw(1200, -150, 250, Colors::TREE_NIGHT);
+    TreeOne tree11;
+    tree11.draw(1720, -210, 255, Colors::TREE_NIGHT);
 
     glFlush();
     glutSwapBuffers(); 
@@ -654,7 +694,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene1);
 
     portal.startTimer(); 
     glutTimerFunc(2000, changeGirlStateAfterDelay, 0);
