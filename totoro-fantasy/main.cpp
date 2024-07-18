@@ -83,13 +83,12 @@ static void displayScene1() {
     FullMoon moon;
     moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
 
-
     DayCloudTwo cloud1;
     cloud1.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
     DayCloudOne cloud2;
-    cloud2.draw(1080, 900, 150, Colors::NIGHT_CLOUD);    
+    cloud2.draw(400, 850, 150, Colors::NIGHT_CLOUD);    
     DayCloudTwo cloud3;
-    cloud3.draw(1080, 900, 150, Colors::NIGHT_CLOUD);
+    cloud3.draw(1600, 800, 150, Colors::NIGHT_CLOUD);
     glFlush();
     glutSwapBuffers(); 
 
@@ -556,7 +555,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene3); 
+    glutDisplayFunc(displayScene1); 
     portal.startTimer(); 
     glutFullScreen();
     glutMainLoop();

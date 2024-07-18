@@ -17,8 +17,6 @@ public:
     {
 
         glColor3f(color.getR(), color.getG(), color.getB()); 
-
-
      
         float circleRadius = 0.5f * size;
         Circle::draw(x + 0.1f * size, y + 0.1f * size, circleRadius);
@@ -27,7 +25,7 @@ public:
         float smallRadius2 = 0.1f * size;
         float smallRadius3 = 0.1f * size;
 
-        glColor3f(0.6f, 0.6f, 0.6f);  
+        glColor3f(0.86, 0.84, 0.45);
         Circle::draw(x - 0.2f * size, y + 0.3f * size, smallRadius1); 
         Circle::draw(x + 0.35f * size, y - 0.1f * size, smallRadius2); 
         Circle::draw(x + 0.1f * size, y + 0.1f * size, smallRadius3);
