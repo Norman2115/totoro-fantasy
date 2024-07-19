@@ -420,22 +420,12 @@ public:
 
         // Right Hill
         glColor3f(0.39, 0.64, 0.24);
-        Circle::draw(2800.0f, -1500.0f, 2000.0f);
+        Circle::draw(2800.0f, -1650.0f, 2000.0f);
 
         //Left Hill
         glColor3f(0.39, 0.64, 0.24);
-        Circle::draw(550.0f, -2500.0f, 2700.0f);
+        Circle::draw(550.0f, -2650.0f, 2700.0f);
 
-        glColor3f(0.22, 0.3, 0.17);
-        glBegin(GL_LINE_LOOP);
-        float radius = 2000.0f;
-        for (int i = 0; i <= 360; ++i) {
-            float angle = static_cast<float>(i) * Constants::PI / 180.0f;
-            float x = 2800.0f + radius * cosf(angle);
-            float y = -1500.0f + radius * sinf(angle);
-            glVertex2f(x, y);
-        }
-        glEnd();
     }
 
     static void Scene10() {

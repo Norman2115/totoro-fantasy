@@ -175,7 +175,7 @@ static void displayScene1() {
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     FullMoon moon;
-    moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene1) {
         cloud->draw();
@@ -199,7 +199,7 @@ static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene2();
     FullMoon moon;
-    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene2) {
         cloud->draw();
@@ -295,7 +295,7 @@ static void displayScene3() {
     Background::Scene3();
   
     FullMoon moon;
-    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene3) {
         cloud->draw();
@@ -509,9 +509,9 @@ static void displayScene6() {
     Background::Scene6_7();
 
     FullMoon moon1;
-    moon1.draw(130, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(130, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     cloud1_scene6.draw();
     cloud2_scene6.draw();
@@ -587,9 +587,9 @@ static void displayScene7() {
     Background::Scene6_7();
 
     FullMoon moon1;
-    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     cloud1_scene7.draw();
     cloud2_scene7.draw();
@@ -670,9 +670,9 @@ static void displayScene8() {
     Background::Scene8();
 
     FullMoon moon1;
-    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     cloud1_scene8.draw();
     cloud2_scene8.draw();
@@ -732,6 +732,16 @@ static void displayScene8() {
 static void displayScene9() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
+
+    FullMoon moon1;
+    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
+    FullMoon moon2;
+    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
+
+
+
+
+
     glFlush();
     glutSwapBuffers(); 
 
@@ -1094,7 +1104,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene8);
+    glutDisplayFunc(displayScene9);
 
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
