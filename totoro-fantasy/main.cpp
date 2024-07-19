@@ -92,6 +92,12 @@ DayCloudOne cloud3_scene9{ 1700, 360, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene9{ 0, 360, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud5_scene9{ 1930, 460, 120, Colors::NIGHT_CLOUD };
 
+DayCloudTwo cloud1_scene10{ 1080, 950, 110, Colors::DAY_CLOUD };
+DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
+DayCloudOne cloud3_scene10{ 1600, 850, 110, Colors::DAY_CLOUD };
+DayCloudTwo cloud4_scene10{ 1930, 885, 110, Colors::DAY_CLOUD };
+
+
 
 ///// Tree /////
 
@@ -804,21 +810,46 @@ static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
 
-    //Fourth Layer
+    DaySunOne sun;
+    sun.draw(150, 940, 110, Colors::DAY_SUN);
+
+    cloud1_scene10.draw();
+    cloud2_scene10.draw();
+    cloud3_scene10.draw();
+    cloud4_scene10.draw();
+
+    portal.draw(1800.0f, 630.0f, 90.0f, 140.0f);
+
+    House house;
+    house.draw(20.0f, 595.0f, 200, false);
+
     TreeTwo tree1;
     tree1.draw(1930, 180, 140, Colors::TREE_DAY);
     TreeOne tree2;
-    tree2.draw(1750, 160, 130, Colors::TREE_DAY);    
+    tree2.draw(1750, 155, 130, Colors::TREE_DAY);    
     TreeTwo tree3;
     tree3.draw(1550, 150, 135, Colors::TREE_DAY);
+
     TreeTwo tree4;
-    tree4.draw(1930, 180, 140, Colors::TREE_DAY);
+    tree4.draw(1830, 90, 150, Colors::TREE_DAY);
+    TreeTwo tree5;
+    tree5.draw(1650, 60, 160, Colors::TREE_DAY);
+
+    TreeTwo tree6;
+    tree6.draw(1950, -100, 150, Colors::TREE_DAY);
+    TreeOne tree7;
+    tree7.draw(1750, -80, 160, Colors::TREE_DAY);
+    TreeTwo tree8;
+    tree8.draw(1580, -100, 140, Colors::TREE_DAY);
+
+
+
 
     //Upper level
     GrassTwo grass1;
-    grass1.drawWithRotation(30, 500, 20, 358, Colors::GRASS_DAY);
+    grass1.drawWithRotation(30, 496, 20, 358, Colors::GRASS_DAY);
     GrassTwo grass2;
-    grass2.drawWithRotation(130, 495, 20, 355, Colors::GRASS_DAY);
+    grass2.drawWithRotation(123, 495, 17, 355, Colors::GRASS_DAY);
     GrassOne grass3;
     grass3.drawWithRotation(250, 483, 20, 347, Colors::GRASS_DAY);
     GrassTwo grass5;

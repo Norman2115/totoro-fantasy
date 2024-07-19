@@ -33,7 +33,7 @@ public:
     static const Color MOM_DRESS;
 };
 
-const Color Colors::DAY_CLOUD{ 0.75f, 0.85f, 1.0f };
+const Color Colors::DAY_CLOUD{ 0.7, 0.82, 1 };
 const Color Colors::DAY_DARK_CLOUD{ 0.4f, 0.45f, 0.5f };
 const Color Colors::NIGHT_CLOUD{ 0.15, 0.27, 0.4 };
 const Color Colors::NIGHT_DARK_CLOUD{ 0.05f, 0.1f, 0.15f };
