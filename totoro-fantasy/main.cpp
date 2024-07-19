@@ -22,6 +22,7 @@
 #include "Thunder.h"
 #include "Rain.h"
 #include "FadeEffect.h"
+#include "BusSignBoard.h"
 
 /////   Declare global variables    /////
 
@@ -89,6 +90,19 @@ DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene8{ 1700, 860, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene8{ 0, 860, 120, Colors::NIGHT_CLOUD };
 
+DayCloudTwo cloud1_scene9{ 1000, 440, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene9{ 440, 410, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene9{ 1700, 360, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud4_scene9{ 0, 360, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud5_scene9{ 1930, 460, 120, Colors::NIGHT_CLOUD };
+
+DayCloudTwo cloud1_scene10{ 1080, 950, 110, Colors::DAY_CLOUD };
+DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
+DayCloudOne cloud3_scene10{ 1600, 850, 110, Colors::DAY_CLOUD };
+DayCloudTwo cloud4_scene10{ 1930, 885, 110, Colors::DAY_CLOUD };
+
+
+
 ///// Tree /////
 
 TreeTwo tree8_scene3;
@@ -105,7 +119,8 @@ bool isScene3End = false;
 bool isScene4End = false;
 bool isScene6End = false;
 
-int currentScene = 6;
+int currentScene = 1;
+
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
@@ -218,7 +233,7 @@ static void displayScene1() {
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     FullMoon moon;
-    moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene1) {
         cloud->draw();
@@ -242,7 +257,7 @@ static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene2();
     FullMoon moon;
-    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene2) {
         cloud->draw();
@@ -337,7 +352,7 @@ static void displayScene3() {
     Background::Scene3();
 
     FullMoon moon;
-    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene3) {
         cloud->draw();
@@ -561,9 +576,9 @@ static void displayScene6_7() {
     Background::Scene6_7();
 
     FullMoon moon1;
-    moon1.draw(130, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(130, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     for (auto cloud : clouds_scene6) {
         cloud->draw();
@@ -661,9 +676,9 @@ static void displayScene7() {
     Background::Scene6_7();
 
     FullMoon moon1;
-    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     cloud1_scene7.draw();
     cloud2_scene7.draw();
@@ -752,9 +767,9 @@ static void displayScene8() {
     Background::Scene8();
 
     FullMoon moon1;
-    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON);
+    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON, 1);
     FullMoon moon2;
-    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON);
+    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
     cloud1_scene8.draw();
     cloud2_scene8.draw();
@@ -768,6 +783,9 @@ static void displayScene8() {
     mushroomTwo mushroom2;
     mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
 
+    BusSignBoard sign;
+    sign.draw(1630, 474, 100);
+  
     //Upper Level
     GrassOne grass1;
     grass1.drawWithRotation(1750, 450, 60, 2, Colors::GRASS_NIGHT);
@@ -812,6 +830,32 @@ static void displayScene8() {
 static void displayScene9() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
+
+    FullMoon moon1;
+    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
+    FullMoon moon2;
+    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
+
+    cloud1_scene9.draw();
+    cloud2_scene9.draw();
+    cloud3_scene9.draw();
+    cloud4_scene9.draw();
+    cloud5_scene9.draw();
+
+    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
+
+    mushroomThree mushroom4;
+    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
+    mushroomOne mushroom5;
+    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+
+    IslandTwo island1;
+    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
+    mushroomOne mushroom6;
+    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+
     glFlush();
     glutSwapBuffers();
 
@@ -821,11 +865,46 @@ static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
 
+    DaySunOne sun;
+    sun.draw(150, 940, 110, Colors::DAY_SUN);
+
+    cloud1_scene10.draw();
+    cloud2_scene10.draw();
+    cloud3_scene10.draw();
+    cloud4_scene10.draw();
+
+    portal.draw(1800.0f, 630.0f, 90.0f, 140.0f);
+
+    House house;
+    house.draw(20.0f, 595.0f, 200, false);
+
+    TreeTwo tree1;
+    tree1.draw(1930, 180, 140, Colors::TREE_DAY);
+    TreeOne tree2;
+    tree2.draw(1750, 155, 130, Colors::TREE_DAY);    
+    TreeTwo tree3;
+    tree3.draw(1550, 150, 135, Colors::TREE_DAY);
+
+    TreeTwo tree4;
+    tree4.draw(1830, 90, 150, Colors::TREE_DAY);
+    TreeTwo tree5;
+    tree5.draw(1650, 60, 160, Colors::TREE_DAY);
+
+    TreeTwo tree6;
+    tree6.draw(1950, -100, 150, Colors::TREE_DAY);
+    TreeOne tree7;
+    tree7.draw(1750, -80, 160, Colors::TREE_DAY);
+    TreeTwo tree8;
+    tree8.draw(1580, -100, 140, Colors::TREE_DAY);
+
+
+
+
     //Upper level
     GrassTwo grass1;
-    grass1.drawWithRotation(30, 500, 20, 358, Colors::GRASS_DAY);
+    grass1.drawWithRotation(30, 496, 20, 358, Colors::GRASS_DAY);
     GrassTwo grass2;
-    grass2.drawWithRotation(130, 495, 20, 355, Colors::GRASS_DAY);
+    grass2.drawWithRotation(123, 495, 17, 355, Colors::GRASS_DAY);
     GrassOne grass3;
     grass3.drawWithRotation(250, 483, 20, 347, Colors::GRASS_DAY);
     GrassTwo grass5;
@@ -1310,7 +1389,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene10);
+
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
