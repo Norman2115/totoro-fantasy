@@ -40,6 +40,8 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.1 * size, y);
@@ -47,6 +49,7 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glVertex2f(x - 0.1 * size, y);
         glEnd();
+        glPopMatrix();
 
         glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
@@ -139,12 +142,15 @@ public:
         glVertex2f(x + 0.6 * size, y + 0.4 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.6 * size, y + 0.4 * size);
         glVertex2f(x + 0.6 * size, y + 0.4 * size);
         glEnd();
+        glPopMatrix();
 
         // Draw the middle triangle
         glColor4f(color.getR(), color.getG(), color.getB(), opacity);
@@ -154,12 +160,15 @@ public:
         glVertex2f(x + 0.6 * size, y + 0.8 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.6 * size, y + 0.8 * size);
         glVertex2f(x + 0.6 * size, y + 0.8 * size);
         glEnd();
+        glPopMatrix();
 
         // Draw the top triangle
         glColor4f(color.getR(), color.getG(), color.getB(), opacity);
@@ -169,6 +178,8 @@ public:
         glVertex2f(x + 0.6 * size, y + 1.2 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.8 * size);
@@ -176,6 +187,7 @@ public:
         glVertex2f(x + 0.6 * size, y + 1.2 * size);
         glEnd();
         glDisable(GL_BLEND);
+        glPopMatrix();
     }
 };
 
@@ -195,6 +207,8 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.1 * size, y);
@@ -202,6 +216,7 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glVertex2f(x - 0.1 * size, y);
         glEnd();
+        glPopMatrix();
 
         glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
@@ -294,12 +309,15 @@ public:
         glVertex2f(x + 0.4 * size, y + 0.4 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.4 * size, y + 0.4 * size);
         glVertex2f(x + 0.4 * size, y + 0.4 * size);
         glEnd();
+        glPopMatrix();
 
         // Draw the middle triangle
         glColor4f(color.getR(), color.getG(), color.getB(), opacity);
@@ -309,12 +327,15 @@ public:
         glVertex2f(x + 0.4 * size, y + 0.8 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.4 * size, y + 0.8 * size);
         glVertex2f(x + 0.4 * size, y + 0.8 * size);
         glEnd();
+        glPopMatrix();
 
         // Draw the top triangle
         glColor4f(color.getR(), color.getG(), color.getB(), opacity);
@@ -324,6 +345,8 @@ public:
         glVertex2f(x + 0.4 * size, y + 1.2 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.8 * size);
@@ -331,5 +354,6 @@ public:
         glVertex2f(x + 0.4 * size, y + 1.2 * size);
         glEnd();
         glDisable(GL_BLEND);
+        glPopMatrix();
     }
 };
