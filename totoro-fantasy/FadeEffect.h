@@ -30,10 +30,17 @@ public:
         glDisable(GL_BLEND);
     }
 
-    void updateFadeScreen() {
+    void updateFadeOutScreen() {
         opacity += 0.05f;
         if (opacity >= 1.0f) {
             opacity = 1.0f;
+        }
+    }
+
+    void updateFadeInScreen() {
+        opacity -= 0.05f;
+        if (opacity <= 0.0f) {
+            opacity = 0.0f;
         }
     }
 };
