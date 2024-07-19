@@ -56,14 +56,14 @@ std::vector<Cloud*> clouds_scene3{
 
 Thunder thunderScene3(clouds_scene3, 2.0f);
 
-// Static (Rainbow)
-DayCloudOne cloud1_scene4(1290, 745, 130, Colors::DAY_CLOUD);
-DayCloudTwo cloud2_scene4(1510, 745, 140, Colors::DAY_CLOUD);
-
-DayCloudTwo cloud3_scene4(140, 850, 130, Colors::DAY_CLOUD);
-DayCloudTwo cloud4_scene4(1940, 800, 130, Colors::DAY_CLOUD);
-DayCloudTwo cloud5_scene4(760, 700, 40, Colors::DAY_CLOUD);
-DayCloudTwo cloud6_scene4(1760, 600, 30, Colors::DAY_CLOUD);
+std::vector<Cloud*> clouds_scene4{
+    new DayCloudOne(1290, 745, 130, Colors::DAY_CLOUD), // static
+    new DayCloudTwo(1510, 745, 140, Colors::DAY_CLOUD), // static
+    new DayCloudTwo(140, 850, 130, Colors::DAY_CLOUD),
+    new DayCloudTwo(1940, 800, 130, Colors::DAY_CLOUD),
+    new DayCloudTwo(760, 700, 40, Colors::DAY_CLOUD),
+    new DayCloudTwo(1760, 600, 30, Colors::DAY_CLOUD)
+};
 
 DayCloudTwo cloud1_scene6{ 1080, 950, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene6{ 400, 900, 130, Colors::NIGHT_CLOUD };
@@ -72,7 +72,6 @@ DayCloudOne cloud3_scene6{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
-
 
 ///// Tree /////
 
@@ -87,19 +86,25 @@ TreeTwo tree13_scene3;
 bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
+bool isScene4End = false;
 int currentScene = 1;
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
 bool isScene3GirlPosInitialized = false;
+bool isScene4Initialized = false;
+bool isScene4AfterBounceInitialized = false;
 bool isDiagonalMovement = false;
 bool isEnterPortal = false;
+bool isBouncing = true;
 
 ///// Delay Variables /////
 
 int delayCounterScene3 = 0;
 const int delayDurationScene3 = 60;
 
+int delayCounterScene4 = 0;
+const int delayDurationScene4 = 60;
 
 /////   Declare states  /////
 
@@ -210,7 +215,6 @@ static void displayScene2() {
     tree3.draw(1300, 320, 250, Colors::TREE_NIGHT);
     GrassTwo grass20;
     grass20.draw(1317, 322, 30, Colors::GRASS_NIGHT);
-
 
     //Upper Level
     GrassTwo grass1;
@@ -411,11 +415,11 @@ static void displayScene4() {
     sun.draw(160, 930, 110, Colors::DAY_SUN);
 
     rainbow.draw(1400, 745, 200, Colors::RAINBOW);
-    cloud1_scene4.draw();
-    cloud2_scene4.draw();
-    cloud3_scene4.draw();
-    cloud4_scene4.draw();
 
+    clouds_scene4[0]->draw();
+    clouds_scene4[1]->draw();
+    clouds_scene4[2]->draw();
+    clouds_scene4[3]->draw();
 
     portal.draw(200, 500, 150.0f, 75.0f);
 
@@ -424,8 +428,8 @@ static void displayScene4() {
     IslandTwo island2;
     island2.draw(1800, 600, 200, Colors::ISLAND_DAY);
 
-    cloud5_scene4.draw();
-    cloud6_scene4.draw();
+    clouds_scene4[4]->draw();
+    clouds_scene4[5]->draw();
 
     mushroomThree mushroom2;
     mushroom2.draw(1800, 250, 300, Colors::MUSHROOM_DAY, true);
@@ -488,6 +492,16 @@ static void displayScene4() {
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
+    switch (currentState) {
+        case FRONT_VIEW:
+            girl.drawFrontView();
+            break;
+        case SIDE_VIEW:
+        case MOVING:
+            girl.drawSideView();
+            break;
+    }
+
     glFlush();
     glutSwapBuffers(); 
 }
@@ -528,8 +542,6 @@ static void displayScene6() {
     mushroomThree mushroom3;
     mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
 
-
-  
     //Upper Level
     GrassTwo grass1;
     grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
@@ -829,14 +841,13 @@ static void display() {
     else if (currentScene == 4) {
         displayScene4();
     }
+    else if (currentScene == 5) {
+        displayScene5();
+    }
+    else if (currentScene == 6) {
+        displayScene6();
+    }
 }
-
-//// Timer function to update the frame
-//void totoroTimer(int value) {
-//    totoroSide.updateFrame();
-//    glutPostRedisplay();
-//    glutTimerFunc(100, totoroTimer, 0); // Call timer function every 100 milliseconds
-//}
 
 /////   Declare update functions  /////
 
@@ -918,6 +929,29 @@ static void updateGirlPosition(int value) {
             currentScene = 4;
         }
     }
+    else if (currentScene == 4) {
+        if (!isScene4Initialized) {
+            currentState = FRONT_VIEW;
+            girl.setPosX(190);
+            girl.setPosY(400);
+            girl.setCharacterSize(210);
+            girl.setOpacity(0.0f);
+            isScene4Initialized = true;
+        }
+
+        if (!isBouncing) {
+            if (!isScene4AfterBounceInitialized) {
+                currentState = SIDE_VIEW;
+                currentState = MOVING;
+            }
+            girl.move(3.0f);
+
+            if (girl.getPosX() > 1920) {
+                isScene4End = true;
+                currentScene = 6;
+            }
+        }
+    }
 
     glutPostRedisplay();
     glutTimerFunc(16, updateGirlPosition, 0);
@@ -961,6 +995,24 @@ static void updateGirlFadeInIntoPortal(int value) {
     glutTimerFunc(16, updateGirlFadeInIntoPortal, 0);
 }
 
+static void updateGirlExitPortal(int value) {
+    if (currentScene == 4) {
+        if (girl.getOpacity() < 1) {
+            girl.setOpacity(girl.getOpacity() + 0.1f);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateGirlExitPortal, 0);
+}
+
+static void updateExitPortalBounce(int value) {
+    if (currentScene == 4 && isBouncing) {
+        isBouncing = girl.bounceVertical(30.0f, 200.0f, 1.0f, 30);
+    }
+    glutPostRedisplay();
+    glutTimerFunc(30, updateExitPortalBounce, 0);
+}
+
 static void updateCloudPosition(int value) {
     if (currentScene == 1) {
         clouds_scene1.at(0)->move(0.1f, false);
@@ -973,10 +1025,16 @@ static void updateCloudPosition(int value) {
         clouds_scene2.at(2)->move(0.1f, false);
         clouds_scene2.at(3)->move(0.1f, true);
     }
-    else {
+    else if (currentScene == 3) {
         clouds_scene3.at(0)->move(0.1f, true);
         clouds_scene3.at(1)->move(0.1f, true);
         clouds_scene3.at(2)->move(0.1f, false);
+    }
+    else if (currentScene == 4) {
+        clouds_scene4.at(2)->move(0.1f, true);
+        clouds_scene4.at(3)->move(0.1f, false);
+        clouds_scene4.at(4)->move(0.1f, false);
+        clouds_scene4.at(5)->move(0.1f, true);
     }
 
     glutPostRedisplay();
@@ -1084,6 +1142,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateTreeOpacity, 0);
     glutTimerFunc(16, updateGirlViewScene3, 0);
     glutTimerFunc(16, updateGirlFadeInIntoPortal, 0);
+    glutTimerFunc(16, updateGirlExitPortal, 0);
+    glutTimerFunc(30, updateExitPortalBounce, 0);
 
     glutFullScreen();
     glutMainLoop();

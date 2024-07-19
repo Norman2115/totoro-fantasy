@@ -26,22 +26,18 @@ public:
         float rayDistance = size * 0.1f; 
         int numRays = 12;
         for (int i = 0; i < numRays; i++) {
-            float angle = i * (2.0f * 3.1415926f / numRays); 
-
+            float angle = i * (2.0f * 3.1415926f / numRays);
             
             float rayLength = (i % 2 == 0) ? longRayLength : shortRayLength;
-
             
             float rayStartX = x + (radius + rayDistance) * cos(angle);
             float rayStartY = y + (radius + rayDistance) * sin(angle);
             float rayEndX = x + (radius + rayLength) * cos(angle);
             float rayEndY = y + (radius + rayLength) * sin(angle);
-
             
             float perpX = -sin(angle);
             float perpY = cos(angle);
 
-            
             float rayTopLeftX = rayEndX - rayWidth / 2 * perpX;
             float rayTopLeftY = rayEndY - rayWidth / 2 * perpY;
             float rayTopRightX = rayEndX + rayWidth / 2 * perpX;
@@ -50,7 +46,6 @@ public:
             float rayBottomRightY = rayStartY + rayWidth / 2 * perpY;
             float rayBottomLeftX = rayStartX - rayWidth / 2 * perpX;
             float rayBottomLeftY = rayStartY - rayWidth / 2 * perpY;
-
           
             glBegin(GL_QUADS);
             glVertex2f(rayTopLeftX, rayTopLeftY); 
@@ -58,8 +53,6 @@ public:
             glVertex2f(rayBottomRightX, rayBottomRightY); 
             glVertex2f(rayBottomLeftX, rayBottomLeftY); 
             glEnd();
-
-
         }
     }
 };
