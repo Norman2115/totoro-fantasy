@@ -87,7 +87,7 @@ TreeTwo tree13_scene3;
 bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
-int currentScene = 1;
+int currentScene = 7;
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
@@ -99,7 +99,6 @@ bool isEnterPortal = false;
 
 int delayCounterScene3 = 0;
 const int delayDurationScene3 = 60;
-
 
 /////   Declare states  /////
 
@@ -648,7 +647,11 @@ static void displayScene7() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
-    //totoro.draw(960.0f, 450.0f, 300.0f);
+    girl.setPosX(850);
+    girl.setPosY(250);
+    girl.setCharacterSize(210);
+    girl.drawFrontView();
+    totoro.draw(1080.0f, 450.0f, 300.0f);
     //totoroSide.draw(700.0f, 300.0f, 300.0f);
 
     glFlush();
@@ -824,6 +827,9 @@ static void display() {
     }
     else if (currentScene == 4) {
         displayScene4();
+    }
+    else if (currentScene == 7) {
+        displayScene7();
     }
 }
 
