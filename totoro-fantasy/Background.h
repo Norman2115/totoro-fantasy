@@ -206,11 +206,14 @@ public:
         glVertex2f(0.0f, 250.0f);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINES);
         glVertex2f(0.0f, 250.0f);
         glVertex2f(1920.0f, 250.0f);
         glEnd();
+        glPopMatrix();
     }
 
     
@@ -417,6 +420,18 @@ public:
         glVertex2f(1920.0f, 1080.0f);
         glVertex2f(0.0f, 1080.0f);
         glEnd();
+
+        mushroomThree mushroom1;
+        mushroom1.draw(0, -50, 300, Colors::MUSHROOM_NIGHT, true);
+        mushroomOne mushroom2;
+        mushroom2.draw(100, -60, 100, Colors::MUSHROOM_NIGHT, true);
+        mushroomOne mushroom4;
+        mushroom4.draw(580, 19, 150, Colors::MUSHROOM_NIGHT, true);
+        mushroomThree mushroom3;
+        mushroom3.draw(500, 20, 100, Colors::MUSHROOM_NIGHT, true);
+
+
+
 
         // Right Hill
         glColor3f(0.39, 0.64, 0.24);

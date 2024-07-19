@@ -39,6 +39,23 @@ public:
             glPopMatrix();
         }
 
+        if (Line)
+        {
+            glColor3f(0.87, 0.83, 0.74);
+            glBegin(GL_LINES);
+            glVertex2f(x - 0.09 * size, y + 0.45 * size);
+            glVertex2f(x - 0.09 * size, y + 0.25 * size);
+            glVertex2f(x - 0.2 * size, y + 0.50 * size);
+            glVertex2f(x - 0.2 * size, y + 0.30 * size);
+            glVertex2f(x + 0.12 * size, y + 0.25 * size);
+            glVertex2f(x + 0.12 * size, y + 0.05 * size);
+            glVertex2f(x + 0.07 * size, y + 0.50 * size);
+            glVertex2f(x + 0.07 * size, y + 0.43 * size);
+            glVertex2f(x, y + 0.15 * size);
+            glVertex2f(x, y);
+            glEnd();
+        }
+
 
         // mushroom top
         glColor3f(color.getR(), color.getG(), color.getB());
@@ -185,6 +202,27 @@ public:
             glEnd();
             glPopMatrix();
 
+        }
+
+        if (Line)
+        {
+            glColor3f(0.87, 0.83, 0.74);
+            glBegin(GL_LINES);
+            glVertex2f(x - 0.25 * size, y + 0.15 * size);
+            glVertex2f(x - 0.25 * size, y);
+            glVertex2f(x - 0.15 * size, y + 0.30 * size);
+            glVertex2f(x - 0.15 * size, y + 0.15 * size);
+            glVertex2f(x - 0.035 * size, y + 0.20 * size);
+            glVertex2f(x - 0.035 * size, y + 0.10 * size);
+            glVertex2f(x + 0.07 * size, y + 0.35 * size);
+            glVertex2f(x + 0.07 * size, y + 0.25 * size);
+            glVertex2f(x + 0.15 * size, y + 0.15 * size);
+            glVertex2f(x + 0.15 * size, y + 0.05 * size);
+            glVertex2f(x + 0.25 * size, y + 0.35 * size);
+            glVertex2f(x + 0.25 * size, y + 0.30 * size);
+            glVertex2f(x + 0.30 * size, y + 0.08 * size);
+            glVertex2f(x + 0.30 * size, y);
+            glEnd();
         }
 
         // Cap
