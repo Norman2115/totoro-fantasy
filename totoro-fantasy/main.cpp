@@ -1482,7 +1482,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(display);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
@@ -1501,7 +1501,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlViewScene6, 0);
     glutTimerFunc(16, updateFadeOutEffectScene6, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;
