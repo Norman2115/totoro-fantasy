@@ -47,16 +47,29 @@ public:
         movingRight = moving;
     }
 
-    void move(float speed) {
-        posX += speed;
-    }
-
     float getCurrentAngle() const {
         return currentAngle;
     }
 
     void setCurrentAngle(float angle) {
         currentAngle = angle;
+    }
+
+    float getOpacity() const {
+        return opacity;
+    }
+
+    void setOpacity(float op) {
+        opacity = op;
+    }
+
+    void move(float speed) {
+        posX += speed;
+    }
+
+    void moveDiagonally(float speedX, float speedY) {
+        posX += speedX;
+        posY += speedY;
     }
 
     void moveInArc(float speed, float angleIncrement) {
@@ -78,6 +91,7 @@ protected:
     float posY;
     float characterSize;
     float currentAngle;
+    float opacity = 1.0f;
     int currentFrame;
     bool movingRight;
 
@@ -86,15 +100,17 @@ protected:
     }
 
     void drawFrontView() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
         // Head
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
         // Pink Dress
-        glColor3f(1.0f, 0.75f, 0.8f);
+        glColor4f(1.0f, 0.75f, 0.8f, opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.05f, 0.45f, -0.01f);
         glVertex3f(0.05f, 0.45f, -0.01f);
@@ -102,7 +118,7 @@ protected:
         glVertex3f(-0.075f, 0.2f, -0.01f);
         glEnd();
         // Left Hand
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(0.0575f, 0.4f);
         glVertex2f(0.1f, 0.275f);
@@ -125,18 +141,21 @@ protected:
         glVertex2f(0.075f, -0.025f);
         glEnd();
         glPopMatrix();
+        glDisable(GL_BLEND);
     }
 
     void drawSideView() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
 
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
 
-        glColor3f(1.0f, 0.75f, 0.8f);
+        glColor4f(1.0f, 0.75f, 0.8f, opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.025f, 0.45f, -0.01f);
         glVertex3f(0.025f, 0.45f, -0.01f);
@@ -144,7 +163,7 @@ protected:
         glVertex3f(-0.05f, 0.2f, -0.01f);
         glEnd();
 
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, opacity);
         if (currentFrame == 0) {
             // Left leg
             glBegin(GL_LINE_STRIP);
@@ -234,6 +253,7 @@ protected:
             glEnd();
         }
         glPopMatrix();
+        glDisable(GL_BLEND);
     }
 };
 

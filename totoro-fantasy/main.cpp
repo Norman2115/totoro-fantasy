@@ -48,9 +48,13 @@ std::vector<Cloud*> clouds_scene2{
 
 Thunder thunderScene2(clouds_scene2, 2.0f);
 
-DayCloudOne cloud1_scene3{ 200, 850, 150, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud2_scene3{ 700, 860, 150, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud3_scene3{ 1800, 870, 150, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene3{
+    new DayCloudOne{ 200, 850, 150, Colors::NIGHT_CLOUD },
+    new DayCloudTwo{ 700, 860, 150, Colors::NIGHT_CLOUD },
+    new DayCloudOne{ 1800, 870, 150, Colors::NIGHT_CLOUD }
+};
+
+Thunder thunderScene3(clouds_scene3, 2.0f);
 
 // Static (Rainbow)
 DayCloudOne cloud1_scene4(1290, 745, 130, Colors::DAY_CLOUD);
@@ -70,11 +74,32 @@ DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 
 
+///// Tree /////
+
+TreeTwo tree8_scene3;
+TreeTwo tree9_scene3;
+TreeOne tree10_scene3;
+TreeTwo tree11_scene3;
+TreeTwo tree12_scene3;
+TreeTwo tree13_scene3;
+
+///// Flags //////
 bool isScene1End = false;
 bool isScene2End = false;
+bool isScene3End = false;
 int currentScene = 1;
 bool thunderTriggeredOnScene2 = false;
+bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
+bool isScene3GirlPosInitialized = false;
+bool isDiagonalMovement = false;
+bool isEnterPortal = false;
+
+///// Delay Variables /////
+
+int delayCounterScene3 = 0;
+const int delayDurationScene3 = 60;
+
 
 /////   Declare states  /////
 
@@ -267,9 +292,9 @@ static void displayScene3() {
     FullMoon moon;
     moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
 
-    cloud1_scene3.draw();
-    cloud2_scene3.draw();
-    cloud3_scene3.draw();
+    for (auto cloud : clouds_scene3) {
+        cloud->draw();
+    }
 
     //First Layer
     TreeTwo tree3;
@@ -313,6 +338,18 @@ static void displayScene3() {
     GrassTwo grass22;
     grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
 
+    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
+
+    switch (currentState) {
+        case FRONT_VIEW:
+            girl.drawFrontView();
+            break;
+        case SIDE_VIEW:
+        case MOVING:
+            girl.drawSideView();
+            break;
+    }
+
     //Lower Level
     GrassOne grass7;
     grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
@@ -344,32 +381,22 @@ static void displayScene3() {
     grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
 
     //Third Layer
-    TreeTwo tree8;
-    tree8.draw(900, 150, 350, Colors::TREE_NIGHT);
+    tree8_scene3.draw(900, 150, 350, Colors::TREE_NIGHT);
     GrassOne grass23;
     grass23.draw(875, 152, 45, Colors::GRASS_NIGHT);
-    TreeTwo tree9;
-    tree9.draw(500, 90, 360, Colors::TREE_NIGHT);
+    tree9_scene3.draw(500, 90, 360, Colors::TREE_NIGHT);
     GrassTwo grass24;
     grass24.draw(515, 91, 30, Colors::GRASS_NIGHT);
 
     //Fourth Layer
-    TreeOne tree10;
-    tree10.draw(100, -200, 360, Colors::TREE_NIGHT);
-    TreeTwo tree11;
-    tree11.draw(630, -240, 370, Colors::TREE_NIGHT);    
-    TreeTwo tree12;
-    tree12.draw(980, -320, 360, Colors::TREE_NIGHT);
-    TreeTwo tree13;
-    tree13.draw(420, -470, 360, Colors::TREE_NIGHT);
+    tree10_scene3.draw(100, -200, 360, Colors::TREE_NIGHT);
+    tree11_scene3.draw(630, -240, 370, Colors::TREE_NIGHT);
+    tree12_scene3.draw(980, -320, 360, Colors::TREE_NIGHT);
+    tree13_scene3.draw(420, -470, 360, Colors::TREE_NIGHT);
     TreeTwo tree14;
     tree14.draw(1900, -400, 360, Colors::TREE_NIGHT);
 
-
-    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);  
-
-
-
+    rain.renderRain();
 
     glFlush();
     glutSwapBuffers(); 
@@ -795,6 +822,9 @@ static void display() {
     else if (currentScene == 3) {
         displayScene3();
     }
+    else if (currentScene == 4) {
+        displayScene4();
+    }
 }
 
 //// Timer function to update the frame
@@ -828,6 +858,10 @@ static void triggerThunder(int value) {
         thunderScene2.startThunder();
         thunderTriggeredOnScene2 = true;
     }
+    else if (currentScene == 3 && !thunderTriggeredOnScene3) {
+        thunderScene3.startThunder();
+        thunderTriggeredOnScene3 = true;
+    }
     glutPostRedisplay();
 }
 
@@ -856,6 +890,28 @@ static void updateGirlPosition(int value) {
         if (girl.getPosX() > 1920) {
             isScene2End = true;
             currentScene = 3;
+            triggerThunder(0);
+        }
+    }
+    else if (currentScene == 3) {
+        if (!isScene3GirlPosInitialized) {
+            currentState = MOVING;
+            girl.setPosX(0);
+            girl.setPosY(155);
+            isScene3GirlPosInitialized = true;
+        }
+        if (currentState == MOVING) {
+            if (!isDiagonalMovement) {
+                girl.move(3.0f);
+            }
+            else {
+                girl.moveDiagonally(1.8f, 1.8f);
+            }
+        }
+
+        if (isEnterPortal) {
+            isScene3End = true;
+            currentScene = 4;
         }
     }
 
@@ -871,6 +927,36 @@ static void updateGirlFrame(int value) {
     glutTimerFunc(250, updateGirlFrame, 0);
 }
 
+static void updateGirlViewScene3(int value) {
+    if (currentScene == 3) {
+        if (girl.getPosX() >= 1400) {
+            currentState = FRONT_VIEW;
+            delayCounterScene3++;
+            if (delayCounterScene3 >= delayDurationScene3) {
+                currentState = SIDE_VIEW;
+                currentState = MOVING;
+                isDiagonalMovement = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateGirlViewScene3, 0);
+}
+
+static void updateGirlFadeInIntoPortal(int value) {
+    if (currentScene == 3) {
+        if (girl.getPosX() >= 1480) {
+            girl.setOpacity(girl.getOpacity() - 0.1f);
+        }
+
+        if (girl.getOpacity() <= 0) {
+            isEnterPortal = true;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateGirlFadeInIntoPortal, 0);
+}
+
 static void updateCloudPosition(int value) {
     if (currentScene == 1) {
         clouds_scene1.at(0)->move(0.1f, false);
@@ -882,6 +968,11 @@ static void updateCloudPosition(int value) {
         clouds_scene2.at(1)->move(0.1f, true);
         clouds_scene2.at(2)->move(0.1f, false);
         clouds_scene2.at(3)->move(0.1f, true);
+    }
+    else {
+        clouds_scene3.at(0)->move(0.1f, true);
+        clouds_scene3.at(1)->move(0.1f, true);
+        clouds_scene3.at(2)->move(0.1f, false);
     }
 
     glutPostRedisplay();
@@ -895,16 +986,68 @@ static void updateThunderEffect(int value) {
     else if (currentScene == 2) {
         thunderScene2.update();
     }
+    else if (currentScene == 3) {
+        thunderScene3.update();
+    }
     glutPostRedisplay();
     glutTimerFunc(100, updateThunderEffect, 0);
 }
 
 static void updateRain(int value) {
-    if (currentScene == 2) {
+    if (currentScene == 2 || currentScene == 3) {
         rain.updateRain();
     }
     glutPostRedisplay();
     glutTimerFunc(16, updateRain, 0);
+}
+
+static void updateTreeOpacity(int value) {
+    if (currentScene == 3) {
+
+        if (girl.getPosX() >= 0) {
+            tree10_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 400) {
+            tree10_scene3.setOpacity(1.0f);
+        }
+
+        if (girl.getPosX() >= 350) {
+            tree13_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 500) {
+            tree13_scene3.setOpacity(1.0f);
+        }
+
+        if (girl.getPosX() >= 350) {
+            tree9_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 700) {
+            tree9_scene3.setOpacity(1.0f);
+        }
+
+        if (girl.getPosX() >= 380) {
+            tree11_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 800) {
+            tree11_scene3.setOpacity(1.0f);
+        }
+
+        if (girl.getPosX() >= 750) {
+            tree8_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 1100) {
+            tree8_scene3.setOpacity(1.0f);
+        }
+
+        if (girl.getPosX() >= 800) {
+            tree12_scene3.setOpacity(0.3f);
+        }
+        if (girl.getPosX() >= 1100) {
+            tree12_scene3.setOpacity(1.0f);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateTreeOpacity, 0);
 }
 
 static void updateCatbusFrame(int value) {
@@ -934,6 +1077,9 @@ int main(int argc, char** argv) {
     glutTimerFunc(3000, triggerThunder, 0);
     glutTimerFunc(100, updateThunderEffect, 0);
     glutTimerFunc(16, updateRain, 0);
+    glutTimerFunc(16, updateTreeOpacity, 0);
+    glutTimerFunc(16, updateGirlViewScene3, 0);
+    glutTimerFunc(16, updateGirlFadeInIntoPortal, 0);
 
     glutFullScreen();
     glutMainLoop();
