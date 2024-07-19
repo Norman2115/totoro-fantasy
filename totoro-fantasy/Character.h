@@ -107,10 +107,10 @@ protected:
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
         // Head
-        glColor4f(1.0f, 1.0f, 1.0f, opacity);
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
-        // Pink Dress
-        glColor4f(1.0f, 0.75f, 0.8f, opacity);
+        // Dress
+        glColor4f(Colors::GIRL_DRESS.getR(), Colors::GIRL_DRESS.getG(), Colors::GIRL_DRESS.getB(), opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.05f, 0.45f, -0.01f);
         glVertex3f(0.05f, 0.45f, -0.01f);
@@ -118,7 +118,7 @@ protected:
         glVertex3f(-0.075f, 0.2f, -0.01f);
         glEnd();
         // Left Hand
-        glColor4f(1.0f, 1.0f, 1.0f, opacity);
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(0.0575f, 0.4f);
         glVertex2f(0.1f, 0.275f);
@@ -152,10 +152,10 @@ protected:
         glScalef(characterSize, characterSize, 1.0f);
         glLineWidth(3);
 
-        glColor4f(1.0f, 1.0f, 1.0f, opacity);
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
 
-        glColor4f(1.0f, 0.75f, 0.8f, opacity);
+        glColor4f(Colors::GIRL_DRESS.getR(), Colors::GIRL_DRESS.getG(), Colors::GIRL_DRESS.getB(), opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.025f, 0.45f, -0.01f);
         glVertex3f(0.025f, 0.45f, -0.01f);
@@ -163,7 +163,7 @@ protected:
         glVertex3f(-0.05f, 0.2f, -0.01f);
         glEnd();
 
-        glColor4f(1.0f, 1.0f, 1.0f, opacity);
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         if (currentFrame == 0) {
             // Left leg
             glBegin(GL_LINE_STRIP);
@@ -260,6 +260,8 @@ protected:
 class LittleGirl : public Character {
 private:
     bool isCrying;
+    float bounceTime;
+    bool initialDropComplete;
 
     void drawCryingEffect() {
 
@@ -267,7 +269,7 @@ private:
 
 public:
     LittleGirl(float startX, float startY, float size, float currentAngle, bool crying)
-        : Character(startX, startY, size, currentAngle), isCrying(crying) {
+        : Character(startX, startY, size, currentAngle), isCrying(crying), bounceTime(0), initialDropComplete(false) {
     }
 
     bool getCrying() const {
@@ -288,4 +290,30 @@ public:
     void drawSideView() {
         Character::drawSideView();
     }
+
+    bool bounceVertical(float bounceHeight, float targetPosY, float bounceDuration, float updateInterval) {
+        if (!initialDropComplete) {
+            posY -= 10.0f;
+            if (posY <= targetPosY) {
+                posY = targetPosY;
+                initialDropComplete = true;
+                bounceTime = 0.0f;
+            }
+            return true;
+        }
+        
+        bounceTime += updateInterval / 1000.0f;
+        float progress = bounceTime / bounceDuration;
+        if (progress >= 1.0f) {
+            setPosY(targetPosY);
+            return false;
+        }
+        else {
+            float heightAdjustment = sin(progress * 3.14159f) * bounceHeight;
+            setPosY(targetPosY + heightAdjustment);
+            return true;
+        }
+    }
+
+    void resetBounceTime() { bounceTime = 0; }
 };

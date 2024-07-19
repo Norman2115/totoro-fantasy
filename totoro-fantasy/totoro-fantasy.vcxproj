@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="BusSignBoard.h" />
     <ClInclude Include="Catbus.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Circle.h" />
@@ -153,6 +154,9 @@
     <ClInclude Include="Thunder.h" />
     <ClInclude Include="totoro.h" />
     <ClInclude Include="Tree.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

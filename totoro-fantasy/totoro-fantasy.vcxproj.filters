@@ -95,5 +95,11 @@
     <ClInclude Include="Rain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BusSignBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

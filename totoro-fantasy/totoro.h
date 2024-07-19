@@ -5,12 +5,19 @@
 #include <cmath>
 
 class Totoro {
+private:
+    float bounceHeight;
+    bool bouncingUp;
+    float maxBounceHeight;
+    float bounceSpeed;
+    int bounceCount;
+
 public:
-    Totoro() {}
+    Totoro() : bounceHeight(0.0f), bouncingUp(true), maxBounceHeight(30.0f), bounceSpeed(10.0f), bounceCount(0) {} // Increased maxBounceHeight and bounceSpeed
 
     void draw(float x, float y, float size) {
         glPushMatrix();
-        glTranslatef(x, y, 0.0f);
+        glTranslatef(x, y + bounceHeight, 0.0f); // Apply bounce effect here
         glScalef(size, size, 1.0f);  // Only use size for uniform scaling
 
         // Body
@@ -208,6 +215,37 @@ public:
         glEnd();
 
         glPopMatrix();
+    }
+    void startBounce() {
+        bounceHeight = 0.0f;
+        bouncingUp = true;
+        maxBounceHeight = 30.0f; // Increased initial bounce height
+        bounceSpeed = 10.0f; // Increased bounce speed
+        bounceCount = 0;
+    }
+
+    void updateBounce() {
+        if (bouncingUp) {
+            bounceHeight += bounceSpeed;
+            if (bounceHeight >= maxBounceHeight) {
+                bouncingUp = false;
+            }
+        }
+        else {
+            bounceHeight -= bounceSpeed;
+            if (bounceHeight <= 0.0f) {
+                bounceHeight = 0.0f;
+                bouncingUp = true;
+                maxBounceHeight *= 0.5f; // Decrease bounce height to simulate bouncing effect
+                bounceSpeed *= 0.5f; // Decrease bounce speed as bounce height decreases
+                bounceCount++; // Increment the bounce count
+                if (bounceCount >= 2) { // Stop bouncing after two bounces
+                    maxBounceHeight = 0.0f;
+                    bounceHeight = 0.0f;
+                    bouncingUp = false;
+                }
+            }
+        }
     }
 };
 
