@@ -123,7 +123,7 @@ bool isScene3End = false;
 bool isScene4End = false;
 bool isScene6End = false;
 
-int currentScene = 6;
+int currentScene = 1;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -535,7 +535,7 @@ static void displayScene4() {
     grass9.draw(20, 248, 52, Colors::GRASS_DAY);
 
     Flower flower1;
-    flower1.draw(200, 200, 40, 40, Colors::FLOWER_BLUE);  
+    flower1.draw(80, 200, 40, 40, Colors::FLOWER_BLUE);  
     Flower flower3;
     flower3.draw(1050, 220, 40, 50, Colors::FLOWER_ORANGE);    
     Flower flower4;
