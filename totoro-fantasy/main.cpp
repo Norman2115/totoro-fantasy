@@ -534,6 +534,17 @@ static void displayScene4() {
     GrassOne grass9;
     grass9.draw(20, 248, 52, Colors::GRASS_DAY);
 
+    Flower flower1;
+    flower1.draw(200, 200, 40, 40, Colors::FLOWER_BLUE);  
+    Flower flower3;
+    flower3.draw(1050, 220, 40, 50, Colors::FLOWER_ORANGE);    
+    Flower flower4;
+    flower4.draw(790, 20, 40, 60, Colors::FLOWER_PURPLE);    
+    Flower flower5;
+    flower5.draw(1800, 100, 40, 80, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(400, 50, 40, 90, Colors::FLOWER_YELLOW);
+
     //Lower Level
     GrassTwo grass10;
     grass10.draw(50, 150, 60, Colors::GRASS_DAY);
@@ -625,6 +636,19 @@ static void displayScene6_7() {
     grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
     GrassTwo grass9;
     grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
+
+    Flower flower1;
+    flower1.draw(1050, 100, 40, 60, Colors::FLOWER_BLUE);
+    Flower flower2;
+    flower2.draw(400, 190, 40, 100, Colors::FLOWER_CYAN);
+    Flower flower3;
+    flower3.draw(100, 90, 40, 130, Colors::FLOWER_RED);
+    Flower flower4;
+    flower4.draw(800, 120, 40, 20, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(1300, 190, 40, 60, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(1800, 50, 40, 40, Colors::FLOWER_PURPLE);
 
     //Lower Level
     GrassOne grass10;
@@ -811,6 +835,17 @@ static void displayScene8() {
     grass8.drawWithRotation(1500, 445, 58, 5, Colors::GRASS_NIGHT);
     GrassTwo grass9;
     grass9.drawWithRotation(80, 10, 40, 30, Colors::GRASS_NIGHT);
+
+    Flower flower1;
+    flower1.draw(1550, 370, 40, 60, Colors::FLOWER_ORANGE);
+    Flower flower2;
+    flower2.draw(1000, 200, 40, 100, Colors::FLOWER_YELLOW);
+    Flower flower3;
+    flower3.draw(1300, 90, 40, 130, Colors::FLOWER_BLUE);
+    Flower flower4;
+    flower4.draw(1850, 30, 40, 20, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(500, 60, 40, 40, Colors::FLOWER_RED);
 
     //Inner Level
     GrassOne grass10;
@@ -1004,11 +1039,6 @@ static void displayScene11() {
     grass19.draw(1830, 90, 46, Colors::GRASS_DAY);
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
-
-    /*
-    Flower flower;
-    flower.draw(200, 200, 200, 40, Colors::DAY_CLOUD);
-    */
 
     glFlush();
     glutSwapBuffers();

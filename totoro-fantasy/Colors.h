@@ -14,6 +14,13 @@ public:
     static const Color TREE_DAY;
     static const Color TREE_NIGHT;
 
+    static const Color FLOWER_BLUE;
+    static const Color FLOWER_PURPLE;
+    static const Color FLOWER_YELLOW;
+    static const Color FLOWER_RED;
+    static const Color FLOWER_ORANGE;
+    static const Color FLOWER_CYAN;
+
 
     static const Color MUSHROOM_DAY;
     static const Color MUSHROOM_NIGHT;
@@ -53,5 +60,12 @@ const Color Colors::THUNDER_CLOUD{ 0.85, 0.82, 0.1 };
 const Color Colors::CHARACTER_SKIN{ 0.94, 0.64, 0.32 };
 const Color Colors::GIRL_DRESS{ 0.91, 0.09, 0.21 };
 const Color Colors::MOM_DRESS{ 0.96, 0.76, 0.69 };
+
+const Color Colors::FLOWER_BLUE{ 0.39, 0.74, 1 };
+const Color Colors::FLOWER_PURPLE{ 0.77, 0.39, 0.94 };
+const Color Colors::FLOWER_YELLOW{ 0.93, 0.88, 0.16 };
+const Color Colors::FLOWER_RED{ 1, 0.29, 0.29 };
+const Color Colors::FLOWER_ORANGE{ 1, 0.51, 0.29 };
+const Color Colors::FLOWER_CYAN{ 0.34, 0.87, 0.85 };
 
 // Define colors here
