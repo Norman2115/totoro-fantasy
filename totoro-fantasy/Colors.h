@@ -39,7 +39,7 @@ const Color Colors::NIGHT_CLOUD{ 0.15, 0.27, 0.4 };
 const Color Colors::NIGHT_DARK_CLOUD{ 0.05f, 0.1f, 0.15f };
 const Color Colors::DAY_SUN{ 1, 0.92, 0.38 };
 const Color Colors::NIGHT_FULL_MOON{ 1, 0.99, 0.61 };
-const Color Colors::TREE_DAY{0.26, 0.62, 0.16 };
+const Color Colors::TREE_DAY{ 0.39, 0.76, 0.29 };
 const Color Colors::TREE_NIGHT{ 0.13, 0.36, 0.07 };
 const Color Colors::MUSHROOM_DAY{ 0.95, 0.09, 0.21 };
 const Color Colors::MUSHROOM_NIGHT{0.57, 0.11, 0.17 };

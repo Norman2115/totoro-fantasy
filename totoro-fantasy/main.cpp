@@ -804,6 +804,16 @@ static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
 
+    //Fourth Layer
+    TreeTwo tree1;
+    tree1.draw(1930, 180, 140, Colors::TREE_DAY);
+    TreeOne tree2;
+    tree2.draw(1750, 160, 130, Colors::TREE_DAY);    
+    TreeTwo tree3;
+    tree3.draw(1550, 150, 135, Colors::TREE_DAY);
+    TreeTwo tree4;
+    tree4.draw(1930, 180, 140, Colors::TREE_DAY);
+
     //Upper level
     GrassTwo grass1;
     grass1.drawWithRotation(30, 500, 20, 358, Colors::GRASS_DAY);
@@ -1220,7 +1230,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene8);
+    glutDisplayFunc(displayScene10);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
