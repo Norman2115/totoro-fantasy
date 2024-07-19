@@ -67,6 +67,10 @@ public:
         posX += speed;
     }
 
+    void moveVertically(float speed) {
+        posY += speed;
+    }
+
     void moveDiagonally(float speedX, float speedY) {
         posX += speedX;
         posY += speedY;
@@ -263,8 +267,35 @@ private:
     float bounceTime;
     bool initialDropComplete;
 
-    void drawCryingEffect() {
+    void drawCryEffect() {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        glScalef(characterSize, characterSize, 1.0f);
+        // Circle::draw(0.0f, 0.525f, 0.075f);
+        // Draw the face of two horizontal line eyes and two long lines of tears from the middle of each eye line
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(-0.0125, 0.5375);
+        glVertex2f(-0.04, 0.5375);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0125, 0.5375);
+        glVertex2f(0.04, 0.5375);
+        glEnd();
 
+        glPushAttrib(GL_LINE_BIT);
+        glLineWidth(2);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(-0.02625, 0.53);
+        glVertex2f(-0.02625, 0.46);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.02625, 0.53);
+        glVertex2f(0.02625, 0.46);
+        glEnd();
+        glPopAttrib();
+        glPopMatrix();
     }
 
 public:
@@ -283,7 +314,7 @@ public:
     void drawFrontView() {
         Character::drawFrontView();
         if (isCrying) {
-            drawCryingEffect();
+            drawCryEffect();
         }
     }
 
