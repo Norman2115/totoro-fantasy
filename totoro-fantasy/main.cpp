@@ -99,7 +99,7 @@ bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
 bool isScene4End = false;
-int currentScene = 1;
+int currentScene = 3;
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
@@ -1184,7 +1184,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene8);
+    glutDisplayFunc(display);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
@@ -1201,7 +1201,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlExitPortal, 0);
     glutTimerFunc(30, updateExitPortalBounce, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
 
     return 0;
