@@ -29,6 +29,7 @@
 /////   Declare global variables    /////
 Sound sound;
 bool isRainSoundPlaying = false;
+bool isThunderSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -195,6 +196,11 @@ static void init() {
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    if (!isThunderSoundPlaying) {
+        sound.playThunderSound();
+        isRainSoundPlaying = true;
+    }
     Background::Scene1();
 
     House house;
@@ -264,6 +270,10 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (isThunderSoundPlaying) {
+        sound.stopSound();
+        isThunderSoundPlaying = false;
+    }
     // Start playing the rain sound if it's not already playing
     if (!isRainSoundPlaying) {
         sound.playRainSound();
@@ -1472,7 +1482,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     
-    glutDisplayFunc(displayScene2);
+    glutDisplayFunc(displayScene1);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);

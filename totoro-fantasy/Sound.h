@@ -20,6 +20,13 @@ public:
         }
     }
 
+    void playThunderSound() {
+        if (!isPlaying.exchange(true)) {
+            std::thread([this]() {
+                PlaySound(TEXT("thunder.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+                }).detach();
+        }
+    }
 
     void stopSound() {
         if (isPlaying.exchange(false)) {
