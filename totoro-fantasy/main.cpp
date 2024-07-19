@@ -21,6 +21,7 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
+#include "FadeEffect.h"
 #include "BusSignBoard.h"
 
 /////   Declare global variables    /////
@@ -31,6 +32,7 @@ TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
 Catbus catbus{ 500, 180, 600, false };
 Rain rain{ 500 };
+FadeEffect fadeEffect;
 
 //for totoro side view walking
 int state = 0; // 0 for side view walking, 1 for front view
@@ -73,9 +75,11 @@ std::vector<Cloud*> clouds_scene4{
     new DayCloudTwo(1760, 600, 30, Colors::DAY_CLOUD)
 };
 
-DayCloudTwo cloud1_scene6{ 1080, 950, 130, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud2_scene6{ 400, 900, 130, Colors::NIGHT_CLOUD };
-DayCloudOne cloud3_scene6{ 1600, 850, 130, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene6{
+    new DayCloudTwo(1080, 950, 130, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(400, 900, 130, Colors::NIGHT_CLOUD),
+    new DayCloudOne(1600, 850, 130, Colors::NIGHT_CLOUD)
+};
 
 DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
@@ -113,16 +117,27 @@ bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
 bool isScene4End = false;
-int currentScene = 4;
+bool isScene6End = false;
+
+int currentScene = 1;
+
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
 bool isScene3GirlPosInitialized = false;
 bool isScene4Initialized = false;
 bool isScene4AfterBounceInitialized = false;
+bool isScene6Initialized = false;
 bool isDiagonalMovement = false;
+bool isVerticalMovement = false;
 bool isEnterPortal = false;
 bool isBouncing = true;
+bool isCrying = false;
+bool isTotoroAppeared = false;
+bool isTotoroComforting = false;
+bool isFinishCrying = false;
+
+bool isFadeOutScene6 = false;
 
 ///// Delay Variables /////
 
@@ -132,17 +147,34 @@ const int delayDurationScene3 = 60;
 int delayCounterScene4 = 0;
 const int delayDurationScene4 = 60;
 
+int delayCounterScene6 = 0;
+const int delayDurationScene6 = 60;
+
+int cryingDelayCounter = 0;
+const int cryingDurationCounter = 125;
+
+int finishCryingDelayCounter = 0;
+const int finishCryingDurationCounter = 75;
+
+int fadeOutScene6DelayCounter = 0;
+const int fadeOutScene6DurationCounter = 60;
+
 /////   Declare states  /////
 
 enum LittleGirlState {
-    FRONT_VIEW,
-    SIDE_VIEW,
-    MOVING
+    LITTLE_GIRL_FRONT_VIEW,
+    LITTLE_GIRL_SIDE_VIEW,
+    LITTLE_GIRL_MOVING
 };
 
-LittleGirlState currentState = FRONT_VIEW;
+enum TotoroState {
+    TOTORO_INVISIBLE,
+    TOTORO_FRONT_VIEW,
+    TOTORO_SIDE_VIEW_WALKING
+};
 
-///// Init function /////
+LittleGirlState currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+TotoroState currentTotoroState = TOTORO_INVISIBLE;
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -207,12 +239,12 @@ static void displayScene1() {
         cloud->draw();
     }
 
-    switch (currentState) {
-    case FRONT_VIEW:
+    switch (currentGirlState) {
+    case LITTLE_GIRL_FRONT_VIEW:
         girl.drawFrontView();
         break;
-    case SIDE_VIEW:
-    case MOVING:
+    case LITTLE_GIRL_SIDE_VIEW:
+    case LITTLE_GIRL_MOVING:
         girl.drawSideView();
         break;
     }
@@ -370,12 +402,12 @@ static void displayScene3() {
 
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
 
-    switch (currentState) {
-    case FRONT_VIEW:
+    switch (currentGirlState) {
+    case LITTLE_GIRL_FRONT_VIEW:
         girl.drawFrontView();
         break;
-    case SIDE_VIEW:
-    case MOVING:
+    case LITTLE_GIRL_SIDE_VIEW:
+    case LITTLE_GIRL_MOVING:
         girl.drawSideView();
         break;
     }
@@ -518,12 +550,12 @@ static void displayScene4() {
     GrassOne grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
-    switch (currentState) {
-        case FRONT_VIEW:
+    switch (currentGirlState) {
+        case LITTLE_GIRL_FRONT_VIEW:
             girl.drawFrontView();
             break;
-        case SIDE_VIEW:
-        case MOVING:
+        case LITTLE_GIRL_SIDE_VIEW:
+        case LITTLE_GIRL_MOVING:
             girl.drawSideView();
             break;
     }
@@ -539,7 +571,7 @@ static void displayScene5() {
     glutSwapBuffers();
 }
 
-static void displayScene6() {
+static void displayScene6_7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
@@ -548,9 +580,9 @@ static void displayScene6() {
     FullMoon moon2;
     moon2.draw(225, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
-    cloud1_scene6.draw();
-    cloud2_scene6.draw();
-    cloud3_scene6.draw();
+    for (auto cloud : clouds_scene6) {
+        cloud->draw();
+    }
 
     mushroomThree mushroom5;
     mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
@@ -610,9 +642,33 @@ static void displayScene6() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
+    switch (currentGirlState) {
+        case LITTLE_GIRL_FRONT_VIEW:
+            girl.drawFrontView();
+            break;
+        case LITTLE_GIRL_SIDE_VIEW:
+        case LITTLE_GIRL_MOVING:
+            girl.drawSideView();
+            break;
+    }
+    
+    switch (currentTotoroState) {
+        case TOTORO_INVISIBLE:
+            break;
+        case TOTORO_FRONT_VIEW:
+            totoroFront.draw(1080.0f, 450.0f, 300.0f);
+            break;
+        case TOTORO_SIDE_VIEW_WALKING:
+            totoroSide.draw(positionX, 420.0f, 270.0f);
+            break;
+    }
+
+    if (isFadeOutScene6) {
+        fadeEffect.drawFadeScreen();
+    }
+
     glFlush();
     glutSwapBuffers();
-
 }
 
 static void displayScene7() {
@@ -729,8 +785,7 @@ static void displayScene8() {
 
     BusSignBoard sign;
     sign.draw(1630, 474, 100);
-
-
+  
     //Upper Level
     GrassOne grass1;
     grass1.drawWithRotation(1750, 450, 60, 2, Colors::GRASS_NIGHT);
@@ -960,40 +1015,23 @@ static void display() {
     else if (currentScene == 5) {
         displayScene5();
     }
-    else if (currentScene == 6) {
-        displayScene6();
+    else if (currentScene == 6 || currentScene == 7) {
+        displayScene6_7();
     }
-}
-
-void totoroTimer(int value) {
-    if (state == 0) {
-        totoroSide.updateFrame();
-        positionX -= 17.0f; // Move to the left by 5 pixels per update
-        if (positionX <= 1080.0f) { 
-            state = 1;
-            totoroFront.startBounce(); // Start the bounce effect
-        }
-    }
-    else if (state == 1) {
-        totoroFront.updateBounce(); // Update the bounce effect
-    }
-
-    glutPostRedisplay();
-    glutTimerFunc(100, totoroTimer, 0); // Keep the timer interval for smoother updates
 }
 
 /////   Declare update functions  /////
 
 static void changeGirlStateAfterDelay(int value) {
-    switch (currentState) {
-    case FRONT_VIEW:
-        currentState = SIDE_VIEW;
-        break;
-    case SIDE_VIEW:
-        currentState = MOVING;
-        break;
-    default:
-        break;
+    switch (currentGirlState) {
+        case LITTLE_GIRL_FRONT_VIEW:
+            currentGirlState = LITTLE_GIRL_SIDE_VIEW;
+            break;
+        case LITTLE_GIRL_SIDE_VIEW:
+            currentGirlState = LITTLE_GIRL_MOVING;
+            break;
+        default:
+            break;
     }
     glutPostRedisplay();
 }
@@ -1015,7 +1053,7 @@ static void triggerThunder(int value) {
 
 static void updateGirlPosition(int value) {
     if (currentScene == 1) {
-        if (currentState == MOVING) {
+        if (currentGirlState == LITTLE_GIRL_MOVING) {
             girl.move(3.0f);
         }
 
@@ -1026,7 +1064,7 @@ static void updateGirlPosition(int value) {
         }
     }
     else if (currentScene == 2) {
-        currentState = MOVING;
+        currentGirlState = LITTLE_GIRL_MOVING;
 
         if (!isScene2ArcAngleInitialized) {
             girl.setCurrentAngle(2.2f);
@@ -1043,12 +1081,12 @@ static void updateGirlPosition(int value) {
     }
     else if (currentScene == 3) {
         if (!isScene3GirlPosInitialized) {
-            currentState = MOVING;
+            currentGirlState = LITTLE_GIRL_MOVING;
             girl.setPosX(0);
             girl.setPosY(155);
             isScene3GirlPosInitialized = true;
         }
-        if (currentState == MOVING) {
+        if (currentGirlState == LITTLE_GIRL_MOVING) {
             if (!isDiagonalMovement) {
                 girl.move(3.0f);
             }
@@ -1060,11 +1098,12 @@ static void updateGirlPosition(int value) {
         if (isEnterPortal) {
             isScene3End = true;
             currentScene = 4;
+            isDiagonalMovement = false;
         }
     }
     else if (currentScene == 4) {
         if (!isScene4Initialized) {
-            currentState = FRONT_VIEW;
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
             girl.setPosX(190);
             girl.setPosY(400);
             girl.setCharacterSize(210);
@@ -1074,8 +1113,8 @@ static void updateGirlPosition(int value) {
 
         if (!isBouncing) {
             if (!isScene4AfterBounceInitialized) {
-                currentState = SIDE_VIEW;
-                currentState = MOVING;
+                currentGirlState = LITTLE_GIRL_SIDE_VIEW;
+                currentGirlState = LITTLE_GIRL_MOVING;
             }
             girl.move(3.0f);
 
@@ -1085,13 +1124,29 @@ static void updateGirlPosition(int value) {
             }
         }
     }
+    else if (currentScene == 6) {
+        if (!isScene6Initialized) {
+            currentGirlState = LITTLE_GIRL_MOVING;
+            girl.setPosX(0);
+            girl.setPosY(200);
+            isScene6Initialized = true;
+        }
 
+        if (currentGirlState == LITTLE_GIRL_MOVING) {
+            if (!isVerticalMovement) {
+                girl.move(3.0f);
+            }
+            else {
+                girl.moveVertically(1.8f);
+            }
+        }
+    }
     glutPostRedisplay();
     glutTimerFunc(16, updateGirlPosition, 0);
 }
 
 static void updateGirlFrame(int value) {
-    if (currentState == MOVING) {
+    if (currentGirlState == LITTLE_GIRL_MOVING) {
         girl.updateFrame();
     }
     glutPostRedisplay();
@@ -1101,17 +1156,59 @@ static void updateGirlFrame(int value) {
 static void updateGirlViewScene3(int value) {
     if (currentScene == 3) {
         if (girl.getPosX() >= 1400) {
-            currentState = FRONT_VIEW;
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
             delayCounterScene3++;
             if (delayCounterScene3 >= delayDurationScene3) {
-                currentState = SIDE_VIEW;
-                currentState = MOVING;
+                currentGirlState = LITTLE_GIRL_SIDE_VIEW;
+                currentGirlState = LITTLE_GIRL_MOVING;
                 isDiagonalMovement = true;
             }
         }
     }
     glutPostRedisplay();
     glutTimerFunc(16, updateGirlViewScene3, 0);
+}
+
+static void updateGirlViewScene6(int value) {
+    if (currentScene == 6) {
+        if (girl.getPosX() >= 850 && !isVerticalMovement) {
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            delayCounterScene6++;
+            if (delayCounterScene6 >= delayDurationScene6) {
+                currentGirlState = LITTLE_GIRL_SIDE_VIEW;
+                currentGirlState = LITTLE_GIRL_MOVING;
+                isVerticalMovement = true;
+            }
+        }
+
+        if (girl.getPosY() >= 250 && isVerticalMovement && !isTotoroAppeared) {
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            isCrying = true;
+            girl.setCrying(true);
+            cryingDelayCounter++;
+            if (cryingDelayCounter >= cryingDurationCounter) {
+                currentTotoroState = TOTORO_SIDE_VIEW_WALKING;
+                isTotoroAppeared = true;
+            }
+        }
+
+        if (isTotoroComforting && !isFinishCrying) {
+            finishCryingDelayCounter++;
+            if (finishCryingDelayCounter >= finishCryingDurationCounter) {
+                girl.setCrying(false);
+                isFinishCrying = true;
+            }
+        }
+
+        if (isFinishCrying && !isFadeOutScene6) {
+            fadeOutScene6DelayCounter++;
+            if (fadeOutScene6DelayCounter >= fadeOutScene6DurationCounter) {
+                isFadeOutScene6 = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateGirlViewScene6, 0);
 }
 
 static void updateGirlFadeInIntoPortal(int value) {
@@ -1169,6 +1266,11 @@ static void updateCloudPosition(int value) {
         clouds_scene4.at(4)->move(0.1f, false);
         clouds_scene4.at(5)->move(0.1f, true);
     }
+    else if (currentScene == 6) {
+        clouds_scene6.at(0)->move(0.1f, true);
+        clouds_scene6.at(1)->move(0.1f, true);
+        clouds_scene6.at(2)->move(0.1f, false);
+    }
 
     glutPostRedisplay();
     glutTimerFunc(16, updateCloudPosition, 0);
@@ -1198,7 +1300,6 @@ static void updateRain(int value) {
 
 static void updateTreeOpacity(int value) {
     if (currentScene == 3) {
-
         if (girl.getPosX() >= 0) {
             tree10_scene3.setOpacity(0.3f);
         }
@@ -1241,8 +1342,35 @@ static void updateTreeOpacity(int value) {
             tree12_scene3.setOpacity(1.0f);
         }
     }
+
     glutPostRedisplay();
     glutTimerFunc(16, updateTreeOpacity, 0);
+}
+
+static void updateFadeOutEffectScene6(int value) {
+    if (isFadeOutScene6) {
+        fadeEffect.updateFadeScreen();
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateFadeOutEffectScene6, 0);
+}
+
+static void totoroTimer(int value) {
+    if (currentTotoroState == TOTORO_SIDE_VIEW_WALKING) {
+        totoroSide.updateFrame();
+        positionX -= 17.0f; // Move to the left by 5 pixels per update
+        if (positionX <= 1080.0f) {
+            currentTotoroState = TOTORO_FRONT_VIEW;
+            totoroFront.startBounce(); // Start the bounce effect
+            isTotoroComforting = true;
+        }
+    }
+    else if (currentTotoroState == TOTORO_FRONT_VIEW) {
+        totoroFront.updateBounce(); // Update the bounce effect
+        isTotoroComforting = true;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(100, totoroTimer, 0);
 }
 
 static void updateCatbusFrame(int value) {
@@ -1278,6 +1406,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlFadeInIntoPortal, 0);
     glutTimerFunc(16, updateGirlExitPortal, 0);
     glutTimerFunc(30, updateExitPortalBounce, 0);
+    glutTimerFunc(16, updateGirlViewScene6, 0);
+    glutTimerFunc(16, updateFadeOutEffectScene6, 0);
 
     glutFullScreen();
     glutMainLoop();
