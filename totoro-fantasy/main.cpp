@@ -21,6 +21,7 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
+#include "BusSignBoard.h"
 
 /////   Declare global variables    /////
 
@@ -85,6 +86,13 @@ DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene8{ 1700, 860, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene8{ 0, 860, 120, Colors::NIGHT_CLOUD };
 
+DayCloudTwo cloud1_scene9{ 1000, 440, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene9{ 440, 410, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene9{ 1700, 360, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud4_scene9{ 0, 360, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud5_scene9{ 1930, 460, 120, Colors::NIGHT_CLOUD };
+
+
 ///// Tree /////
 
 TreeTwo tree8_scene3;
@@ -99,7 +107,7 @@ bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
 bool isScene4End = false;
-int currentScene = 3;
+int currentScene = 4;
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 bool isScene2ArcAngleInitialized = false;
@@ -713,6 +721,8 @@ static void displayScene8() {
     mushroomTwo mushroom2;
     mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
 
+    BusSignBoard sign;
+    sign.draw(1630, 474, 100);
 
 
     //Upper Level
@@ -765,9 +775,25 @@ static void displayScene9() {
     FullMoon moon2;
     moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
 
+    cloud1_scene9.draw();
+    cloud2_scene9.draw();
+    cloud3_scene9.draw();
+    cloud4_scene9.draw();
+    cloud5_scene9.draw();
 
+    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
 
+    mushroomThree mushroom4;
+    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
+    mushroomOne mushroom5;
+    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
 
+    IslandTwo island1;
+    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
+    mushroomOne mushroom6;
+    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
 
     glFlush();
     glutSwapBuffers();
@@ -1194,7 +1220,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene8);
+
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
