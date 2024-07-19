@@ -68,8 +68,8 @@ std::vector<Cloud*> clouds_scene3{
 Thunder thunderScene3(clouds_scene3, 2.0f);
 
 std::vector<Cloud*> clouds_scene4{
-    new DayCloudOne(1290, 745, 130, Colors::DAY_CLOUD), // static
-    new DayCloudTwo(1510, 745, 140, Colors::DAY_CLOUD), // static
+    new DayCloudThree(1300, 740, 105, Colors::DAY_CLOUD), // static
+    new DayCloudThree(1500, 740, 105, Colors::DAY_CLOUD), // static
     new DayCloudTwo(140, 850, 130, Colors::DAY_CLOUD),
     new DayCloudTwo(1940, 800, 130, Colors::DAY_CLOUD),
     new DayCloudTwo(760, 700, 40, Colors::DAY_CLOUD),
@@ -101,6 +101,11 @@ DayCloudTwo cloud1_scene10{ 1080, 950, 110, Colors::DAY_CLOUD };
 DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
 DayCloudOne cloud3_scene10{ 1600, 850, 110, Colors::DAY_CLOUD };
 DayCloudTwo cloud4_scene10{ 1930, 885, 110, Colors::DAY_CLOUD };
+
+DayCloudTwo cloud1_scene11{ 1080, 900, 140, Colors::DAY_CLOUD };
+DayCloudTwo cloud2_scene11{ 400, 850, 140, Colors::DAY_CLOUD };
+DayCloudOne cloud3_scene11{ 1600, 800, 140, Colors::DAY_CLOUD };
+DayCloudTwo cloud4_scene11{ 1930, 900, 140, Colors::DAY_CLOUD };
 
 ///// Tree /////
 
@@ -785,7 +790,7 @@ static void displayScene8() {
     mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
 
     BusSignBoard sign;
-    sign.draw(1630, 474, 100);
+    sign.draw(1200, 530, 100, 3);
   
     //Upper Level
     GrassOne grass1;
@@ -946,11 +951,22 @@ static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
 
+    DaySunOne sun;
+    sun.draw(155, 940, 110, Colors::DAY_SUN);
+
+    cloud1_scene11.draw();
+    cloud2_scene11.draw();
+    cloud3_scene11.draw();
+    cloud4_scene11.draw();
+
+    House house;
+    house.draw(200.0f, 600.0f, 700.0f, true);
+
     //Upper Level
     GrassTwo grass1;
     grass1.draw(200, 250, 45, Colors::GRASS_DAY);
     GrassTwo grass2;
-    grass2.draw(460, 249, 47, Colors::GRASS_DAY);
+    grass2.draw(400, 253, 47, Colors::GRASS_DAY);
     GrassTwo grass3;
     grass3.draw(1200, 250, 46, Colors::GRASS_DAY);
     GrassOne grass4;
@@ -965,6 +981,7 @@ static void displayScene11() {
     grass8.draw(830, 248, 46, Colors::GRASS_DAY);
     GrassTwo grass9;
     grass9.draw(30, 248, 46, Colors::GRASS_DAY);
+
     //Lower Level
     GrassOne grass10;
     grass10.draw(50, 100, 60, Colors::GRASS_DAY);
@@ -978,8 +995,7 @@ static void displayScene11() {
     grass14.draw(1550, 60, 59, Colors::GRASS_DAY);
     GrassTwo grass15;
     grass15.draw(300, 140, 46, Colors::GRASS_DAY);
-    GrassTwo grass16;
-    grass16.draw(540, 180, 44, Colors::GRASS_DAY);
+
     GrassTwo grass17;
     grass17.draw(890, 65, 43, Colors::GRASS_DAY);
     GrassTwo grass18;
@@ -989,8 +1005,10 @@ static void displayScene11() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
+    /*
     Flower flower;
     flower.draw(200, 200, 200, 40, Colors::DAY_CLOUD);
+    */
 
     glFlush();
     glutSwapBuffers();
