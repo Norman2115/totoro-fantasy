@@ -32,7 +32,8 @@ TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
 Catbus catbus{ 500, 180, 600, false };
 Rain rain{ 500 };
-FadeEffect fadeEffect;
+FadeEffect fadeOutScene6;
+FadeEffect fadeInScene8;
 
 //for totoro side view walking
 int state = 0; // 0 for side view walking, 1 for front view
@@ -101,8 +102,6 @@ DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
 DayCloudOne cloud3_scene10{ 1600, 850, 110, Colors::DAY_CLOUD };
 DayCloudTwo cloud4_scene10{ 1930, 885, 110, Colors::DAY_CLOUD };
 
-
-
 ///// Tree /////
 
 TreeTwo tree8_scene3;
@@ -119,7 +118,7 @@ bool isScene3End = false;
 bool isScene4End = false;
 bool isScene6End = false;
 
-int currentScene = 1;
+int currentScene = 6;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -127,6 +126,7 @@ bool isScene2ArcAngleInitialized = false;
 bool isScene3GirlPosInitialized = false;
 bool isScene4Initialized = false;
 bool isScene4AfterBounceInitialized = false;
+bool isScene8Initialized = false;
 bool isScene6Initialized = false;
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
@@ -136,8 +136,8 @@ bool isCrying = false;
 bool isTotoroAppeared = false;
 bool isTotoroComforting = false;
 bool isFinishCrying = false;
-
 bool isFadeOutScene6 = false;
+bool isDoneFadeOutScene6 = false;
 
 ///// Delay Variables /////
 
@@ -158,6 +158,7 @@ const int finishCryingDurationCounter = 75;
 
 int fadeOutScene6DelayCounter = 0;
 const int fadeOutScene6DurationCounter = 60;
+
 
 /////   Declare states  /////
 
@@ -664,7 +665,7 @@ static void displayScene6_7() {
     }
 
     if (isFadeOutScene6) {
-        fadeEffect.drawFadeScreen();
+        fadeOutScene6.drawFadeScreen();
     }
 
     glFlush();
@@ -824,7 +825,6 @@ static void displayScene8() {
 
     glFlush();
     glutSwapBuffers();
-
 }
 
 static void displayScene9() {
@@ -896,9 +896,6 @@ static void displayScene10() {
     tree7.draw(1750, -80, 160, Colors::TREE_DAY);
     TreeTwo tree8;
     tree8.draw(1580, -100, 140, Colors::TREE_DAY);
-
-
-
 
     //Upper level
     GrassTwo grass1;
@@ -1017,6 +1014,18 @@ static void display() {
     }
     else if (currentScene == 6 || currentScene == 7) {
         displayScene6_7();
+    }
+    else if (currentScene == 8) {
+        displayScene8();
+    }
+    else if (currentScene == 9) {
+        displayScene9();
+    }
+    else if (currentScene == 10) {
+        displayScene10();
+    }
+    else if (currentScene == 11) {
+        displayScene11();
     }
 }
 
@@ -1140,7 +1149,17 @@ static void updateGirlPosition(int value) {
                 girl.moveVertically(1.8f);
             }
         }
+        if (isDoneFadeOutScene6) {
+            isScene6End = true;
+            currentScene = 8;
+        }
     }
+    else if (currentScene == 8) {
+        if (!isScene8Initialized) {
+            fadeInScene8.setOpacity(1.0f);
+        }
+    }
+
     glutPostRedisplay();
     glutTimerFunc(16, updateGirlPosition, 0);
 }
@@ -1348,8 +1367,11 @@ static void updateTreeOpacity(int value) {
 }
 
 static void updateFadeOutEffectScene6(int value) {
-    if (isFadeOutScene6) {
-        fadeEffect.updateFadeScreen();
+    if (isFadeOutScene6 && !isDoneFadeOutScene6) {
+        fadeOutScene6.updateFadeOutScreen();
+        if (fadeOutScene6.getOpacity() >= 1) {
+            isDoneFadeOutScene6 = true;
+        }
     }
     glutPostRedisplay();
     glutTimerFunc(16, updateFadeOutEffectScene6, 0);
@@ -1389,7 +1411,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene10);
+    glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
