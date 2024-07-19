@@ -648,7 +648,11 @@ static void displayScene7() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
-    //totoro.draw(960.0f, 450.0f, 300.0f);
+    girl.setPosX(850);
+    girl.setPosY(250);
+    girl.setCharacterSize(210);
+    girl.drawFrontView();
+    totoro.draw(1080.0f, 450.0f, 300.0f);
     //totoroSide.draw(700.0f, 300.0f, 300.0f);
 
     glFlush();
