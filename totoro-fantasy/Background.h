@@ -520,3 +520,7 @@ public:
     }
 };
 
+        /*  Line for Sunset
+        glColor3f(0.39, 0.64, 0.24);
+        Circle::draw(-490.0f, -2617.0f, 3600.0f);
+        */
