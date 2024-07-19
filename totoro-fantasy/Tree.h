@@ -7,7 +7,21 @@
 class Tree
 {
 private:
-	virtual void draw(float x, float y, float size, Color color) = 0;
+    virtual void draw(float x, float y, float size, Color color) = 0;
+
+protected:
+    float opacity = 1.0;
+
+public:
+    void setOpacity(float opacity)
+    {
+        this->opacity = opacity;
+    }
+
+    float getOpacity() const
+    {
+        return opacity;
+    }
 };
 
 class TreeOne : public Tree
@@ -15,8 +29,10 @@ class TreeOne : public Tree
 public:
     void draw(float x, float y, float size, Color color)
     {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // Draw the trunk
-        glColor3f(0.38, 0.26, 0.17); // Brown color
+        glColor4f(0.38, 0.26, 0.17, opacity); // Brown color
         glBegin(GL_POLYGON);
         glVertex2f(x - 0.1 * size, y);
         glVertex2f(x + 0.1 * size, y);
@@ -24,7 +40,7 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.1 * size, y);
         glVertex2f(x + 0.1 * size, y + 0.6 * size);
@@ -32,7 +48,7 @@ public:
         glVertex2f(x - 0.1 * size, y);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.01 * size, y + 0.24545 * size);
         glVertex2f(x + 0.0214 * size, y + 0.2492 * size);
@@ -49,7 +65,7 @@ public:
         glVertex2f(x + 0.001 * size, y + 0.2455 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.069 * size, y + 0.197 * size);
         glVertex2f(x + 0.0691 * size, y + 0.192 * size);
@@ -62,7 +78,7 @@ public:
         glVertex2f(x + 0.056 * size, y + 0.015 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.052 * size, y + 0.324 * size);
         glVertex2f(x - 0.052 * size, y + 0.319 * size);
@@ -71,7 +87,7 @@ public:
         glVertex2f(x - 0.056 * size, y + 0.2496 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.03 * size, y + 0.415 * size);
         glVertex2f(x + 0.04 * size, y + 0.395 * size);
@@ -81,7 +97,7 @@ public:
         glVertex2f(x + 0.065 * size, y + 0.314 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.005 * size, y + 0.403 * size);
         glVertex2f(x - 0.011 * size, y + 0.3975 * size);
@@ -90,7 +106,7 @@ public:
         glVertex2f(x - 0.023 * size, y + 0.361* size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.082 * size, y + 0.158 * size);
         glVertex2f(x - 0.082 * size, y + 0.139 * size);
@@ -100,14 +116,14 @@ public:
         glVertex2f(x - 0.062 * size, y + 0.092 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.02 * size, y + 0.125 * size);
         glVertex2f(x + 0.02 * size, y + 0.093 * size);
         glVertex2f(x + 0.0218 * size, y + 0.0772 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.055 * size, y + 0.04 * size);
         glVertex2f(x - 0.057 * size, y + 0.034 * size);
@@ -116,14 +132,14 @@ public:
         glEnd();
 
         // Draw the bottom triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.6 * size, y + 0.4 * size);
         glVertex2f(x + 0.6 * size, y + 0.4 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.6 * size, y + 0.4 * size);
@@ -131,14 +147,14 @@ public:
         glEnd();
 
         // Draw the middle triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.6 * size, y + 0.8 * size);
         glVertex2f(x + 0.6 * size, y + 0.8 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.6 * size, y + 0.8 * size);
@@ -146,19 +162,20 @@ public:
         glEnd();
 
         // Draw the top triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.8 * size);
         glVertex2f(x - 0.6 * size, y + 1.2 * size);
         glVertex2f(x + 0.6 * size, y + 1.2 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.8 * size);
         glVertex2f(x - 0.6 * size, y + 1.2 * size);
         glVertex2f(x + 0.6 * size, y + 1.2 * size);
         glEnd();
+        glDisable(GL_BLEND);
     }
 };
 
@@ -167,8 +184,10 @@ class TreeTwo : public Tree
 public:
     void draw(float x, float y, float size, Color color)
     {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // Draw the trunk
-        glColor3f(0.38, 0.26, 0.17); // Brown color
+        glColor4f(0.38, 0.26, 0.17, opacity); // Brown color
         glBegin(GL_POLYGON);
         glVertex2f(x - 0.1 * size, y);
         glVertex2f(x + 0.1 * size, y);
@@ -176,7 +195,7 @@ public:
         glVertex2f(x - 0.1 * size, y + 0.6 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.1 * size, y);
         glVertex2f(x + 0.1 * size, y + 0.6 * size);
@@ -184,7 +203,7 @@ public:
         glVertex2f(x - 0.1 * size, y);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.01 * size, y + 0.24545 * size);
         glVertex2f(x - 0.0214 * size, y + 0.2492 * size);
@@ -201,7 +220,7 @@ public:
         glVertex2f(x - 0.001 * size, y + 0.2455 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.069 * size, y + 0.197 * size);
         glVertex2f(x - 0.0691 * size, y + 0.192 * size);
@@ -214,7 +233,7 @@ public:
         glVertex2f(x - 0.056 * size, y + 0.015 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.052 * size, y + 0.324 * size);
         glVertex2f(x + 0.052 * size, y + 0.319 * size);
@@ -223,7 +242,7 @@ public:
         glVertex2f(x + 0.056 * size, y + 0.2496 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.03 * size, y + 0.415 * size);
         glVertex2f(x - 0.04 * size, y + 0.395 * size);
@@ -233,7 +252,7 @@ public:
         glVertex2f(x - 0.065 * size, y + 0.314 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.005 * size, y + 0.403 * size);
         glVertex2f(x + 0.011 * size, y + 0.3975 * size);
@@ -242,7 +261,7 @@ public:
         glVertex2f(x + 0.023 * size, y + 0.361 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.082 * size, y + 0.158 * size);
         glVertex2f(x + 0.082 * size, y + 0.139 * size);
@@ -252,14 +271,14 @@ public:
         glVertex2f(x + 0.062 * size, y + 0.092 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.02 * size, y + 0.125 * size);
         glVertex2f(x - 0.02 * size, y + 0.093 * size);
         glVertex2f(x - 0.0218 * size, y + 0.0772 * size);
         glEnd();
 
-        glColor3f(0.25, 0.17, 0.11);
+        glColor4f(0.25, 0.17, 0.11, opacity);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x + 0.055 * size, y + 0.04 * size);
         glVertex2f(x + 0.057 * size, y + 0.034 * size);
@@ -268,14 +287,14 @@ public:
         glEnd();
 
         // Draw the bottom triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.4 * size, y + 0.4 * size);
         glVertex2f(x + 0.4 * size, y + 0.4 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.0 * size);
         glVertex2f(x - 0.4 * size, y + 0.4 * size);
@@ -283,14 +302,14 @@ public:
         glEnd();
 
         // Draw the middle triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.4 * size, y + 0.8 * size);
         glVertex2f(x + 0.4 * size, y + 0.8 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.4 * size);
         glVertex2f(x - 0.4 * size, y + 0.8 * size);
@@ -298,18 +317,19 @@ public:
         glEnd();
 
         // Draw the top triangle
-        glColor3f(color.getR(), color.getG(), color.getB());
+        glColor4f(color.getR(), color.getG(), color.getB(), opacity);
         glBegin(GL_TRIANGLES);
         glVertex2f(x, y + 1.8 * size);
         glVertex2f(x - 0.4 * size, y + 1.2 * size);
         glVertex2f(x + 0.4 * size, y + 1.2 * size);
         glEnd();
 
-        glColor3f(0.0f, 0.0f, 0.0f); // Black outline
+        glColor4f(0.0f, 0.0f, 0.0f, opacity); // Black outline
         glBegin(GL_LINE_LOOP);
         glVertex2f(x, y + 1.8 * size);
         glVertex2f(x - 0.4 * size, y + 1.2 * size);
         glVertex2f(x + 0.4 * size, y + 1.2 * size);
         glEnd();
+        glDisable(GL_BLEND);
     }
 };
