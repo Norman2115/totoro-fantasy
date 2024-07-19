@@ -30,6 +30,7 @@
 Sound sound;
 bool isRainSoundPlaying = false;
 bool isThunderSoundPlaying = false;
+bool isPortalSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -373,6 +374,10 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (!isRainSoundPlaying) {
+        sound.playPortalSound();
+        isPortalSoundPlaying = true;
+    }
     Background::Scene3();
 
     FullMoon moon;
@@ -495,6 +500,14 @@ static void displayScene4() {
         sound.stopSound();
         isRainSoundPlaying = false;
     }
+
+    // Stop playing the rain sound
+    if (isPortalSoundPlaying) {
+        sound.stopSound();
+        isPortalSoundPlaying = false;
+    }
+
+
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -1482,7 +1495,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
     
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(displayScene3);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
