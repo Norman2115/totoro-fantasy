@@ -149,6 +149,7 @@
     <ClInclude Include="Mushroom1.h" />
     <ClInclude Include="Rain.h" />
     <ClInclude Include="Rainbow.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Thunder.h" />

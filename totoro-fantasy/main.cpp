@@ -21,9 +21,11 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
+#include "sound.h"
 
 /////   Declare global variables    /////
-
+Sound sound;
+bool isRainSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -209,6 +211,11 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
+    // Start playing the rain sound if it's not already playing
+    if (!isRainSoundPlaying) {
+        sound.playRainSound();
+        isRainSoundPlaying = true;
+    }
     Background::Scene2();
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
@@ -420,6 +427,11 @@ static void displayScene3() {
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
+    // Stop playing the rain sound
+    if (isRainSoundPlaying) {
+        sound.stopSound();
+        isRainSoundPlaying = false;
+    }
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -1193,8 +1205,8 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0);
     glutCreateWindow("Little Girl's Adventure");
     init();
-
-    glutDisplayFunc(display);
+    
+    glutDisplayFunc(displayScene2);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
@@ -1211,8 +1223,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlExitPortal, 0);
     glutTimerFunc(30, updateExitPortalBounce, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
-
+    
     return 0;
 }
