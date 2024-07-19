@@ -27,6 +27,13 @@ public:
                 }).detach();
         }
     }
+    void playPortalSound() {
+        if (!isPlaying.exchange(true)) {
+            std::thread([this]() {
+                PlaySound(TEXT("portal.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+                }).detach();
+        }
+    }
 
     void stopSound() {
         if (isPlaying.exchange(false)) {
