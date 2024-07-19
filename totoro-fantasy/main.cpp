@@ -419,28 +419,6 @@ static void displayScene3() {
     SmallRockTwo rock2;
     rock2.draw(1190, 235, 150, Colors::ROCK);
 
-    //Second Layer
-    TreeTwo tree6;
-    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
-    GrassOne grass21;
-    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
-    TreeTwo tree7;
-    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
-    GrassTwo grass22;
-    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
-
-    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
-
-    switch (currentGirlState) {
-    case LITTLE_GIRL_FRONT_VIEW:
-        girl.drawFrontView();
-        break;
-    case LITTLE_GIRL_SIDE_VIEW:
-    case LITTLE_GIRL_MOVING:
-        girl.drawSideView();
-        break;
-    }
-
     //Lower Level
     GrassOne grass7;
     grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
@@ -470,6 +448,30 @@ static void displayScene3() {
     grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
     GrassOne grass20;
     grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
+
+    //Second Layer
+    TreeTwo tree6;
+    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
+    GrassOne grass21;
+    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
+    TreeTwo tree7;
+    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
+    GrassTwo grass22;
+    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
+
+    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
+
+    switch (currentGirlState) {
+    case LITTLE_GIRL_FRONT_VIEW:
+        girl.drawFrontView();
+        break;
+    case LITTLE_GIRL_SIDE_VIEW:
+    case LITTLE_GIRL_MOVING:
+        girl.drawSideView();
+        break;
+    }
+
+
 
     //Third Layer
     tree8_scene3.draw(900, 150, 350, Colors::TREE_NIGHT);
@@ -570,17 +572,6 @@ static void displayScene4() {
     GrassOne grass9;
     grass9.draw(20, 248, 52, Colors::GRASS_DAY);
 
-    Flower flower1;
-    flower1.draw(80, 200, 40, 40, Colors::FLOWER_BLUE);  
-    Flower flower3;
-    flower3.draw(1050, 220, 40, 50, Colors::FLOWER_ORANGE);    
-    Flower flower4;
-    flower4.draw(790, 20, 40, 60, Colors::FLOWER_PURPLE);    
-    Flower flower5;
-    flower5.draw(1800, 100, 40, 80, Colors::FLOWER_RED);
-    Flower flower6;
-    flower6.draw(400, 50, 40, 90, Colors::FLOWER_YELLOW);
-
     //Lower Level
     GrassTwo grass10;
     grass10.draw(50, 150, 60, Colors::GRASS_DAY);
@@ -612,6 +603,17 @@ static void displayScene4() {
             girl.drawSideView();
             break;
     }
+
+    Flower flower1;
+    flower1.draw(80, 200, 40, 40, Colors::FLOWER_BLUE);
+    Flower flower3;
+    flower3.draw(1050, 190, 40, 50, Colors::FLOWER_ORANGE);
+    Flower flower4;
+    flower4.draw(790, 20, 40, 60, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(1800, 100, 40, 80, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(400, 50, 40, 90, Colors::FLOWER_YELLOW);
 
     glFlush();
     glutSwapBuffers();
@@ -1494,8 +1496,9 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0);
     glutCreateWindow("Little Girl's Adventure");
     init();
-    
+
     glutDisplayFunc(displayScene3);
+
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
@@ -1514,7 +1517,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlViewScene6, 0);
     glutTimerFunc(16, updateFadeOutEffectScene6, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;
