@@ -27,6 +27,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
             glVertex2f(x - 0.25 * size, y);
@@ -34,6 +36,7 @@ public:
             glVertex2f(x + 0.25 * size, y + 0.5 * size);
             glVertex2f(x - 0.25 * size, y + 0.5 * size);
             glEnd();
+            glPopMatrix();
         }
 
 
@@ -49,6 +52,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
             for (int i = 0; i <= 180; i++) {
@@ -56,6 +61,7 @@ public:
                 glVertex2f(x + cos(rad) * 0.5 * size, y + 0.5 * size + sin(rad) * 0.5 * size);
             }
             glEnd();
+            glPopMatrix();
         }
 
         // mushroom spots
@@ -94,6 +100,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             // Stem outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
@@ -102,6 +110,7 @@ public:
             glVertex2f(x + 0.15 * size, y + 0.5 * size);
             glVertex2f(x - 0.15 * size, y + 0.5 * size);
             glEnd();
+            glPopMatrix();
         }
 
         // Cap
@@ -115,6 +124,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             // Cap outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
@@ -123,6 +134,7 @@ public:
                 glVertex2f(x + cos(rad) * 0.4 * size, y + 0.5 * size + sin(rad) * 0.55 * size);
             }
             glEnd();
+            glPopMatrix();
         }
 
         // Cap circles
@@ -161,6 +173,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             // Stem outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
@@ -169,6 +183,7 @@ public:
             glVertex2f(x + 0.35 * size, y + 0.35 * size);
             glVertex2f(x - 0.35 * size, y + 0.35 * size);
             glEnd();
+            glPopMatrix();
 
         }
 
@@ -183,6 +198,8 @@ public:
 
         if (Line)
         {
+            glPushMatrix();
+            glLineWidth(1.0f);
             // Cap outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
@@ -191,6 +208,7 @@ public:
                 glVertex2f(x + cos(rad) * 0.5 * size, y + 0.35 * size + sin(rad) * 0.5 * size);
             }
             glEnd();
+            glPopMatrix();
         }
 
         // Cap circles

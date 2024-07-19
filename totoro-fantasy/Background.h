@@ -10,6 +10,7 @@
 #include "Circle.h"
 #include "Elements.h"
 #include "Star.h"
+#include "Mushroom1.h"
 
 class Background {
 private:
@@ -119,6 +120,8 @@ public:
         glVertex2f(1920.0f, 220.0f);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f); 
         glColor3f(0.0f, 0.0f, 0.0f);
         glBegin(GL_LINE_LOOP);
         glVertex2f(1200.0f, 220.0f);
@@ -132,6 +135,7 @@ public:
         glVertex2f(1880.0f, 460.0f);
         glVertex2f(1920.0f, 220.0f);
         glEnd();
+        glPopMatrix(); 
 
         // Small Rocks
         glColor3f(0.37, 0.38, 0.38);
@@ -147,6 +151,9 @@ public:
         glVertex2f(1810.0f, 200.0f);
         glEnd();
 
+
+        glPushMatrix(); 
+        glLineWidth(1.0f);
         glColor3f(0.0f, 0.0f, 0.0f);
         glBegin(GL_LINE_LOOP);
         glVertex2f(1670.0f, 200.0f);
@@ -159,6 +166,8 @@ public:
         glVertex2f(1930.0f, 200.0f);
         glVertex2f(1810.0f, 200.0f);
         glEnd();
+        glPopMatrix();
+
     }
 
     static void Scene4() {
@@ -371,6 +380,15 @@ public:
         glEnd();
 
         Star::draw(true);
+
+        mushroomOne mushroom2;
+        mushroom2.draw(300, 0, 800, Colors::MUSHROOM_NIGHT, true);
+        mushroomThree mushroom1;
+        mushroom1.draw(-150, -150, 800, Colors::MUSHROOM_NIGHT, true);
+        mushroomOne mushroom3;
+        mushroom3.draw(570, 15, 380, Colors::MUSHROOM_NIGHT, true);
+
+
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);

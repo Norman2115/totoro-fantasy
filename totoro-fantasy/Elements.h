@@ -27,6 +27,8 @@ class SmallRockOne : public Elements {
             glVertex2f(x - 0.28 * size, y - 0.18 * size);
             glEnd();
 
+            glPushMatrix();
+            glLineWidth(1.0f);
             glColor3f(0.0, 0.0, 0.0); 
             glBegin(GL_LINE_STRIP);
             glVertex2f(x - 0.49 * size, y - 0.03 * size);
@@ -39,6 +41,7 @@ class SmallRockOne : public Elements {
             glVertex2f(x - 0.28 * size, y - 0.18 * size);
             glVertex2f(x - 0.49 * size, y - 0.03 * size);  
             glEnd();
+            glPopMatrix();
         }
 };
 
@@ -62,6 +65,8 @@ public:
         glVertex2f(x - 0.13 * size, y - 0.08 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.0, 0.0, 0.0);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.21 * size, y - 0.03 * size);
@@ -78,6 +83,7 @@ public:
         glVertex2f(x - 0.13 * size, y - 0.08 * size);
         glVertex2f(x - 0.21 * size, y - 0.03 * size);
         glEnd();
+        glPopMatrix();
     }
 };
 
@@ -107,6 +113,8 @@ public:
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.14 * size, y - 0.08 * size);  
@@ -128,6 +136,7 @@ public:
         glVertex2f(x + 0.09 * size, y - 0.058 * size);
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
+        glPopMatrix();
     }
 
     void drawWithRotation(float x, float y, float size, float angle, Color color) {
@@ -158,6 +167,8 @@ public:
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.14 * size, y - 0.08 * size);
@@ -179,8 +190,9 @@ public:
         glVertex2f(x + 0.09 * size, y - 0.058 * size);
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
-
         glPopMatrix();
+        glPopMatrix();
+
     }
 };
 
@@ -209,6 +221,8 @@ public:
         glVertex2f(x + 0.3 * size, y - 0.1 * size);   
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.4 * size, y - 0.1 * size);
@@ -229,6 +243,7 @@ public:
         glVertex2f(x + 0.28 * size, y - 0.06 * size);
         glVertex2f(x + 0.3 * size, y - 0.1 * size);
         glEnd();
+        glPopMatrix();
     }
 
     void drawWithRotation(float x, float y, float size, float angle, Color color) {
@@ -258,6 +273,8 @@ public:
         glVertex2f(x + 0.3 * size, y - 0.1 * size);
         glEnd();
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.4 * size, y - 0.1 * size);
@@ -278,8 +295,9 @@ public:
         glVertex2f(x + 0.28 * size, y - 0.06 * size);
         glVertex2f(x + 0.3 * size, y - 0.1 * size);
         glEnd();
-
         glPopMatrix();
+        glPopMatrix();
+
     }
 };
 
@@ -288,6 +306,8 @@ public:
     void draw(float x, float y, float size, Color color) {
         glColor3f(color.getR(), color.getG(), color.getB());
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.14 * size, y - 0.08 * size);
@@ -309,6 +329,7 @@ public:
         glVertex2f(x + 0.09 * size, y - 0.058 * size);
         glVertex2f(x + 0.112 * size, y - 0.08 * size);
         glEnd();
+        glPopMatrix();
     }
 };
 
@@ -317,6 +338,8 @@ public:
     void draw(float x, float y, float size, Color color) {
         glColor3f(color.getR(), color.getG(), color.getB());
 
+        glPushMatrix();
+        glLineWidth(1.0f);
         glColor3f(0.22, 0.3, 0.17);
         glBegin(GL_LINE_STRIP);
         glVertex2f(x - 0.4 * size, y - 0.1 * size);
@@ -337,5 +360,6 @@ public:
         glVertex2f(x + 0.28 * size, y - 0.06 * size);
         glVertex2f(x + 0.3 * size, y - 0.1 * size);
         glEnd();
+        glPopMatrix();
     }
 };

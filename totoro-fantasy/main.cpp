@@ -25,11 +25,18 @@
 /////   Declare global variables    /////
 
 Portal portal;
-Totoro totoro;
+Totoro totoroFront;
+TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
-// TotoroSide totoroSide;
 Catbus catbus{ 500, 180, 600, false };
 Rain rain{ 500 };
+
+//for totoro side view walking
+int state = 0; // 0 for side view walking, 1 for front view
+float positionX = 1980.0f; // Starting position for the side view
+const float startX = 1.0f;
+const float endX = 1020.0f; // Ending position for the side view
+int steps = 0;
 
 std::vector<Cloud*> clouds_scene1{
     new DayCloudTwo(1080, 900, 150, Colors::NIGHT_CLOUD),
@@ -72,6 +79,11 @@ DayCloudOne cloud3_scene6{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
+
+DayCloudTwo cloud1_scene8{ 1000, 940, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene8{ 1700, 860, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud4_scene8{ 0, 860, 120, Colors::NIGHT_CLOUD };
 
 ///// Tree /////
 
@@ -164,7 +176,7 @@ static void displayScene1() {
     GrassOne grass14;
     grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
     GrassTwo grass15;
-    grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);      
+    grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);
     GrassTwo grass17;
     grass17.draw(890, 65, 43, Colors::GRASS_NIGHT);
     GrassTwo grass18;
@@ -182,13 +194,13 @@ static void displayScene1() {
     }
 
     switch (currentState) {
-        case FRONT_VIEW:
-            girl.drawFrontView();
-            break;
-        case SIDE_VIEW:
-        case MOVING:
-            girl.drawSideView();
-            break;
+    case FRONT_VIEW:
+        girl.drawFrontView();
+        break;
+    case SIDE_VIEW:
+    case MOVING:
+        girl.drawSideView();
+        break;
     }
 
     glFlush();
@@ -222,7 +234,7 @@ static void displayScene2() {
     GrassTwo grass2;
     grass2.drawWithRotation(800, 160, 55, 25, Colors::GRASS_NIGHT);
     GrassTwo grass3;
-    grass3.drawWithRotation(600, 45, 55,33, Colors::GRASS_NIGHT);
+    grass3.drawWithRotation(600, 45, 55, 33, Colors::GRASS_NIGHT);
     GrassTwo grass4;
     grass4.drawWithRotation(400, 157, 20, 340, Colors::GRASS_NIGHT);
     GrassTwo grass5;
@@ -232,11 +244,11 @@ static void displayScene2() {
     GrassOne grass10;
     grass10.drawWithRotation(900, 208, 60, 22, Colors::GRASS_NIGHT);
     GrassOne grass11;
-    grass11.drawWithRotation(550, 98, 30, 335, Colors::GRASS_NIGHT);    
+    grass11.drawWithRotation(550, 98, 30, 335, Colors::GRASS_NIGHT);
 
     //Lower Level
     GrassOne grass12;
-    grass12.drawWithRotation(90, 40, 30, 330, Colors::GRASS_NIGHT);  
+    grass12.drawWithRotation(90, 40, 30, 330, Colors::GRASS_NIGHT);
     GrassTwo grass7;
     grass7.drawWithRotation(440, 85, 20, 335, Colors::GRASS_NIGHT);
     GrassOne grass13;
@@ -286,13 +298,13 @@ static void displayScene2() {
     rain.renderRain();
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 }
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene3();
-  
+
     FullMoon moon;
     moon.draw(1535, 950, 140, Colors::NIGHT_FULL_MOON);
 
@@ -345,13 +357,13 @@ static void displayScene3() {
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
 
     switch (currentState) {
-        case FRONT_VIEW:
-            girl.drawFrontView();
-            break;
-        case SIDE_VIEW:
-        case MOVING:
-            girl.drawSideView();
-            break;
+    case FRONT_VIEW:
+        girl.drawFrontView();
+        break;
+    case SIDE_VIEW:
+    case MOVING:
+        girl.drawSideView();
+        break;
     }
 
     //Lower Level
@@ -403,14 +415,14 @@ static void displayScene3() {
     rain.renderRain();
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 }
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene4();
-    RainbowOne rainbow;   
-    
+    RainbowOne rainbow;
+
     DaySunOne sun;
     sun.draw(160, 930, 110, Colors::DAY_SUN);
 
@@ -503,7 +515,7 @@ static void displayScene4() {
     }
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 }
 
 static void displayScene5() {
@@ -536,7 +548,7 @@ static void displayScene6() {
     mushroomThree mushroom1;
     mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom2;
-    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);   
+    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom4;
     mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom3;
@@ -585,7 +597,7 @@ static void displayScene6() {
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 
 }
 
@@ -660,21 +672,48 @@ static void displayScene7() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
 
+    if (state == 0) {
+        // Side view walking
+        totoroSide.draw(positionX, 420.0f, 270.0f); // Adjust the Y position and size as needed
+    }
+    else if (state == 1) {
+        // Front view
+        totoroFront.draw(1080.0f, 450.0f, 300.0f);
+
+    }
+
     girl.setPosX(850);
     girl.setPosY(250);
     girl.setCharacterSize(210);
     girl.drawFrontView();
-    totoro.draw(1080.0f, 450.0f, 300.0f);
-    //totoroSide.draw(700.0f, 300.0f, 300.0f);
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 
 }
 
 static void displayScene8() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
+
+    FullMoon moon1;
+    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON);
+    FullMoon moon2;
+    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON);
+
+    cloud1_scene8.draw();
+    cloud2_scene8.draw();
+    cloud3_scene8.draw();
+    cloud4_scene8.draw();
+
+    IslandOne island1;
+    island1.draw(1400, 900, 100, Colors::ISLAND_NIGHT);
+    mushroomThree mushroom1;
+    mushroom1.draw(1390, 928, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom2;
+    mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
+
+
 
     //Upper Level
     GrassOne grass1;
@@ -713,7 +752,7 @@ static void displayScene8() {
     grass16.drawWithRotation(1850, 100, 58, 357, Colors::GRASS_NIGHT);
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 
 }
 
@@ -721,7 +760,7 @@ static void displayScene9() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 
 }
 
@@ -770,7 +809,7 @@ static void displayScene10() {
     grass20.drawWithRotation(1450, 25, 20, 350, Colors::GRASS_DAY);
 
     glFlush();
-    glutSwapBuffers(); 
+    glutSwapBuffers();
 
 }
 
@@ -834,7 +873,7 @@ static void display() {
     }
     else if (currentScene == 2) {
         displayScene2();
-    } 
+    }
     else if (currentScene == 3) {
         displayScene3();
     }
@@ -849,18 +888,35 @@ static void display() {
     }
 }
 
+void totoroTimer(int value) {
+    if (state == 0) {
+        totoroSide.updateFrame();
+        positionX -= 17.0f; // Move to the left by 5 pixels per update
+        if (positionX <= 1080.0f) { 
+            state = 1;
+            totoroFront.startBounce(); // Start the bounce effect
+        }
+    }
+    else if (state == 1) {
+        totoroFront.updateBounce(); // Update the bounce effect
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(100, totoroTimer, 0); // Keep the timer interval for smoother updates
+}
+
 /////   Declare update functions  /////
 
 static void changeGirlStateAfterDelay(int value) {
     switch (currentState) {
-        case FRONT_VIEW:
-            currentState = SIDE_VIEW;
-            break;
-        case SIDE_VIEW:
-            currentState = MOVING;
-            break;
-        default:
-            break;
+    case FRONT_VIEW:
+        currentState = SIDE_VIEW;
+        break;
+    case SIDE_VIEW:
+        currentState = MOVING;
+        break;
+    default:
+        break;
     }
     glutPostRedisplay();
 }
@@ -1120,16 +1176,16 @@ static void updateCatbusFrame(int value) {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA); 
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
     int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
     glutInitWindowSize(screenWidth, screenHeight);
-    glutInitWindowPosition(0, 0); 
+    glutInitWindowPosition(0, 0);
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
-
+    glutDisplayFunc(displayScene8);
+    glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
@@ -1145,7 +1201,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlExitPortal, 0);
     glutTimerFunc(30, updateExitPortalBounce, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
 
     return 0;
