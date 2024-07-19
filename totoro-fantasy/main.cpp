@@ -80,6 +80,11 @@ DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 
+DayCloudTwo cloud1_scene8{ 1000, 940, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene8{ 1700, 860, 120, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud4_scene8{ 0, 860, 120, Colors::NIGHT_CLOUD };
+
 
 ///// Tree /////
 
@@ -679,6 +684,25 @@ static void displayScene8() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
 
+    FullMoon moon1;
+    moon1.draw(134, 950, 140, Colors::NIGHT_FULL_MOON);
+    FullMoon moon2;
+    moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON);
+
+    cloud1_scene8.draw();
+    cloud2_scene8.draw();
+    cloud3_scene8.draw();
+    cloud4_scene8.draw();
+
+    IslandOne island1;
+    island1.draw(1400, 900, 100, Colors::ISLAND_NIGHT);
+    mushroomThree mushroom1;
+    mushroom1.draw(1390, 928, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom2;
+    mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
+
+
+
     //Upper Level
     GrassOne grass1;
     grass1.drawWithRotation(1750, 450, 60, 2, Colors::GRASS_NIGHT);
@@ -1096,9 +1120,9 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene7);
+    glutDisplayFunc(displayScene8);
     glutTimerFunc(100, totoroTimer, 0);
-    portal.startTimer();
+    portal.startTimer(); 
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
     glutTimerFunc(16, updateGirlPosition, 0);
