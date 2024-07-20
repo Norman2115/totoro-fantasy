@@ -1032,17 +1032,20 @@ static void displayScene9() {
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
 
-    mushroomThree mushroom4;
-    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
-    mushroomOne mushroom5;
-    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+    mushroomOne mushroom11(1818, 730, 20, Colors::MUSHROOM_NIGHT);
+    mushroom11.draw(false);
+
+    mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
+    mushroom4.draw(true);
+    mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
+    mushroom5.draw(true);
 
     IslandTwo island1;
     island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom6;
-    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomTwo mushroom7;
-    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+    mushroomOne mushroom6(1310, 400, 20, Colors::MUSHROOM_NIGHT);
+    mushroom6.draw(false);
+    mushroomTwo mushroom7(1290, 400, 10, Colors::MUSHROOM_NIGHT);
+    mushroom7.draw(false);
 
     catbus.drawRunningView();
 
