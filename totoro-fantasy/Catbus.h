@@ -2,6 +2,7 @@
 #include <gl/glut.h>
 #include "Ellipse.h"
 #include "Circle.h"
+#include "Constants.h"
 
 class Catbus
 {
@@ -9,21 +10,25 @@ private:
     float posX;
     float posY;
     float busSize;
+    float opacity;
     int currentFrame;
     bool movingRight;
     bool isDay;
     bool isBoarded;
+    float currentAngle;
 
     void drawBody() const {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // Ear - Inner
-        glColor3ub(244, 243, 224);
+        glColor4ub(244, 243, 224, opacity * 255);
         glBegin(GL_POLYGON);
         glVertex2f(-0.4f, 0.2f);
         glVertex2f(-0.4125f, 0.3f);
         glVertex2f(-0.45f, 0.21f);
         glEnd();
         // Ear - Outer
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glBegin(GL_POLYGON);
         glVertex2f(-0.45f, 0.21f);
         glVertex2f(-0.4125f, 0.3f);
@@ -31,16 +36,16 @@ private:
         glEnd();
 
         // Tail
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Circle::draw(0.6625, 0.0625, 0.0625);
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         glBegin(GL_POLYGON);
         glVertex2f(0.475f, -0.025f);
         glVertex2f(0.475f, 0.075f);
         glVertex2f(0.65f, 0.125f);
         glVertex2f(0.675f, 0.0f);
         glEnd();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         // Tail - Lower Stripe
         glBegin(GL_POLYGON);
         glVertex2f(0.5125f, 0.086f);
@@ -50,7 +55,7 @@ private:
         glEnd();
 
         // Body
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         glBegin(GL_QUADS);
         glVertex2f(-0.375f, -0.05f);
         glVertex2f(0.475f, -0.05f);
@@ -58,7 +63,7 @@ private:
         glVertex2f(-0.375f, 0.375f);
         glEnd();
         // Body Outline
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glBegin(GL_LINE_LOOP);
         glVertex2f(-0.375f, -0.05f);
         glVertex2f(0.475f, -0.05f);
@@ -66,7 +71,7 @@ private:
         glVertex2f(-0.375f, 0.375f);
         glEnd();
         // Body - Top Stripe
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glBegin(GL_QUADS);
         glVertex2f(-0.375f, 0.35f);
         glVertex2f(0.475f, 0.35f);
@@ -74,7 +79,7 @@ private:
         glVertex2f(-0.375f, 0.375f);
         glEnd();
         // Body - Middle Stripe
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glBegin(GL_QUADS);
         glVertex2f(-0.375f, 0.1f);
         glVertex2f(0.475f, 0.1f);
@@ -83,31 +88,28 @@ private:
         glEnd();
 
         // Head
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Circle::draw(-0.45f, 0.075f, 0.145f);
 
         // Eye
-        glColor3ub(244, 234, 15);
+        glColor4ub(244, 234, 15, opacity * 255);
         Circle::draw(-0.515f, 0.125f, 0.0325);
         // Lens
-        glColor3ub(0, 0, 0);
+        glColor4ub(0, 0, 0, opacity * 255);
         Ellipse::drawEllipse(-0.525f, 0.15f, 0.011f, 0.025f, 80);
         // Light
         if (!isDay) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBegin(GL_POLYGON);
-            glColor4ub(255, 253, 175, 50);
+            glColor4ub(255, 253, 175, opacity * 50);
             glVertex2f(-0.515f, 0.155);
             glVertex2f(-0.515f, 0.096);
             glVertex2f(-0.9, 0.07);
             glVertex2f(-0.9, 0.165);
             glEnd();
-            glDisable(GL_BLEND);
         }
 
         // Mouth
-        glColor3ub(255, 255, 255);
+        glColor4ub(255, 255, 255, opacity * 255);
         glBegin(GL_POLYGON);
         glVertex2f(-0.55f, -0.025f);
         glVertex2f(-0.45f, 0.075f);
@@ -115,7 +117,7 @@ private:
         glEnd();
 
         // Teeth
-        glColor3ub(182, 167, 149);
+        glColor4ub(182, 167, 149, opacity * 255);
         glBegin(GL_LINES);
         glVertex2f(-0.5f, 0.065f);
         glVertex2f(-0.49f, 0.0365f);
@@ -128,7 +130,7 @@ private:
         // Whiskers
         glPushAttrib(GL_CURRENT_BIT | GL_LINE_BIT);
         glLineWidth(2);
-        glColor3ub(0, 0, 0);
+        glColor4ub(0, 0, 0, opacity * 255);
         glBegin(GL_LINES);
         glVertex2f(-0.475, 0.1f);
         glVertex2f(-0.4125f, 0.125f);
@@ -144,7 +146,7 @@ private:
         glPopAttrib();
 
         // Face Stripe
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glPushMatrix();
         glTranslatef(-0.325f, 0.125f, 0.0f);
         glRotatef(270, 0.0f, 0.0f, 1.0f);
@@ -160,10 +162,10 @@ private:
 
         // Windows
         if (isDay) {
-            glColor3ub(0, 0, 0);
+            glColor4ub(0, 0, 0, opacity * 255);
         }
         else {
-            glColor3ub(0, 0, 0);
+            glColor4ub(0, 0, 0, opacity * 255);
         }
         // Window 1
         glBegin(GL_POLYGON);
@@ -224,10 +226,10 @@ private:
 
         // Windows - Frame within Frame
         if (isDay) {
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
         }
         else {
-            glColor3ub(255, 253, 141);
+            glColor4ub(255, 253, 141, opacity * 255);
         }
         // Window 1
         glBegin(GL_POLYGON);
@@ -335,14 +337,14 @@ private:
         glEnd();
 
         if (isBoarded) {
-            glColor3ub(255, 255, 255);
+            glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
             Circle::draw(0.1063f, 0.2385f, 0.038f);
         }
     }
 
 public:
     Catbus(float startX, float startY, float size, bool isDay)
-        : posX(startX), posY(startY), busSize(size), currentFrame(0), movingRight(true), isDay(isDay), isBoarded(false) {
+        : posX(startX), posY(startY), busSize(size), opacity(1.0f), currentFrame(0), movingRight(true), isDay(isDay), isBoarded(false), currentAngle(Constants::PI / 3) {
     }
 
     void drawStandstillView() {
@@ -353,14 +355,14 @@ public:
         drawBody();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Strip 1
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(-0.15f, -0.08f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(0.15f, 0.08f, 0.0f);
@@ -368,7 +370,7 @@ public:
         glPopMatrix();
         // Stripe 2
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(-0.31f, -0.15f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(0.31f, 0.15f, 0.0f);
@@ -376,14 +378,14 @@ public:
         glPopMatrix();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Stripe
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(-0.187f, -0.115f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(0.187f, 0.115f, 0.0f);
@@ -391,14 +393,14 @@ public:
         glPopMatrix();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Stripe
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(-0.062f, -0.115f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(0.062f, 0.115f, 0.0f);
@@ -406,14 +408,14 @@ public:
         glPopMatrix();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Stripe
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(0.062f, -0.115f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(-0.062f, 0.115f, 0.0f);
@@ -421,14 +423,14 @@ public:
         glPopMatrix();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Stripe
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(0.188f, -0.115f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(-0.188f, 0.115f, 0.0f);
@@ -436,19 +438,22 @@ public:
         glPopMatrix();
 
         glPushMatrix();
-        glColor3ub(237, 182, 38);
+        glColor4ub(237, 182, 38, opacity * 255);
         Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.12f, 100);
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.12f, 100);
         glPopMatrix();
         // Stripe
         glPushMatrix();
-        glColor3ub(193, 129, 59);
+        glColor4ub(193, 129, 59, opacity * 255);
         glTranslatef(0.262f, -0.115f, 0.0f);
         glRotatef(90, 0.0f, 0.0f, 1.0f);
         glTranslatef(-0.262f, 0.115f, 0.0f);
         Ellipse::drawEllipse(0.262f, -0.115f, 0.02f, 0.0375f, 100);
         glPopMatrix();
+
+        glPopMatrix();
+        glDisable(GL_BLEND);
     }
 
     void drawRunningView() {
@@ -467,17 +472,17 @@ public:
 
         if (currentFrame == 0) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.35f, 0.043f, 0.0f);
             glRotatef(10, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.35f, -0.043f, 0.0f);
@@ -485,7 +490,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.4125f, 0.034f, 0.0f);
             glRotatef(10, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.4125f, -0.034f, 0.0f);
@@ -494,17 +499,17 @@ public:
 
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.11f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.11f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.225f, -0.052f, 0.0f);
             glRotatef(60, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.225f, 0.052f, 0.0f);
@@ -512,17 +517,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.038f, -0.125f, 0.0f);
             glRotatef(100, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.038f, 0.13f, 0.0f);
@@ -530,17 +535,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.115f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.115f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.15f, -0.125f, 0.0f);
             glRotatef(130, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.15f, 0.125f, 0.0f);
@@ -548,17 +553,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.115f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.115f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.278f, -0.13f, 0.0f);
             glRotatef(130, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.278f, 0.13f, 0.0f);
@@ -566,17 +571,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.3305f, -0.13f, 0.0f);
             glRotatef(120, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.3305f, 0.13f, 0.0f);
@@ -585,17 +590,17 @@ public:
         }
         else if (currentFrame == 1) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.26f, -0.1f, 0.0f);
             glRotatef(120, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.26f, 0.1f, 0.0f);
@@ -603,7 +608,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.228f, -0.16f, 0.0f);
             glRotatef(120, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.228f, 0.16f, 0.0f);
@@ -611,17 +616,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.11f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.11f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.178f, -0.1f, 0.0f);
             glRotatef(90, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.178f, 0.1f, 0.0f);
@@ -629,17 +634,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.08f, -0.1f, 0.0f);
             glRotatef(70, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.08f, 0.1f, 0.0f);
@@ -647,17 +652,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.115f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.115f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.01f, -0.02f, 0.0f);
             glRotatef(30, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.01f, 0.02f, 0.0f);
@@ -665,17 +670,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.1f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.1f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.135f, -0.015f, 0.0f);
             glRotatef(30, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.135f, 0.015f, 0.0f);
@@ -683,17 +688,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles2[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.1f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.1f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.35f, -0.1f, 0.0f);
             glRotatef(140, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.35f, 0.1f, 0.0f);
@@ -702,17 +707,17 @@ public:
         }
         else if (currentFrame == 2) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.15f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.15f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.228f, -0.105f, 0.0f);
             glRotatef(130, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.228f, 0.105f, 0.0f);
@@ -720,7 +725,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.176f, -0.161f, 0.0f);
             glRotatef(130, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.176f, 0.161f, 0.0f);
@@ -728,17 +733,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.14f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.14f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.092f, -0.135f, 0.0f);
             glRotatef(130, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.092f, 0.135f, 0.0f);
@@ -746,17 +751,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.02f, -0.13f, 0.0f);
             glRotatef(110, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.02f, 0.13f, 0.0f);
@@ -764,17 +769,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.052f, -0.11f, 0.0f);
             glRotatef(80, 0.00f, 0.0f, 1.0f);
             glTranslatef(-0.052f, 0.11f, 0.0f);
@@ -782,17 +787,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.115f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.115f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.12f, -0.015f, 0.0f);
             glRotatef(30, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.12f, 0.015f, 0.0f);
@@ -800,17 +805,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles3[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.11f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.11f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.245f, -0.09f, 0.0f);
             glRotatef(80, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.245f, 0.09f, 0.0f);
@@ -819,17 +824,17 @@ public:
         }
         else if (currentFrame == 3) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.17f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.17f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.1895f, -0.115f, 0.0f);
             glRotatef(140, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.1895f, 0.115f, 0.0f);
@@ -837,7 +842,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.132f, -0.16f, 0.0f);
             glRotatef(140, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.132f, 0.16f, 0.0f);
@@ -845,17 +850,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.15f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.15f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.068f, -0.145f, 0.0f);
             glRotatef(135, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.068f, 0.145f, 0.0f);
@@ -863,17 +868,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.008f, -0.13f, 0.0f);
             glRotatef(115, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.008f, 0.13f, 0.0f);
@@ -881,17 +886,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.062f, -0.115f, 0.0f);
             glRotatef(90, 0.00f, 0.0f, 1.0f);
             glTranslatef(-0.062f, 0.115f, 0.0f);
@@ -899,17 +904,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.13f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.13f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.147f, -0.1f, 0.0f);
             glRotatef(70, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.147f, 0.1f, 0.0f);
@@ -917,17 +922,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles4[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.1f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.1f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.214f, -0.035f, 0.0f);
             glRotatef(50, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.214f, 0.035f, 0.0f);
@@ -936,17 +941,17 @@ public:
         }
         else if (currentFrame == 4) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.11f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.11f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.288f, -0.08f, 0.0f);
             glRotatef(105, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.288f, 0.08f, 0.0f);
@@ -954,7 +959,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.274f, -0.145f, 0.0f);
             glRotatef(105, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.274f, 0.145f, 0.0f);
@@ -962,17 +967,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.139f, -0.12f, 0.0f);
             glRotatef(110, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.139f, 0.12f, 0.0f);
@@ -980,17 +985,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.14f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.14f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.057f, -0.13f, 0.0f);
             glRotatef(140, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.057f, 0.13f, 0.0f);
@@ -998,17 +1003,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.115f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.115f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.132f, -0.12f, 0.0f);
             glRotatef(130, 0.00f, 0.0f, 1.0f);
             glTranslatef(-0.132f, 0.12f, 0.0f);
@@ -1016,17 +1021,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.22f, -0.13f, 0.0f);
             glRotatef(103, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.22f, 0.13f, 0.0f);
@@ -1034,17 +1039,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles5[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.245f, -0.1f, 0.0f);
             glRotatef(80, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.245f, 0.1f, 0.0f);
@@ -1053,17 +1058,17 @@ public:
         }
         else if (currentFrame == 5) {
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[0], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.25f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe 1
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.36f, -0.012f, 0.0f);
             glRotatef(35, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.36f, 0.012f, 0.0f);
@@ -1071,7 +1076,7 @@ public:
             glPopMatrix();
             // Stripe 2
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.41f, -0.0555f, 0.0f);
             glRotatef(35, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.41f, 0.0555f, 0.0f);
@@ -1079,17 +1084,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[1], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(-0.125f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(-0.22f, -0.08f, 0.0f);
             glRotatef(70, 0.0f, 0.0f, 1.0f);
             glTranslatef(0.22f, 0.08f, 0.0f);
@@ -1097,17 +1102,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.0f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[2], 0.0f, 0.0f, 1.0f);
             glTranslatef(0.0f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.0f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.0f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.002f, -0.13f, 0.0f);
             glRotatef(120, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.002f, 0.13f, 0.0f);
@@ -1115,17 +1120,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.125f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[3], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.125f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.125f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.125f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.128f, -0.13f, 0.0f);
             glRotatef(120, 0.00f, 0.0f, 1.0f);
             glTranslatef(-0.128f, 0.13f, 0.0f);
@@ -1133,17 +1138,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.25f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[4], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.25f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.25f, 0.0f, 0.0625f, 0.12f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.25f, 0.0f, 0.0625f, 0.12f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.208f, -0.12f, 0.0f);
             glRotatef(98, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.208f, 0.12f, 0.0f);
@@ -1151,17 +1156,17 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            glColor3ub(237, 182, 38);
+            glColor4ub(237, 182, 38, opacity * 255);
             glTranslatef(0.325f, 0.0f, 0.0f);
             glRotatef(rotationAngles6[5], 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.325f, 0.0f, 0.0f);
             Ellipse::drawEllipse(0.325f, 0.0f, 0.0625f, 0.125f, 100);
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             Ellipse::drawEllipseBorder(0.325f, 0.0f, 0.0625f, 0.125f, 100);
             glPopMatrix();
             // Stripe
             glPushMatrix();
-            glColor3ub(193, 129, 59);
+            glColor4ub(193, 129, 59, opacity * 255);
             glTranslatef(0.262f, -0.11f, 0.0f);
             glRotatef(88, 0.0f, 0.0f, 1.0f);
             glTranslatef(-0.262f, 0.11f, 0.0f);
@@ -1170,10 +1175,69 @@ public:
         }
 
         glPopMatrix();
+        glDisable(GL_BLEND);
     }
 
-    void move() {
+    float getPosX() const {
+        return posX;
+    }
 
+    void setPosX(float x) {
+        posX = x;
+    }
+
+    float getPosY() const {
+        return posY;
+    }
+
+    void setPosY(float y) {
+        posY = y;
+    }
+
+    float getBusSize() const {
+        return busSize;
+    }
+
+    void setBusSize(float size) {
+        busSize = size;
+    }
+
+    float getOpacity() const {
+        return opacity;
+    }
+
+    void setOpacity(float opacity) {
+        this->opacity = opacity;
+    }
+    
+    float getCurrentAngle() const {
+        return currentAngle;
+    }
+
+    void setCurrentAngle(float currentAngle) {
+        this->currentAngle = currentAngle;
+    }
+
+    bool getIsBoarded() const {
+        return isBoarded;
+    }
+
+    void setIsBoarded(bool isBoarded) {
+        this->isBoarded = isBoarded;
+    }
+
+    void move(float speed) {
+        posX -= speed;
+    }
+
+    void moveInArc(float speed, float angleIncrement) {
+        float centerX = 1700.0f;
+        float centerY = -2750.0f;
+        float radius = 3100.0f;
+
+        currentAngle += angleIncrement * speed;
+        posX = centerX + radius * cos(currentAngle);
+        posY = centerY + radius * sin(currentAngle);
     }
 
     void updateFrame() {
