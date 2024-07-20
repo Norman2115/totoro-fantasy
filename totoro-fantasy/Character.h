@@ -109,6 +109,7 @@ protected:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
+        glPushAttrib(GL_LINE_BIT);
         glLineWidth(3);
         // Head
         glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
@@ -144,6 +145,7 @@ protected:
         glVertex2f(0.025f, 0.0f);
         glVertex2f(0.075f, -0.025f);
         glEnd();
+        glPopAttrib();
         glPopMatrix();
         glDisable(GL_BLEND);
     }
@@ -154,6 +156,7 @@ protected:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
+        glPushAttrib(GL_LINE_BIT);
         glLineWidth(3);
 
         glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
@@ -256,6 +259,7 @@ protected:
             glVertex2f(0.025f, 0.25f);
             glEnd();
         }
+        glPopAttrib();
         glPopMatrix();
         glDisable(GL_BLEND);
     }

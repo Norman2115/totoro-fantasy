@@ -7,22 +7,71 @@
 
 class Mushroom1
 {
-private:
-    virtual void draw(float x, float y, float size, Color color, bool Line) = 0;
+protected:
+    float posX;
+    float posY;
+    float size;
+    Color color;
+
+    Mushroom1(float startX, float startY, float size, Color color) : posX(startX), posY(startY), size(size), color(color) {}
+
+public:
+    virtual void draw(bool Line) = 0;
+
+    void moveInfinite(float speed, bool movingRight) {
+        if (movingRight) {
+            posX += speed;
+            if (posX > 2100.0f) {
+                posX = -180.0f;
+            }
+        }
+        else {
+            posX -= speed;
+            if (posX < -180.0f) {
+                posX = 2100.0f;
+            }
+        }
+    }
+
+    void move(float speed) {
+        posX += speed;
+    }
+
+    float getPosX() const {
+        return posX;
+    }
+
+    void setPosX(float x) {
+        posX = x;
+    }
+
+    float getPosY() const {
+        return posY;
+    }
+
+    void setPosY(float y) {
+        posY = y;
+    }
 };
 
 class mushroomOne : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color, bool Line) override
+    mushroomOne(float startX, float startY, float size, Color color) : Mushroom1(startX, startY, size, color) {}
+
+    void draw(bool Line) override
     {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0);
+        glScalef(size, size, 1);
+
         // mushroom stem
         glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.25 * size, y);
-        glVertex2f(x + 0.25 * size, y);
-        glVertex2f(x + 0.25 * size, y + 0.5 * size);
-        glVertex2f(x - 0.25 * size, y + 0.5 * size);
+        glVertex2f(-0.25, 0);
+        glVertex2f(0.25, 0);
+        glVertex2f(0.25, 0.5);
+        glVertex2f(-0.25, 0.5);
         glEnd();
 
         if (Line)
@@ -31,10 +80,10 @@ public:
             glLineWidth(1.0f);
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
-            glVertex2f(x - 0.25 * size, y);
-            glVertex2f(x + 0.25 * size, y);
-            glVertex2f(x + 0.25 * size, y + 0.5 * size);
-            glVertex2f(x - 0.25 * size, y + 0.5 * size);
+            glVertex2f(-0.25, 0);
+            glVertex2f(0.25, 0);
+            glVertex2f(0.25, 0.5);
+            glVertex2f(-0.25, 0.5);
             glEnd();
             glPopMatrix();
         }
@@ -43,29 +92,27 @@ public:
         {
             glColor3f(0.87, 0.83, 0.74);
             glBegin(GL_LINES);
-            glVertex2f(x - 0.09 * size, y + 0.45 * size);
-            glVertex2f(x - 0.09 * size, y + 0.25 * size);
-            glVertex2f(x - 0.2 * size, y + 0.50 * size);
-            glVertex2f(x - 0.2 * size, y + 0.30 * size);
-            glVertex2f(x + 0.12 * size, y + 0.25 * size);
-            glVertex2f(x + 0.12 * size, y + 0.05 * size);
-            glVertex2f(x + 0.07 * size, y + 0.50 * size);
-            glVertex2f(x + 0.07 * size, y + 0.43 * size);
-            glVertex2f(x, y + 0.15 * size);
-            glVertex2f(x, y);
+            glVertex2f(-0.09, 0.45);
+            glVertex2f(-0.09, 0.25);
+            glVertex2f(-0.2, 0.50);
+            glVertex2f(-0.2, 0.30);
+            glVertex2f(0.12, 0.25);
+            glVertex2f(0.12, 0.05);
+            glVertex2f(0.07, 0.50);
+            glVertex2f(0.07, 0.43);
+            glVertex2f(0, 0.15);
+            glVertex2f(0, 0);
             glEnd();
         }
-
 
         // mushroom top
         glColor3f(color.getR(), color.getG(), color.getB());
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y + 0.5 * size + sin(rad) * 0.5 * size);
+            glVertex2f(cos(rad) * 0.5, 0.5 + sin(rad) * 0.5);
         }
         glEnd();
-
 
         if (Line)
         {
@@ -75,7 +122,7 @@ public:
             glBegin(GL_LINE_LOOP);
             for (int i = 0; i <= 180; i++) {
                 float rad = i * 3.14159 / 180;
-                glVertex2f(x + cos(rad) * 0.5 * size, y + 0.5 * size + sin(rad) * 0.5 * size);
+                glVertex2f(cos(rad) * 0.5, 0.5 + sin(rad) * 0.5);
             }
             glEnd();
             glPopMatrix();
@@ -83,12 +130,13 @@ public:
 
         // mushroom spots
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.35 * size, y + 0.7 * size, 0.07 * size);
-        drawCircle(x - 0.1 * size, y + 0.85 * size, 0.07 * size);
-        drawCircle(x + 0.35 * size, y + 0.65 * size, 0.07 * size);
-        drawCircle(x + 0.1 * size, y + 0.75 * size, 0.07 * size);
-        drawCircle(x - 0.1 * size, y + 0.59 * size, 0.07 * size);
-    
+        drawCircle(-0.35, 0.7, 0.07);
+        drawCircle(-0.1, 0.85, 0.07);
+        drawCircle(0.35, 0.65, 0.07);
+        drawCircle(0.1, 0.75, 0.07);
+        drawCircle(-0.1, 0.59, 0.07);
+
+        glPopMatrix();
     }
 
     void drawCircle(float cx, float cy, float r) {
@@ -104,15 +152,21 @@ public:
 class mushroomTwo : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color, bool Line)
+    mushroomTwo(float startX, float startY, float size, Color color) : Mushroom1(startX, startY, size, color) {}
+
+    void draw(bool Line) override
     {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0);
+        glScalef(size, size, 1);
+
         // Stem
         glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.15 * size, y);
-        glVertex2f(x + 0.15 * size, y);
-        glVertex2f(x + 0.15 * size, y + 0.5 * size);
-        glVertex2f(x - 0.15 * size, y + 0.5 * size);
+        glVertex2f(-0.15, 0);
+        glVertex2f(0.15, 0);
+        glVertex2f(0.15, 0.5);
+        glVertex2f(-0.15, 0.5);
         glEnd();
 
         if (Line)
@@ -122,10 +176,10 @@ public:
             // Stem outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
-            glVertex2f(x - 0.15 * size, y);
-            glVertex2f(x + 0.15 * size, y);
-            glVertex2f(x + 0.15 * size, y + 0.5 * size);
-            glVertex2f(x - 0.15 * size, y + 0.5 * size);
+            glVertex2f(-0.15, 0);
+            glVertex2f(0.15, 0);
+            glVertex2f(0.15, 0.5);
+            glVertex2f(-0.15, 0.5);
             glEnd();
             glPopMatrix();
         }
@@ -135,7 +189,7 @@ public:
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.4 * size, y + 0.5 * size + sin(rad) * 0.55 * size);
+            glVertex2f(cos(rad) * 0.4, 0.5 + sin(rad) * 0.55);
         }
         glEnd();
 
@@ -148,7 +202,7 @@ public:
             glBegin(GL_LINE_LOOP);
             for (int i = 0; i <= 180; i++) {
                 float rad = i * 3.14159 / 180;
-                glVertex2f(x + cos(rad) * 0.4 * size, y + 0.5 * size + sin(rad) * 0.55 * size);
+                glVertex2f(cos(rad) * 0.4, 0.5 + sin(rad) * 0.55);
             }
             glEnd();
             glPopMatrix();
@@ -156,10 +210,12 @@ public:
 
         // Cap circles
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.20 * size, y + 0.82 * size, 0.05 * size);
-        drawCircle(x - 0.01 * size, y + 0.85 * size, 0.08 * size);
-        drawCircle(x - 0.30 * size, y + 0.63 * size, 0.055 * size);
-        drawCircle(x + 0.24 * size, y + 0.70 * size, 0.09 * size);
+        drawCircle(-0.20, 0.82, 0.05);
+        drawCircle(-0.01, 0.85, 0.08);
+        drawCircle(-0.30, 0.63, 0.055);
+        drawCircle(0.24, 0.70, 0.09);
+
+        glPopMatrix();
     }
 
     void drawCircle(float cx, float cy, float r) {
@@ -169,23 +225,28 @@ public:
             glVertex2f(cx + cos(rad) * r, cy + sin(rad) * r);
         }
         glEnd();
-
-
     }
 };
+
 
 class mushroomThree : public Mushroom1
 {
 public:
-    void draw(float x, float y, float size, Color color, bool Line)
+    mushroomThree(float startX, float startY, float size, Color color) : Mushroom1(startX, startY, size, color) { }
+
+    void draw(bool Line) override
     {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0);
+        glScalef(size, size, 1);
+
         // Stem
         glColor3f(1, 0.97, 0.89);
         glBegin(GL_POLYGON);
-        glVertex2f(x - 0.35 * size, y);
-        glVertex2f(x + 0.35 * size, y);
-        glVertex2f(x + 0.35 * size, y + 0.35 * size);
-        glVertex2f(x - 0.35 * size, y + 0.35 * size);
+        glVertex2f(-0.35, 0);
+        glVertex2f(0.35, 0);
+        glVertex2f(0.35, 0.35);
+        glVertex2f(-0.35, 0.35);
         glEnd();
 
         if (Line)
@@ -195,33 +256,29 @@ public:
             // Stem outline
             glColor3f(0.0f, 0.0f, 0.0f);
             glBegin(GL_LINE_LOOP);
-            glVertex2f(x - 0.35 * size, y);
-            glVertex2f(x + 0.35 * size, y);
-            glVertex2f(x + 0.35 * size, y + 0.35 * size);
-            glVertex2f(x - 0.35 * size, y + 0.35 * size);
+            glVertex2f(-0.35, 0);
+            glVertex2f(0.35, 0);
+            glVertex2f(0.35, 0.35);
+            glVertex2f(-0.35, 0.35);
             glEnd();
             glPopMatrix();
 
-        }
-
-        if (Line)
-        {
             glColor3f(0.87, 0.83, 0.74);
             glBegin(GL_LINES);
-            glVertex2f(x - 0.25 * size, y + 0.15 * size);
-            glVertex2f(x - 0.25 * size, y);
-            glVertex2f(x - 0.15 * size, y + 0.30 * size);
-            glVertex2f(x - 0.15 * size, y + 0.15 * size);
-            glVertex2f(x - 0.035 * size, y + 0.20 * size);
-            glVertex2f(x - 0.035 * size, y + 0.10 * size);
-            glVertex2f(x + 0.07 * size, y + 0.35 * size);
-            glVertex2f(x + 0.07 * size, y + 0.25 * size);
-            glVertex2f(x + 0.15 * size, y + 0.15 * size);
-            glVertex2f(x + 0.15 * size, y + 0.05 * size);
-            glVertex2f(x + 0.25 * size, y + 0.35 * size);
-            glVertex2f(x + 0.25 * size, y + 0.30 * size);
-            glVertex2f(x + 0.30 * size, y + 0.08 * size);
-            glVertex2f(x + 0.30 * size, y);
+            glVertex2f(-0.25, 0.15);
+            glVertex2f(-0.25, 0);
+            glVertex2f(-0.15, 0.30);
+            glVertex2f(-0.15, 0.15);
+            glVertex2f(-0.035, 0.20);
+            glVertex2f(-0.035, 0.10);
+            glVertex2f(0.07, 0.35);
+            glVertex2f(0.07, 0.25);
+            glVertex2f(0.15, 0.15);
+            glVertex2f(0.15, 0.05);
+            glVertex2f(0.25, 0.35);
+            glVertex2f(0.25, 0.30);
+            glVertex2f(0.30, 0.08);
+            glVertex2f(0.30, 0);
             glEnd();
         }
 
@@ -230,7 +287,7 @@ public:
         glBegin(GL_POLYGON);
         for (int i = 0; i <= 180; i++) {
             float rad = i * 3.14159 / 180;
-            glVertex2f(x + cos(rad) * 0.5 * size, y + 0.35 * size + sin(rad) * 0.5 * size);
+            glVertex2f(cos(rad) * 0.5, 0.35 + sin(rad) * 0.5);
         }
         glEnd();
 
@@ -243,7 +300,7 @@ public:
             glBegin(GL_LINE_LOOP);
             for (int i = 0; i <= 180; i++) {
                 float rad = i * 3.14159 / 180;
-                glVertex2f(x + cos(rad) * 0.5 * size, y + 0.35 * size + sin(rad) * 0.5 * size);
+                glVertex2f(cos(rad) * 0.5, 0.35 + sin(rad) * 0.5);
             }
             glEnd();
             glPopMatrix();
@@ -251,12 +308,14 @@ public:
 
         // Cap circles
         glColor3f(1.0f, 1.0f, 1.0f);
-        drawCircle(x - 0.05 * size, y + 0.7 * size, 0.07 * size);
-        drawCircle(x - 0.2 * size, y + 0.44 * size, 0.05 * size);
-        drawCircle(x + 0.35 * size, y + 0.55 * size, 0.05 * size);
-        drawCircle(x + 0.15 * size, y + 0.65 * size, 0.05 * size);
-        drawCircle(x - 0.25 * size, y + 0.65 * size, 0.05 * size);
-        drawCircle(x + 0.10 * size, y + 0.45 * size, 0.05 * size);
+        drawCircle(-0.05, 0.7, 0.07);
+        drawCircle(-0.2, 0.44, 0.05);
+        drawCircle(0.35, 0.55, 0.05);
+        drawCircle(0.15, 0.65, 0.05);
+        drawCircle(-0.25, 0.65, 0.05);
+        drawCircle(0.10, 0.45, 0.05);
+
+        glPopMatrix();
     }
 
     void drawCircle(float cx, float cy, float r) {
@@ -266,7 +325,5 @@ public:
             glVertex2f(cx + cos(rad) * r, cy + sin(rad) * r);
         }
         glEnd();
-
-
     }
 };
