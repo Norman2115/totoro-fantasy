@@ -86,9 +86,6 @@ std::vector<Cloud*> clouds_scene6{
     new DayCloudOne(1600, 850, 130, Colors::NIGHT_CLOUD)
 };
 
-DayCloudTwo cloud1_scene7{ 1080, 950, 130, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud2_scene7{ 400, 900, 130, Colors::NIGHT_CLOUD };
-DayCloudOne cloud3_scene7{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 
 DayCloudTwo cloud1_scene8{ 1000, 940, 120, Colors::NIGHT_CLOUD };
 DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
@@ -100,6 +97,10 @@ DayCloudOne cloud2_scene9{ 440, 410, 120, Colors::NIGHT_CLOUD };
 DayCloudOne cloud3_scene9{ 1700, 360, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud4_scene9{ 0, 360, 120, Colors::NIGHT_CLOUD };
 DayCloudTwo cloud5_scene9{ 1930, 460, 120, Colors::NIGHT_CLOUD };
+
+DayCloudTwo cloud1_scene9Half{ 1080, 950, 130, Colors::NIGHT_CLOUD };
+DayCloudTwo cloud2_scene9Half{ 400, 900, 130, Colors::NIGHT_CLOUD };
+DayCloudOne cloud3_scene9Half{ 1600, 850, 130, Colors::NIGHT_CLOUD };
 
 DayCloudTwo cloud1_scene10{ 1080, 950, 110, Colors::DAY_CLOUD };
 DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
@@ -775,15 +776,6 @@ static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
-    FullMoon moon1;
-    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON, 1);
-    FullMoon moon2;
-    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON, 1);
-
-    cloud1_scene7.draw();
-    cloud2_scene7.draw();
-    cloud3_scene7.draw();
-
     mushroomThree mushroom5;
     mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom6;
@@ -795,52 +787,13 @@ static void displayScene7() {
     mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom2;
     mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom4;
-    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
     mushroomThree mushroom3;
     mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom4;
+    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
 
-    //Upper Level
-    GrassTwo grass1;
-    grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass2;
-    grass2.draw(456, 249, 50, Colors::GRASS_NIGHT);
-    GrassTwo grass3;
-    grass3.draw(1210, 250, 50, Colors::GRASS_NIGHT);
-    GrassOne grass4;
-    grass4.draw(266, 250, 52, Colors::GRASS_NIGHT);
-    GrassOne grass5;
-    grass5.draw(766, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass6;
-    grass6.draw(1730, 249, 53, Colors::GRASS_NIGHT);
-    GrassTwo grass7;
-    grass7.draw(1820, 250, 49, Colors::GRASS_NIGHT);
-    GrassTwo grass8;
-    grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
-    GrassTwo grass9;
-    grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
 
-    //Lower Level
-    GrassOne grass10;
-    grass10.draw(50, 150, 60, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
-    GrassOne grass13;
-    grass13.draw(1240, 80, 62, Colors::GRASS_NIGHT);
-    GrassOne grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.draw(300, 140, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass16;
-    grass16.draw(540, 120, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass17;
-    grass17.draw(890, 95, 43, Colors::GRASS_NIGHT);
-    GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass19;
-    grass19.draw(1830, 30, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
+
 
     if (state == 0) {
         // Side view walking
@@ -985,6 +938,102 @@ static void displayScene9() {
     glutSwapBuffers();
 
 }
+
+static void displayScene9Half() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene6_7();
+
+    FullMoon moon1;
+    moon1.draw(135, 950, 140, Colors::NIGHT_FULL_MOON, 1);
+    FullMoon moon2;
+    moon2.draw(230, 915, 30, Colors::NIGHT_FULL_MOON, 1);
+
+    IslandTwo island1;
+    island1.draw(1830, 700, 150, Colors::ISLAND_NIGHT);
+    mushroomOne mushroom11;
+    mushroom11.draw(1818, 730, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomThree mushroom12;
+    mushroom12.draw(1840, 730, 13, Colors::MUSHROOM_NIGHT, false);
+
+    cloud1_scene9Half.draw();
+    cloud2_scene9Half.draw();
+    cloud3_scene9Half.draw();
+
+    mushroomThree mushroom5;
+    mushroom5.draw(360, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom6;
+    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom7;
+    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom2;
+    mushroom2.draw(500, 250, 400, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom3;
+    mushroom3.draw(1210, 250, 350, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom10;
+    mushroom10.draw(1650, 250, 150, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom8;
+    mushroom8.draw(155, 250, 120, Colors::MUSHROOM_NIGHT, true);
+
+
+    //Upper Level
+    GrassTwo grass1;
+    grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
+    GrassOne grass2;
+    grass2.draw(456, 249, 50, Colors::GRASS_NIGHT);
+    GrassTwo grass3;
+    grass3.draw(1210, 250, 50, Colors::GRASS_NIGHT);
+    GrassOne grass4;
+    grass4.draw(266, 250, 52, Colors::GRASS_NIGHT);
+    GrassOne grass5;
+    grass5.draw(766, 250, 55, Colors::GRASS_NIGHT);
+    GrassOne grass6;
+    grass6.draw(1730, 249, 53, Colors::GRASS_NIGHT);
+    GrassTwo grass7;
+    grass7.draw(1820, 250, 49, Colors::GRASS_NIGHT);
+    GrassTwo grass8;
+    grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
+    GrassTwo grass9;
+    grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
+
+    Flower flower1;
+    flower1.draw(1050, 100, 40, 60, Colors::FLOWER_BLUE);
+    Flower flower2;
+    flower2.draw(400, 190, 40, 100, Colors::FLOWER_CYAN);
+    Flower flower3;
+    flower3.draw(100, 90, 40, 130, Colors::FLOWER_RED);
+    Flower flower4;
+    flower4.draw(800, 50, 40, 20, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(1300, 190, 40, 60, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(1800, 120, 40, 40, Colors::FLOWER_PURPLE);
+
+    //Lower Level
+    GrassOne grass10;
+    grass10.draw(50, 150, 60, Colors::GRASS_NIGHT);
+    GrassOne grass11;
+    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
+    GrassOne grass13;
+    grass13.draw(1240, 80, 62, Colors::GRASS_NIGHT);
+    GrassOne grass14;
+    grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
+    GrassTwo grass15;
+    grass15.draw(300, 140, 46, Colors::GRASS_NIGHT);
+    GrassTwo grass16;
+    grass16.draw(540, 120, 44, Colors::GRASS_NIGHT);
+    GrassTwo grass17;
+    grass17.draw(890, 95, 43, Colors::GRASS_NIGHT);
+    GrassTwo grass18;
+    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
+    GrassTwo grass19;
+    grass19.draw(1830, 30, 46, Colors::GRASS_NIGHT);
+    GrassTwo grass20;
+    grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
+
+    glFlush();
+    glutSwapBuffers();
+}
+
 
 static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1736,7 +1785,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene5);
+    glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer();
@@ -1764,7 +1813,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateCatbusExitPortal, 0);
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;

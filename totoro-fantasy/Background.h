@@ -503,6 +503,7 @@ public:
 
     }
 
+
     static void Scene10() {
         glClear(GL_COLOR_BUFFER_BIT);
 
