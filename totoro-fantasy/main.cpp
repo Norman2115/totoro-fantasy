@@ -1031,7 +1031,9 @@ static void displayScene9() {
     moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
-
+  
+    mushroomOne mushroom11(1818, 730, 20, Colors::MUSHROOM_NIGHT);
+    mushroom11.draw(false);
     mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
     mushroom4.draw(true);
     mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
