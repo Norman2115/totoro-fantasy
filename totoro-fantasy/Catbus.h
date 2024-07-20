@@ -1230,6 +1230,11 @@ public:
         posX -= speed;
     }
 
+    void moveDiagonal(float speedX, float speedY) {
+        posX += speedX;
+        posY += speedY;
+    }
+
     void moveInArc(float speed, float angleIncrement) {
         float centerX = 1700.0f;
         float centerY = -2750.0f;
