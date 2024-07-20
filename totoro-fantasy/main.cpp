@@ -28,9 +28,9 @@
 
 /////   Declare global variables    /////
 Sound sound;
-bool isRainSoundPlaying = false;
-bool isThunderSoundPlaying = false;
-bool isPortalSoundPlaying = false;
+//bool isRainSoundPlaying = false;
+//bool isThunderSoundPlaying = false;
+//bool isPortalSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -231,10 +231,8 @@ static void init() {
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (!isThunderSoundPlaying) {
-        sound.playThunderSound();
-        isRainSoundPlaying = true;
-    }
+    sound.playDoorSound();
+        sound.playThunderSoundWithDelay(3);
     Background::Scene1();
 
     House house;
@@ -304,15 +302,10 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (isThunderSoundPlaying) {
-        sound.stopSound();
-        isThunderSoundPlaying = false;
-    }
-    // Start playing the rain sound if it's not already playing
-    if (!isRainSoundPlaying) {
+
         sound.playRainSound();
-        isRainSoundPlaying = true;
-    }
+
+
     Background::Scene2();
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
@@ -407,10 +400,8 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!isPortalSoundPlaying) {
-        sound.playPortalSound();
-        isPortalSoundPlaying = true;
-    }
+    sound.playRainSoundForDuration(7);
+    sound.playPortalSoundWithDelay(7);
     Background::Scene3();
 
     FullMoon moon;
@@ -528,17 +519,9 @@ static void displayScene3() {
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
-    // Stop playing the rain sound
-    if (isRainSoundPlaying) {
-        sound.stopSound();
-        isRainSoundPlaying = false;
-    }
-
-    // Stop playing the rain sound
-    if (isPortalSoundPlaying) {
-        sound.stopSound();
-        isPortalSoundPlaying = false;
-    }
+    sound.stopPortalSound();
+    // Play portal sound for 1 second
+        sound.playPortalSoundForDuration(1);
 
 
     Background::Scene4();
@@ -1811,7 +1794,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateCatbusExitPortal, 0);
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
     
     return 0;
