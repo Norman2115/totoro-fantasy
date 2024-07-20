@@ -1082,6 +1082,14 @@ static void displayScene11() {
     glutSwapBuffers();
 }
 
+static void displayScene12() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene12();
+
+    glFlush();
+    glutSwapBuffers();
+}
+
 static void display() {
     if (currentScene == 1) {
         displayScene1();
@@ -1497,7 +1505,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene3);
+    glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 

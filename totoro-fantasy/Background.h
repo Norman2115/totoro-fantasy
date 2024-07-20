@@ -518,6 +518,17 @@ public:
         glVertex2f(1920.0f, 250.0f);
         glEnd();
     }
+
+    static void Scene12() {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBegin(GL_POLYGON);
+        glColor3f(0, 0, 0);
+        glVertex2f(0, 0);
+        glVertex2f(0, 1080);
+        glVertex2f(1920, 0);
+        glVertex2f(1920, 1080);
+        glEnd();
+    }
 };
 
         /*  Line for Sunset
