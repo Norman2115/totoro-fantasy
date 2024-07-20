@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cmath>
 #include <iostream>
+#include <vector>
 #include <thread>
 #include <chrono>
 #include "Constants.h"
@@ -16,17 +17,10 @@
 #include "Flower.h"
 #include "Character.h"
 
-DayCloudTwo cloud1_scene5{ 1080, 920, 130, Colors::DAY_CLOUD };
-DayCloudTwo cloud2_scene5{ 400, 880, 130, Colors::DAY_CLOUD };
-DayCloudOne cloud3_scene5{ 1600, 830, 130, Colors::DAY_CLOUD };
-DayCloudOne cloud4_scene5{ -10, 850, 130, Colors::DAY_CLOUD };
-DayCloudOne cloud5_scene5{ 1950, 900, 130, Colors::DAY_CLOUD };
-DayCloudTwo cloud6_scene5{ 1320, 695, 15, Colors::DAY_CLOUD };
 
 class Background {
-private:
-
 public:
+
     static void Scene1() {
         glClear(GL_COLOR_BUFFER_BIT);
         glBegin(GL_POLYGON);
@@ -111,8 +105,6 @@ public:
         glVertex2f(1920.0f, 250.0f);
         glVertex2f(0.0f, 250.0f);
         glEnd();
-
-
     }
 
     static void Cave() {
@@ -226,146 +218,130 @@ public:
         glEnd();
         glPopMatrix();
     }
-
     
-    static void Scene5() { 
-        int transitionTime = 5000; // 5 seconds
-        int steps = 100;
-        int delay = transitionTime / steps;
+    static void Scene5(LittleGirl& girl, std::vector<Island*>& islands, std::vector<Elements*>& grass, std::vector<Cloud*>& clouds, std::vector<Mushroom1*>& mushrooms, std::vector<Flower*>& flower, DaySunOne sun, int currentStep, int steps) {
+        float a = (float)currentStep / steps; // Appear
+        float f = 1.0f - a; // Fade 
 
-        for (int i = 0; i <= steps; i++) {
-            float a = (float)i / steps; // Appear
-            float f = 1.0f - a; // Fade 
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            glClear(GL_COLOR_BUFFER_BIT);
+        // Sunset 
+        glBegin(GL_QUADS);
+        glColor3f(1, 0.25 * a + 0.71 * f, 0.53 * a + 0.99 * f);
+        glVertex2f(0.0f, 1080.0f);
+        glVertex2f(1920.0f, 1080.0f);
 
-            // Sunset 
-            glBegin(GL_QUADS);
-            glColor3f(1, 0.25 * a + 0.71 * f, 0.53 * a + 0.99 * f);
-            glVertex2f(0.0f, 1080.0f);
-            glVertex2f(1920.0f, 1080.0f);
+        glColor3f(1, 0.45 * a + 0.8 * f, 0.26 * a + 1 * f);
+        glVertex2f(1920.0f, 720.0f);
+        glVertex2f(0.0f, 720.0f);
 
-            glColor3f(1, 0.45 * a + 0.8 * f, 0.26 * a + 1 * f);
-            glVertex2f(1920.0f, 720.0f);
-            glVertex2f(0.0f, 720.0f);
+        glColor3f(1, 0.45 * a + 0.8 * f, 0.26 * a + 1 * f);
+        glVertex2f(0.0f, 720.0f);
+        glVertex2f(1920.0f, 720.0f);
 
-            glColor3f(1, 0.45 * a + 0.8 * f, 0.26 * a + 1 * f);
-            glVertex2f(0.0f, 720.0f);
-            glVertex2f(1920.0f, 720.0f);
+        glColor3f(1, 0.63 * a + 1 * f, 0.26 * a + 0.87 * f);
+        glVertex2f(1920.0f, 250.0f);
+        glVertex2f(0.0f, 250.0f);
 
-            glColor3f(1, 0.63 * a + 1 * f, 0.26 * a + 0.87 * f);
-            glVertex2f(1920.0f, 250.0f);
-            glVertex2f(0.0f, 250.0f);
+        glColor3f(1, 0.63 * a + 1 * f, 0.26 * a + 0.87 * f);
+        glVertex2f(0.0f, 250.0f);
+        glVertex2f(1920.0f, 0.0f);
+        glVertex2f(0.0f, 0.0f);
+        glEnd();
 
-            glColor3f(1, 0.63 * a + 1 * f, 0.26 * a + 0.87 * f);
-            glVertex2f(0.0f, 250.0f);
-            glVertex2f(1920.0f, 0.0f);
-            glVertex2f(0.0f, 0.0f);
-            glEnd();
+        sun.draw();
 
-            // Ground 
-            glColor3f(0.44 * a + 0.67 * f, 0.74 * a + 0.97 * f, 0.27 * a + 0.5 * f);
-            glBegin(GL_QUADS);
-            glVertex2f(0.0f, 0.0f);
-            glVertex2f(1920.0f, 0.0f);
-            glVertex2f(1920.0f, 250.0f);
-            glVertex2f(0.0f, 250.0f);
-            glEnd();
+        // Ground 
+        glColor3f(0.44 * a + 0.67 * f, 0.74 * a + 0.97 * f, 0.27 * a + 0.5 * f);
+        glBegin(GL_QUADS);
+        glVertex2f(0.0f, 0.0f);
+        glVertex2f(1920.0f, 0.0f);
+        glVertex2f(1920.0f, 250.0f);
+        glVertex2f(0.0f, 250.0f);
+        glEnd();
 
-            glColor3f(0.22, 0.3, 0.17);
-            glBegin(GL_LINES);
-            glVertex2f(0.0f, 250.0f);
-            glVertex2f(1920.0f, 250.0f);
-            glEnd();
+        glColor3f(0.22, 0.3, 0.17);
+        glBegin(GL_LINES);
+        glVertex2f(0.0f, 250.0f);
+        glVertex2f(1920.0f, 250.0f);
+        glEnd();
 
-            // Sun is Sun
-            DaySunOne sun;
-            sun.draw(160, 930, 110, Colors::DAY_SUN);
+        // Dont Move
+        IslandTwo island1;
+        island1.draw(700, 850, 150, Colors::ISLAND_DAY);
+        IslandOne island2;
+        island2.draw(1300, 700, 120, Colors::ISLAND_DAY);
+        mushrooms.at(0)->draw(false);
+        mushrooms.at(1)->draw(false);
+        mushrooms.at(2)->draw(false);
 
-            // Dont Move
-            IslandTwo island1;
-            island1.draw(700, 850, 150, Colors::ISLAND_DAY);
-            IslandOne island2;
-            island2.draw(1300, 700, 120, Colors::ISLAND_DAY);
-            mushroomTwo mushroom1;
-            mushroom1.draw(695, 880, 13, Colors::MUSHROOM_DAY, false);
-            mushroomThree mushroom2;
-            mushroom2.draw(710, 880, 10, Colors::MUSHROOM_DAY, false);
-            mushroomThree mushroom3;
-            mushroom3.draw(1305, 733, 15, Colors::MUSHROOM_DAY, false);
+        // Move Fast
+        clouds.at(0)->draw();
+        clouds.at(1)->draw();
+        clouds.at(2)->draw();
+        clouds.at(3)->draw();
+        clouds.at(4)->draw();
+        clouds.at(5)->draw();
 
-            // Move Fast
-            cloud1_scene5.draw();
-            cloud2_scene5.draw();
-            cloud3_scene5.draw();
-            cloud4_scene5.draw();
-            cloud5_scene5.draw();
-            cloud6_scene5.draw();
+        /* Line for Sunset
+        glColor3f(0.39, 0.64, 0.24);
+        Circle::draw(-490.0f, -2617.0f, 3600.0f);
+        */
 
-            /*  Line for Sunset
-            glColor3f(0.39, 0.64, 0.24);
-            Circle::draw(-490.0f, -2617.0f, 3600.0f);
-            */
+        // Move Infinite
+        mushrooms.at(4)->draw(true);
+        mushrooms.at(3)->draw(true);
+        mushrooms.at(5)->draw(true);
+        mushrooms.at(6)->draw(true);
+        mushrooms.at(7)->draw(true);
 
+        Flower flower1;
+        flower1.draw(1650, 90, 40, 60, Colors::FLOWER_BLUE);
+        Flower flower2;
+        flower2.draw(1000, 170, 40, 100, Colors::FLOWER_PURPLE);
+        Flower flower3;
+        flower3.draw(550, 60, 40, 130, Colors::FLOWER_RED);
 
-            // Move Infinite
-            mushroomThree mushroom5;
-            mushroom5.draw(600, 250, 275, Colors::MUSHROOM_DAY, true);
-            mushroomOne mushroom4;
-            mushroom4.draw(450, 250, 300, Colors::MUSHROOM_DAY, true);
-            mushroomThree mushroom6;
-            mushroom6.draw(1000, 250, 150, Colors::MUSHROOM_DAY, true);
-            mushroomThree mushroom7;
-            mushroom7.draw(1500, 250, 300, Colors::MUSHROOM_DAY, true);
-            mushroomThree mushroom8;
-            mushroom8.draw(1600, 250, 200, Colors::MUSHROOM_DAY, true);
+        //Lower Level
+        GrassLineTwo grass1;
+        grass1.draw(200, 220, 45, Colors::GRASS_NIGHT);
+        GrassLineOne grass3;
+        grass3.draw(280, 230, 55, Colors::GRASS_NIGHT);
+        GrassLineTwo grass5;
+        grass5.draw(30, 218, 46, Colors::GRASS_NIGHT);
+        GrassLineOne grass7;
+        grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
+        GrassLineOne grass8;
+        grass8.draw(190, 80, 59, Colors::GRASS_NIGHT);
+        GrassLineOne grass9;
+        grass9.draw(760, 190, 61, Colors::GRASS_NIGHT);
+        GrassLineOne grass10;
+        grass10.draw(1230, 44, 62, Colors::GRASS_NIGHT);
+        GrassLineOne grass11;
+        grass11.draw(1450, 90, 59, Colors::GRASS_NIGHT);
+        GrassLineTwo grass12;
+        grass12.draw(350, 160, 46, Colors::GRASS_NIGHT);
+        GrassLineTwo grass13;
+        grass13.draw(550, 190, 44, Colors::GRASS_NIGHT);
+        GrassLineTwo grass14;
+        grass14.draw(900, 120, 43, Colors::GRASS_NIGHT);
+        GrassLineTwo grass15;
+        grass15.draw(1200, 200, 44, Colors::GRASS_NIGHT);
+        GrassLineTwo grass16;
+        grass16.draw(1800, 110, 46, Colors::GRASS_NIGHT);
+        GrassLineTwo grass17;
+        grass17.draw(1600, 220, 47, Colors::GRASS_NIGHT);
+        GrassLineOne grass18;
+        grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
+        GrassLineTwo grass19;
+        grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
 
-            Flower flower1;
-            flower1.draw(1650, 90, 40, 60, Colors::FLOWER_BLUE);
-            Flower flower2;
-            flower2.draw(1000, 170, 40, 100, Colors::FLOWER_PURPLE);
-            Flower flower3;
-            flower3.draw(550, 60, 40, 130, Colors::FLOWER_RED);
+        girl.drawSideView();
 
-            //Lower Level
-            GrassLineTwo grass1;
-            grass1.draw(200, 220, 45, Colors::GRASS_NIGHT);
-            GrassLineOne grass3;
-            grass3.draw(280, 230, 55, Colors::GRASS_NIGHT);
-            GrassLineTwo grass5;
-            grass5.draw(30, 218, 46, Colors::GRASS_NIGHT);
-            GrassLineOne grass7;
-            grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
-            GrassLineOne grass8;
-            grass8.draw(190, 80, 59, Colors::GRASS_NIGHT);
-            GrassLineOne grass9;
-            grass9.draw(760, 190, 61, Colors::GRASS_NIGHT);
-            GrassLineOne grass10;
-            grass10.draw(1230, 44, 62, Colors::GRASS_NIGHT);
-            GrassLineOne grass11;
-            grass11.draw(1450, 90, 59, Colors::GRASS_NIGHT);
-            GrassLineTwo grass12;
-            grass12.draw(350, 160, 46, Colors::GRASS_NIGHT);
-            GrassLineTwo grass13;
-            grass13.draw(550, 190, 44, Colors::GRASS_NIGHT);
-            GrassLineTwo grass14;
-            grass14.draw(900, 120, 43, Colors::GRASS_NIGHT);
-            GrassLineTwo grass15;
-            grass15.draw(1200, 200, 44, Colors::GRASS_NIGHT);
-            GrassLineTwo grass16;
-            grass16.draw(1800, 110, 46, Colors::GRASS_NIGHT);
-            GrassLineTwo grass17;
-            grass17.draw(1600, 220, 47, Colors::GRASS_NIGHT);
-            GrassLineOne grass18;
-            grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
-            GrassLineTwo grass19;
-            grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
+        glFlush();
+        glutSwapBuffers();
 
-            glFlush();
-            glutSwapBuffers();
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
+        // std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
 
     static void Scene6_7() {
@@ -408,14 +384,12 @@ public:
 
         Star::draw(true);
 
-        mushroomOne mushroom2;
-        mushroom2.draw(300, 0, 800, Colors::MUSHROOM_NIGHT, true);
-        mushroomThree mushroom1;
-        mushroom1.draw(-150, -150, 800, Colors::MUSHROOM_NIGHT, true);
-        mushroomOne mushroom3;
-        mushroom3.draw(570, 15, 380, Colors::MUSHROOM_NIGHT, true);
-
-
+        mushroomOne mushroom2(300, 0, 800, Colors::MUSHROOM_NIGHT);
+        mushroom2.draw(true);
+        mushroomThree mushroom1(-150, -150, 800, Colors::MUSHROOM_NIGHT);
+        mushroom1.draw(true);
+        mushroomOne mushroom3(570, 15, 380, Colors::MUSHROOM_NIGHT);
+        mushroom3.draw(true);
 
         // Ground
         glColor3f(0.39, 0.64, 0.24);
@@ -445,17 +419,14 @@ public:
         glVertex2f(0.0f, 1080.0f);
         glEnd();
 
-        mushroomThree mushroom1;
-        mushroom1.draw(0, -50, 300, Colors::MUSHROOM_NIGHT, true);
-        mushroomOne mushroom2;
-        mushroom2.draw(100, -60, 100, Colors::MUSHROOM_NIGHT, true);
-        mushroomOne mushroom4;
-        mushroom4.draw(580, 19, 150, Colors::MUSHROOM_NIGHT, true);
-        mushroomThree mushroom3;
-        mushroom3.draw(500, 20, 100, Colors::MUSHROOM_NIGHT, true);
-
-
-
+        mushroomThree mushroom1(0, -50, 300, Colors::MUSHROOM_NIGHT);
+        mushroom1.draw(true);
+        mushroomOne mushroom2(100, -60, 100, Colors::MUSHROOM_NIGHT);
+        mushroom2.draw(true);
+        mushroomOne mushroom4(580, 19, 150, Colors::MUSHROOM_NIGHT);
+        mushroom4.draw(true);
+        mushroomThree mushroom3(500, 20, 100, Colors::MUSHROOM_NIGHT);
+        mushroom3.draw(true);
 
         // Right Hill
         glColor3f(0.39, 0.64, 0.24);
@@ -466,7 +437,6 @@ public:
         Circle::draw(550.0f, -2650.0f, 2700.0f);
 
     }
-
 
     static void Scene10() {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -555,5 +525,3 @@ public:
         glEnd();
     }
 };
-
-LittleGirl girl(0, 200, 210, 0, false);

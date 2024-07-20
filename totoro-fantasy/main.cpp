@@ -25,7 +25,6 @@
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
 
-
 /////   Declare global variables    /////
 Sound sound;
 bool isRainSoundPlaying = false;
@@ -35,16 +34,22 @@ Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
-Catbus catbus{ 0, 0, 600, false };
+Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
 FadeEffect fadeOutScene6;
 
-//for totoro side view walking
-int state = 0; // 0 for side view walking, 1 for front view
-float positionX = 1980.0f; // Starting position for the side view
+// For totoro side view walking
+int state = 0;
+float positionX = 1980.0f;
 const float startX = 1.0f;
-const float endX = 1020.0f; // Ending position for the side view
+const float endX = 1020.0f;
 int steps = 0;
+
+// For sunset effect
+int transitionTime = 8000; // 8 seconds
+int sunsetSteps = 100;
+int delay = transitionTime / sunsetSteps;
+int currentStep = 0;
 
 std::vector<Cloud*> clouds_scene1{
     new DayCloudTwo(1080, 900, 150, Colors::NIGHT_CLOUD),
@@ -86,6 +91,15 @@ std::vector<Cloud*> clouds_scene6{
     new DayCloudOne(1600, 850, 130, Colors::NIGHT_CLOUD)
 };
 
+std::vector<Cloud*> clouds_scene5{
+    new DayCloudTwo{ 1080, 920, 130, Colors::DAY_CLOUD },
+    new DayCloudTwo{ 400, 880, 130, Colors::DAY_CLOUD },
+    new DayCloudOne{ 1600, 830, 130, Colors::DAY_CLOUD },
+    new DayCloudOne{ -10, 850, 130, Colors::DAY_CLOUD },
+    new DayCloudOne{ 1950, 900, 130, Colors::DAY_CLOUD },
+    new DayCloudTwo{ 1320, 695, 15, Colors::DAY_CLOUD }
+};
+
 
 DayCloudTwo cloud1_scene8{ 1000, 940, 120, Colors::NIGHT_CLOUD };
 DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
@@ -121,17 +135,58 @@ TreeTwo tree11_scene3;
 TreeTwo tree12_scene3;
 TreeTwo tree13_scene3;
 
+///// Grass /////
+
+std::vector<Elements*> grass_scene5{
+
+};
+
+///// Mushrooms /////
+
+
+
+///// Sun /////
+
+std::vector<Mushroom1*> mushrooms_scene5{
+    new mushroomTwo(695, 880, 13, Colors::MUSHROOM_DAY),
+    new mushroomThree(710, 880, 10, Colors::MUSHROOM_DAY),
+    new mushroomThree(1305, 733, 15, Colors::MUSHROOM_DAY),
+    new mushroomOne(450, 250, 300, Colors::MUSHROOM_DAY),
+    new mushroomThree(600, 250, 275, Colors::MUSHROOM_DAY),
+    new mushroomThree(1000, 250, 150, Colors::MUSHROOM_DAY),
+    new mushroomThree(1500, 250, 300, Colors::MUSHROOM_DAY),
+    new mushroomThree(1600, 250, 200, Colors::MUSHROOM_DAY)
+};
+
+///// Flower /////
+
+std::vector<Flower*> flowers_scene5{
+
+};
+
+///// Island /////
+
+std::vector <Island*> islands_scene5{
+
+};
+
+
+///// Sun /////
+
+DaySunOne sun_scene5(160, 930, 110, Colors::DAY_SUN);
+
 ///// Flags //////
 bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
 bool isScene4End = false;
+bool isScene5End = false;
 bool isScene6End = false;
 bool isScene8End = false;
 bool isScene9End = false;
 bool isScene10End = false;  
 
-int currentScene = 10;
+float currentScene = 5;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -140,10 +195,12 @@ bool isScene2ArcAngleInitialized = false;
 bool isScene3GirlPosInitialized = false;
 bool isScene4Initialized = false;
 bool isScene4AfterBounceInitialized = false;
+bool isScene5Initialized = false;
 bool isScene6Initialized = false;
 bool isScene8Initialized = false;
 bool isScene9Initialized = false;
 bool isScene10Initialized = false;
+bool isSunsetAngleInitialized = false;
 
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
@@ -159,8 +216,7 @@ bool isCrying = false;
 bool isTotoroAppeared = false;
 bool isTotoroComforting = false;
 bool isFinishCrying = false;
-bool isFadeOutScene6 = false;
-bool isDoneFadeOutScene6 = false;
+
 bool isPickup = false;
 bool isCatbusReachedGround = false;
 
@@ -540,12 +596,11 @@ static void displayScene4() {
         isPortalSoundPlaying = false;
     }
 
-
     Background::Scene4();
     RainbowOne rainbow;
 
-    DaySunOne sun;
-    sun.draw(160, 930, 110, Colors::DAY_SUN);
+    DaySunOne sun(160, 930, 110, Colors::DAY_SUN);
+    sun.draw();
 
     rainbow.draw(1400, 745, 200, Colors::RAINBOW);
 
@@ -564,24 +619,21 @@ static void displayScene4() {
     clouds_scene4[4]->draw();
     clouds_scene4[5]->draw();
 
-    mushroomThree mushroom2;
-    mushroom2.draw(1800, 250, 300, Colors::MUSHROOM_DAY, true);
+    mushroomThree mushroom2(1800, 250, 300, Colors::MUSHROOM_DAY);
+    mushroom2.draw(true);
+    mushroomOne mushroom3(1700, 250, 100, Colors::MUSHROOM_DAY);
+    mushroom3.draw(true);
+    mushroomOne mushroom5(1000, 250, 300, Colors::MUSHROOM_DAY);
+    mushroom5.draw(true);
+    mushroomOne mushroom6(1100, 250, 140, Colors::MUSHROOM_DAY);
+    mushroom6.draw(true);
 
-    mushroomOne mushroom3;
-    mushroom3.draw(1700, 250, 100, Colors::MUSHROOM_DAY, true);
-
-    mushroomOne mushroom5;
-    mushroom5.draw(1000, 250, 300, Colors::MUSHROOM_DAY, true);
-    mushroomOne mushroom6;
-    mushroom6.draw(1100, 250, 140, Colors::MUSHROOM_DAY, true);
-
-
-    mushroomOne mushroom4;
-    mushroom4.draw(720, 768, 30, Colors::MUSHROOM_DAY, false);
-    mushroomTwo mushroom7;
-    mushroom7.draw(680, 768, 10, Colors::MUSHROOM_DAY, false);
-    mushroomThree mushroom8;
-    mushroom8.draw(1790, 640, 30, Colors::MUSHROOM_DAY, false);
+    mushroomOne mushroom4(720, 768, 30, Colors::MUSHROOM_DAY);
+    mushroom4.draw(false);
+    mushroomTwo mushroom7(680, 768, 10, Colors::MUSHROOM_DAY);
+    mushroom7.draw(false);
+    mushroomThree mushroom8(1790, 640, 30, Colors::MUSHROOM_DAY);
+    mushroom8.draw(false);
 
     //Upper Level
     GrassOne grass1;
@@ -652,7 +704,7 @@ static void displayScene4() {
 
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene5();
+    Background::Scene5(girl, islands_scene5, grass_scene5, clouds_scene5, mushrooms_scene5, flowers_scene5, sun_scene5, currentStep, sunsetSteps);
     glFlush();
     glutSwapBuffers();
 }
@@ -670,21 +722,21 @@ static void displayScene6_7() {
         cloud->draw();
     }
 
-    mushroomThree mushroom5;
-    mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom6;
-    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom7;
-    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom5(250, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom5.draw(true);
+    mushroomThree mushroom6(820, 250, 600, Colors::MUSHROOM_NIGHT);
+    mushroom6.draw(true);
+    mushroomThree mushroom7(1500, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom7.draw(true);
 
-    mushroomThree mushroom1;
-    mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom2;
-    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom4;
-    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom3;
-    mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom1(-150, 250, 800, Colors::MUSHROOM_NIGHT);
+    mushroom1.draw(true);
+    mushroomThree mushroom2(500, 250, 700, Colors::MUSHROOM_NIGHT);
+    mushroom2.draw(true);
+    mushroomThree mushroom4(1800, 250, 750, Colors::MUSHROOM_NIGHT);
+    mushroom4.draw(true);
+    mushroomThree mushroom3(1200, 250, 820, Colors::MUSHROOM_NIGHT);
+    mushroom3.draw(true);
 
     //Upper Level
     GrassTwo grass1;
@@ -762,10 +814,6 @@ static void displayScene6_7() {
             break;
     }
 
-    if (isFadeOutScene6) {
-        fadeOutScene6.drawFadeScreen();
-    }
-
     glFlush();
     glutSwapBuffers();
 }
@@ -774,24 +822,21 @@ static void displayScene7() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
-    mushroomThree mushroom5;
-    mushroom5.draw(250, 250, 500, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom6;
-    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom7;
-    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom5(250, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom5.draw(true);
+    mushroomThree mushroom6(820, 250, 600, Colors::MUSHROOM_NIGHT);
+    mushroom6.draw(true);
+    mushroomThree mushroom7(1500, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom7.draw(true);
 
-    mushroomThree mushroom1;
-    mushroom1.draw(-150, 250, 800, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom2;
-    mushroom2.draw(500, 250, 700, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom3;
-    mushroom3.draw(1200, 250, 820, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom4;
-    mushroom4.draw(1800, 250, 750, Colors::MUSHROOM_NIGHT, true);
-
-
-
+    mushroomThree mushroom1(-150, 250, 800, Colors::MUSHROOM_NIGHT);
+    mushroom1.draw(true);
+    mushroomThree mushroom2(500, 250, 700, Colors::MUSHROOM_NIGHT);
+    mushroom2.draw(true);
+    mushroomThree mushroom3(1200, 250, 820, Colors::MUSHROOM_NIGHT);
+    mushroom3.draw(true);
+    mushroomThree mushroom4(1800, 250, 750, Colors::MUSHROOM_NIGHT);
+    mushroom4.draw(true);
 
     if (state == 0) {
         // Side view walking
@@ -829,10 +874,10 @@ static void displayScene8() {
 
     IslandOne island1;
     island1.draw(1400, 900, 100, Colors::ISLAND_NIGHT);
-    mushroomThree mushroom1;
-    mushroom1.draw(1390, 928, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomTwo mushroom2;
-    mushroom2.draw(1410, 928, 10, Colors::MUSHROOM_NIGHT, false);
+    mushroomThree mushroom1(1390, 928, 20, Colors::MUSHROOM_NIGHT);
+    mushroom1.draw(false);
+    mushroomTwo mushroom2(1410, 928, 10, Colors::MUSHROOM_NIGHT);
+    mushroom2.draw(false);
 
     BusSignBoard sign;
     sign.draw(1200, 530, 100, 3);
@@ -912,17 +957,17 @@ static void displayScene9() {
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
 
-    mushroomThree mushroom4;
-    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
-    mushroomOne mushroom5;
-    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+    mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
+    mushroom4.draw(true);
+    mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
+    mushroom5.draw(true);
 
     IslandTwo island1;
     island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom6;
-    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomTwo mushroom7;
-    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+    mushroomOne mushroom6(1310, 400, 20, Colors::MUSHROOM_NIGHT);
+    mushroom6.draw(false);
+    mushroomTwo mushroom7(1290, 400, 10, Colors::MUSHROOM_NIGHT);
+    mushroom7.draw(false);
 
     catbus.drawRunningView();
 
@@ -948,30 +993,29 @@ static void displayScene9Half() {
 
     IslandTwo island1;
     island1.draw(1830, 700, 150, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom11;
-    mushroom11.draw(1818, 730, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomThree mushroom12;
-    mushroom12.draw(1840, 730, 13, Colors::MUSHROOM_NIGHT, false);
+    mushroomOne mushroom11(1818, 730, 20, Colors::MUSHROOM_NIGHT);
+    mushroom11.draw(false);
+    mushroomThree mushroom12(1840, 730, 13, Colors::MUSHROOM_NIGHT);
+    mushroom12.draw(false);
 
     cloud1_scene9Half.draw();
     cloud2_scene9Half.draw();
     cloud3_scene9Half.draw();
 
-    mushroomThree mushroom5;
-    mushroom5.draw(360, 250, 500, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom6;
-    mushroom6.draw(820, 250, 600, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom7;
-    mushroom7.draw(1500, 250, 500, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom2;
-    mushroom2.draw(500, 250, 400, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom3;
-    mushroom3.draw(1210, 250, 350, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom10;
-    mushroom10.draw(1650, 250, 150, Colors::MUSHROOM_NIGHT, true);
-    mushroomThree mushroom8;
-    mushroom8.draw(155, 250, 120, Colors::MUSHROOM_NIGHT, true);
-
+    mushroomThree mushroom5(360, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom5.draw(true);
+    mushroomThree mushroom6(820, 250, 600, Colors::MUSHROOM_NIGHT);
+    mushroom6.draw(true);
+    mushroomThree mushroom7(1500, 250, 500, Colors::MUSHROOM_NIGHT);
+    mushroom7.draw(true);
+    mushroomThree mushroom2(500, 250, 400, Colors::MUSHROOM_NIGHT);
+    mushroom2.draw(true);
+    mushroomThree mushroom3(1210, 250, 350, Colors::MUSHROOM_NIGHT);
+    mushroom3.draw(true);
+    mushroomThree mushroom10(1650, 250, 150, Colors::MUSHROOM_NIGHT);
+    mushroom10.draw(true);
+    mushroomThree mushroom8(155, 250, 120, Colors::MUSHROOM_NIGHT);
+    mushroom8.draw(true);
 
     //Upper Level
     GrassTwo grass1;
@@ -1037,8 +1081,8 @@ static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
 
-    DaySunOne sun;
-    sun.draw(150, 940, 110, Colors::DAY_SUN);
+    DaySunOne sun(150, 940, 110, Colors::DAY_SUN);
+    sun.draw();
 
     cloud1_scene10.draw();
     cloud2_scene10.draw();
@@ -1120,8 +1164,8 @@ static void displayScene11() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
 
-    DaySunOne sun;
-    sun.draw(155, 940, 110, Colors::DAY_SUN);
+    DaySunOne sun(155, 940, 110, Colors::DAY_SUN);
+    sun.draw();
 
     cloud1_scene11.draw();
     cloud2_scene11.draw();
@@ -1210,6 +1254,9 @@ static void display() {
     }
     else if (currentScene == 9) {
         displayScene9();
+    }
+    else if (currentScene == 9.5) {
+        displayScene9Half();
     }
     else if (currentScene == 10) {
         displayScene10();
@@ -1319,8 +1366,26 @@ static void updateGirlPosition(int value) {
 
             if (girl.getPosX() > 1920) {
                 isScene4End = true;
-                currentScene = 6;
+                currentScene = 5;
             }
+        }
+    }
+    else if (currentScene == 5) {
+        if (!isScene5Initialized) {
+            currentGirlState = LITTLE_GIRL_MOVING;
+            girl.setPosX(0);
+            girl.setPosY(200);
+            girl.setCharacterSize(210);
+            isScene5Initialized = true;
+        }
+
+        if (currentGirlState == LITTLE_GIRL_MOVING) {
+            girl.move(6.0f);
+        }
+
+        if (girl.getPosX() >= 1920) {
+            isScene5End = true;
+            currentScene = 6;
         }
     }
     else if (currentScene == 6) {
@@ -1328,6 +1393,7 @@ static void updateGirlPosition(int value) {
             currentGirlState = LITTLE_GIRL_MOVING;
             girl.setPosX(0);
             girl.setPosY(200);
+            girl.setCharacterSize(210);
             isScene6Initialized = true;
         }
 
@@ -1339,7 +1405,7 @@ static void updateGirlPosition(int value) {
                 girl.moveVertically(1.8f);
             }
         }
-        if (isDoneFadeOutScene6) {
+        if (isScene6End) {
             isScene6End = true;
             currentScene = 8;
         }
@@ -1381,8 +1447,11 @@ static void updateGirlPosition(int value) {
 
         if (isPortalDeactivatedScene9) {
             isScene9End = true;
-            currentScene = 10;
+            currentScene = 9.5;
         }
+    }
+    else if (currentScene == 9.5) {
+
     }
     else if (currentScene == 10) {
         if (!isScene10Initialized) {
@@ -1474,10 +1543,10 @@ static void updateGirlViewScene6(int value) {
             }
         }
 
-        if (isFinishCrying && !isFadeOutScene6) {
+        if (isFinishCrying) {
             fadeOutScene6DelayCounter++;
             if (fadeOutScene6DelayCounter >= fadeOutScene6DurationCounter) {
-                isFadeOutScene6 = true;
+                isScene6End = true;
             }
         }
     }
@@ -1635,6 +1704,15 @@ static void updateCloudPosition(int value) {
         clouds_scene4.at(4)->move(0.1f, false);
         clouds_scene4.at(5)->move(0.1f, true);
     }
+    else if (currentScene == 5) {
+    //    std::vector<Cloud*> clouds_scene5{
+        clouds_scene5.at(0)->moveInfinite(10.0f, false);
+        clouds_scene5.at(1)->moveInfinite(10.0f, true);
+        clouds_scene5.at(2)->moveInfinite(10.0f, true);
+        clouds_scene5.at(3)->moveInfinite(10.0f, true);
+        clouds_scene5.at(4)->moveInfinite(10.0f, false);
+        clouds_scene5.at(5)->move(6.0f, true);
+    }
     else if (currentScene == 6) {
         clouds_scene6.at(0)->move(0.1f, true);
         clouds_scene6.at(1)->move(0.1f, true);
@@ -1716,17 +1794,6 @@ static void updateTreeOpacity(int value) {
     glutTimerFunc(16, updateTreeOpacity, 0);
 }
 
-static void updateFadeOutEffectScene6(int value) {
-    if (isFadeOutScene6 && !isDoneFadeOutScene6) {
-        fadeOutScene6.updateFadeOutScreen();
-        if (fadeOutScene6.getOpacity() >= 1) {
-            isDoneFadeOutScene6 = true;
-        }
-    }
-    glutPostRedisplay();
-    glutTimerFunc(16, updateFadeOutEffectScene6, 0);
-}
-
 static void totoroTimer(int value) {
     if (currentTotoroState == TOTORO_SIDE_VIEW_WALKING) {
         totoroSide.updateFrame();
@@ -1773,6 +1840,36 @@ static void updateCatbusPickup(int value) {
     glutTimerFunc(16, updateCatbusPickup, 0);
 }
 
+static void updateSunset(int value) {
+    if (currentScene == 5) {
+        if (currentStep <= sunsetSteps) {
+            currentStep++;
+        }
+
+        if (!isSunsetAngleInitialized) {
+            sun_scene5.setCurrentAngle(Constants::PI / 2.27);
+            isSunsetAngleInitialized = true;
+        }
+
+        sun_scene5.moveInArc(0.15f, 0.05f);
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(delay, updateSunset, 0);
+}
+
+static void infiniteBackgroundScrollingScene5(int value) {
+    if (currentScene == 5) {
+        mushrooms_scene5.at(3)->moveInfinite(7.0f, false);
+        mushrooms_scene5.at(4)->moveInfinite(7.0f, false);
+        mushrooms_scene5.at(5)->moveInfinite(7.0f, false);
+        mushrooms_scene5.at(6)->moveInfinite(7.0f, false);
+        mushrooms_scene5.at(7)->moveInfinite(7.0f, false);
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, infiniteBackgroundScrollingScene5, 0);
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
@@ -1783,7 +1880,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene5);
+    glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer();
@@ -1801,7 +1898,6 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateGirlExitPortal, 0);
     glutTimerFunc(30, updateExitPortalBounce, 0);
     glutTimerFunc(16, updateGirlViewScene6, 0);
-    glutTimerFunc(16, updateFadeOutEffectScene6, 0);
     glutTimerFunc(30, updateCatbusFrame, 0);
     glutTimerFunc(16, updateCatbusPickup, 0);
     glutTimerFunc(16, updateCatbusEnterPortal, 0);
@@ -1810,6 +1906,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updatePortalActivationScene10, 0);
     glutTimerFunc(16, updateCatbusExitPortal, 0);
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
+    glutTimerFunc(16, infiniteBackgroundScrollingScene5, 0);
+    glutTimerFunc(delay, updateSunset, 0);
 
     glutFullScreen();
     glutMainLoop();

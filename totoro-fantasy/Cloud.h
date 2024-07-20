@@ -36,6 +36,21 @@ public:
             posX -= speed;
         }
     }
+
+    void moveInfinite(float speed, bool movingRight) {
+        if (movingRight) {
+            posX += speed;
+            if (posX > 2100.0f) {
+                posX = -180.0f;
+            }
+        }
+        else {
+            posX -= speed;
+            if (posX < -180.0f) {
+                posX = 2100.0f;
+            }
+        }
+    }
 };
 
 class DayCloudOne : public Cloud {
