@@ -30,10 +30,9 @@ Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
-Catbus catbus{ 500, 180, 600, false };
+Catbus catbus{ 0, 0, 600, false };
 Rain rain{ 500 };
 FadeEffect fadeOutScene6;
-FadeEffect fadeInScene8;
 
 //for totoro side view walking
 int state = 0; // 0 for side view walking, 1 for front view
@@ -122,20 +121,31 @@ bool isScene2End = false;
 bool isScene3End = false;
 bool isScene4End = false;
 bool isScene6End = false;
+bool isScene8End = false;
+bool isScene9End = false;
 
-int currentScene = 6;
+int currentScene = 8;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
+
 bool isScene2ArcAngleInitialized = false;
 bool isScene3GirlPosInitialized = false;
 bool isScene4Initialized = false;
 bool isScene4AfterBounceInitialized = false;
-bool isScene8Initialized = false;
 bool isScene6Initialized = false;
+bool isScene8Initialized = false;
+bool isScene9Initialized = false;
+bool isScene10Initialized = false;
+
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
 bool isEnterPortal = false;
+bool isCatbusEnterPortal = false;
+bool isPortalActivatedScene9 = false;
+bool isPortalDeactivatedScene9 = false;
+bool isPortalActivatedScene10 = false;
+bool isPortalDeactivatedScene10 = false;
 bool isBouncing = true;
 bool isCrying = false;
 bool isTotoroAppeared = false;
@@ -143,6 +153,7 @@ bool isTotoroComforting = false;
 bool isFinishCrying = false;
 bool isFadeOutScene6 = false;
 bool isDoneFadeOutScene6 = false;
+bool isPickup = false;
 
 ///// Delay Variables /////
 
@@ -164,6 +175,14 @@ const int finishCryingDurationCounter = 75;
 int fadeOutScene6DelayCounter = 0;
 const int fadeOutScene6DurationCounter = 60;
 
+int pickupBeforeDelayCounter = 0;
+const int pickupBeforeDurationCounter = 60;
+
+int transitionScene9to10DelayCounter = 0;
+const int transitionScene9to10DurationCounter = 20;
+
+int portalActivationScene10DelayCounter = 0;
+const int portalActivationScene10DurationCounter = 20;
 
 /////   Declare states  /////
 
@@ -179,8 +198,15 @@ enum TotoroState {
     TOTORO_SIDE_VIEW_WALKING
 };
 
+enum CatbusState {
+    CATBUS_INVISIBLE,
+    CATBUS_STANDSTILL,
+    CATBUS_RUNNING
+};
+
 LittleGirlState currentGirlState = LITTLE_GIRL_FRONT_VIEW;
 TotoroState currentTotoroState = TOTORO_INVISIBLE;
+CatbusState currentCatbusState = CATBUS_RUNNING;
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -828,6 +854,19 @@ static void displayScene8() {
     GrassOne grass16;
     grass16.drawWithRotation(1850, 100, 58, 357, Colors::GRASS_NIGHT);
 
+    totoroFront.draw(1000.0f, 520.0f, 270.0f);
+    girl.drawFrontView();
+
+    switch (currentCatbusState) {
+        case CATBUS_INVISIBLE:
+            break;
+        case CATBUS_RUNNING:
+            catbus.drawRunningView();
+            break;
+        case CATBUS_STANDSTILL:
+            catbus.drawStandstillView();
+    }
+
     glFlush();
     glutSwapBuffers();
 }
@@ -840,12 +879,6 @@ static void displayScene9() {
     moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
     FullMoon moon2;
     moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
-
-    cloud1_scene9.draw();
-    cloud2_scene9.draw();
-    cloud3_scene9.draw();
-    cloud4_scene9.draw();
-    cloud5_scene9.draw();
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
 
@@ -860,6 +893,14 @@ static void displayScene9() {
     mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
     mushroomTwo mushroom7;
     mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+
+    catbus.drawRunningView();
+
+    cloud1_scene9.draw();
+    cloud2_scene9.draw();
+    cloud3_scene9.draw();
+    cloud4_scene9.draw();
+    cloud5_scene9.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -1081,7 +1122,7 @@ static void triggerThunder(int value) {
 static void updateGirlPosition(int value) {
     if (currentScene == 1) {
         if (currentGirlState == LITTLE_GIRL_MOVING) {
-            girl.move(3.0f);
+            girl.move(3.5f);
         }
 
         if (girl.getPosX() > 1920) {
@@ -1115,7 +1156,7 @@ static void updateGirlPosition(int value) {
         }
         if (currentGirlState == LITTLE_GIRL_MOVING) {
             if (!isDiagonalMovement) {
-                girl.move(3.0f);
+                girl.move(3.5f);
             }
             else {
                 girl.moveDiagonally(1.8f, 1.8f);
@@ -1143,7 +1184,7 @@ static void updateGirlPosition(int value) {
                 currentGirlState = LITTLE_GIRL_SIDE_VIEW;
                 currentGirlState = LITTLE_GIRL_MOVING;
             }
-            girl.move(3.0f);
+            girl.move(3.5f);
 
             if (girl.getPosX() > 1920) {
                 isScene4End = true;
@@ -1174,7 +1215,48 @@ static void updateGirlPosition(int value) {
     }
     else if (currentScene == 8) {
         if (!isScene8Initialized) {
-            fadeInScene8.setOpacity(1.0f);
+            girl.setPosX(1200);
+            girl.setPosY(350);
+            girl.setCharacterSize(210);
+
+            currentCatbusState = CATBUS_RUNNING;
+            catbus.setBusSize(600);
+            catbus.setCurrentAngle(Constants::PI / 3);
+            isScene8Initialized = true;
+        }
+
+        if (currentCatbusState == CATBUS_RUNNING) {
+            catbus.moveInArc(0.1f, 0.05f);
+
+            if (catbus.getPosX() < 10) {
+                isScene8End = true;
+                currentScene = 9;
+            }
+        }
+    }
+    else if (currentScene == 9) {
+        if (!isScene9Initialized) {
+            catbus.setPosX(1920);
+            catbus.setPosY(550);
+            catbus.setBusSize(450);
+            catbus.setOpacity(1.0f);
+            portal.setOpacity(0.0f);
+            isScene9Initialized = true;
+        }
+
+        if (currentCatbusState == CATBUS_RUNNING) {
+            catbus.move(5.0f);
+        }
+
+        if (isPortalDeactivatedScene9) {
+            isScene9End = true;
+            currentScene = 10;
+        }
+    }
+    else if (currentScene == 10) {
+        if (!isScene10Initialized) {
+            portal.setOpacity(0.0f);
+            isScene10Initialized = true;
         }
     }
 
@@ -1256,6 +1338,7 @@ static void updateGirlFadeInIntoPortal(int value) {
 
         if (girl.getOpacity() <= 0) {
             isEnterPortal = true;
+            girl.setOpacity(0);
         }
     }
     glutPostRedisplay();
@@ -1278,6 +1361,67 @@ static void updateExitPortalBounce(int value) {
     }
     glutPostRedisplay();
     glutTimerFunc(30, updateExitPortalBounce, 0);
+}
+
+static void updatedPortalActivationScene9(int value) {
+    if (currentScene == 9 && !isPortalActivatedScene9 && isScene9Initialized) {
+        if (catbus.getPosX() <= 1300) {
+            portal.setOpacity(portal.getOpacity() + 0.03f);
+
+            if (portal.getOpacity() >= 1.0f) {
+                isPortalActivatedScene9 = true;
+                portal.setOpacity(1.0f);
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatedPortalActivationScene9, 0);
+}
+
+static void updatedPortalDeactivationScene9(int value) {
+    if (currentScene == 9 && !isPortalDeactivatedScene9) {
+        if (isCatbusEnterPortal) {
+            portal.setOpacity(portal.getOpacity() - 0.03f);
+
+            if (portal.getOpacity() <= 0) {
+                portal.setOpacity(0);
+                transitionScene9to10DelayCounter++;
+                if (transitionScene9to10DelayCounter >= transitionScene9to10DurationCounter) {
+                    isPortalDeactivatedScene9 = true;
+                }
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
+}
+
+static void updatePortalActivationScene10(int value) {
+    if (currentScene == 10 && !isPortalActivatedScene10 && isScene10Initialized) {
+        portal.setOpacity(portal.getOpacity() + 0.03f);
+
+        if (portal.getOpacity() >= 1.0f) {
+            isPortalActivatedScene10 = true;
+            portal.setOpacity(1.0f);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatePortalActivationScene10, 0);
+}
+
+static void updateCatbusEnterPortal(int value) {
+    if (currentScene == 9) {
+        if (catbus.getPosX() <= 500) {
+            catbus.setOpacity(catbus.getOpacity() - 0.03f);
+        }
+
+        if (catbus.getOpacity() <= 0) {
+            isCatbusEnterPortal = true;
+            catbus.setOpacity(0);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCatbusEnterPortal, 0);
 }
 
 static void updateCloudPosition(int value) {
@@ -1398,15 +1542,15 @@ static void updateFadeOutEffectScene6(int value) {
 static void totoroTimer(int value) {
     if (currentTotoroState == TOTORO_SIDE_VIEW_WALKING) {
         totoroSide.updateFrame();
-        positionX -= 17.0f; // Move to the left by 5 pixels per update
+        positionX -= 17.0f;
         if (positionX <= 1080.0f) {
             currentTotoroState = TOTORO_FRONT_VIEW;
-            totoroFront.startBounce(); // Start the bounce effect
+            totoroFront.startBounce();
             isTotoroComforting = true;
         }
     }
     else if (currentTotoroState == TOTORO_FRONT_VIEW) {
-        totoroFront.updateBounce(); // Update the bounce effect
+        totoroFront.updateBounce();
         isTotoroComforting = true;
     }
     glutPostRedisplay();
@@ -1414,9 +1558,31 @@ static void totoroTimer(int value) {
 }
 
 static void updateCatbusFrame(int value) {
-    catbus.updateFrame();
+    if (currentCatbusState == CATBUS_RUNNING) {
+        catbus.updateFrame();
+    }
     glutPostRedisplay();
     glutTimerFunc(30, updateCatbusFrame, 0);
+}
+
+static void updateCatbusPickup(int value) {
+    if (currentScene == 8) {
+        if (catbus.getPosX() <= 1100 && !isPickup) {
+            currentCatbusState = CATBUS_STANDSTILL;
+            pickupBeforeDelayCounter++;
+            if (pickupBeforeDelayCounter >= pickupBeforeDurationCounter) {
+                catbus.setIsBoarded(true);
+                girl.setOpacity(0.0f);
+                isPickup = true;
+            }
+        }
+
+        if (isPickup) {
+            currentCatbusState = CATBUS_RUNNING;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCatbusPickup, 0);
 }
 
 int main(int argc, char** argv) {
@@ -1432,7 +1598,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
-    portal.startTimer(); 
+    portal.startTimer();
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
     glutTimerFunc(16, updateGirlPosition, 0);
@@ -1448,6 +1614,12 @@ int main(int argc, char** argv) {
     glutTimerFunc(30, updateExitPortalBounce, 0);
     glutTimerFunc(16, updateGirlViewScene6, 0);
     glutTimerFunc(16, updateFadeOutEffectScene6, 0);
+    glutTimerFunc(30, updateCatbusFrame, 0);
+    glutTimerFunc(16, updateCatbusPickup, 0);
+    glutTimerFunc(16, updateCatbusEnterPortal, 0);
+    glutTimerFunc(16, updatedPortalActivationScene9, 0);
+    glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
+    glutTimerFunc(16, updatePortalActivationScene10, 0);
 
     glutFullScreen();
     glutMainLoop();
