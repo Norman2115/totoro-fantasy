@@ -14,15 +14,14 @@
 #include "Cloud.h"
 #include "Island.h"
 #include "Flower.h"
+#include "Character.h"
 
-    DayCloudTwo cloud1_scene5{ 1080, 920, 130, Colors::DAY_CLOUD };
-    DayCloudTwo cloud2_scene5{ 400, 880, 130, Colors::DAY_CLOUD };
-    DayCloudOne cloud3_scene5{ 1600, 830, 130, Colors::DAY_CLOUD };
-    DayCloudOne cloud4_scene5{ -10, 850, 130, Colors::DAY_CLOUD };
-    DayCloudOne cloud5_scene5{ 1950, 900, 130, Colors::DAY_CLOUD };
-    DayCloudTwo cloud6_scene5{ 1320, 695, 15, Colors::DAY_CLOUD };
-
-
+DayCloudTwo cloud1_scene5{ 1080, 920, 130, Colors::DAY_CLOUD };
+DayCloudTwo cloud2_scene5{ 400, 880, 130, Colors::DAY_CLOUD };
+DayCloudOne cloud3_scene5{ 1600, 830, 130, Colors::DAY_CLOUD };
+DayCloudOne cloud4_scene5{ -10, 850, 130, Colors::DAY_CLOUD };
+DayCloudOne cloud5_scene5{ 1950, 900, 130, Colors::DAY_CLOUD };
+DayCloudTwo cloud6_scene5{ 1320, 695, 15, Colors::DAY_CLOUD };
 
 class Background {
 private:
@@ -367,41 +366,6 @@ public:
 
             std::this_thread::sleep_for(std::chrono::milliseconds(delay));
         }
-
-        //static sunset (leave in case of emergency)
-        /*
-        glBegin(GL_QUADS); // sunset
-        glColor3f(1, 0.25, 0.53);
-        glVertex2f(0.0f, 1080.0f);
-        glVertex2f(1920.0f, 1080.0f);
-
-        glColor3f(1, 0.45, 0.26);
-        glVertex2f(1920.0f, 720.0f);
-        glVertex2f(0.0f, 720.0f);
-
-        glColor3f(1, 0.45, 0.26);
-        glVertex2f(0.0f, 720.0f);
-        glVertex2f(1920.0f, 720.0f);
-
-        glColor3f(1, 0.63, 0.26);
-        glVertex2f(1920.0f, 250.0f);
-        glVertex2f(0.0f, 250.0f);
-
-        glColor3f(1, 0.63, 0.26);
-        glVertex2f(0.0f, 250.0f);
-        glVertex2f(1920.0f, 0.0f);
-        glVertex2f(0.0f, 0.0f);
-        glEnd();
-
-        // Ground(sunset)
-        glColor3f(0.44, 0.74, 0.27);
-        glBegin(GL_QUADS);
-        glVertex2f(0.0f, 0.0f);
-        glVertex2f(1920.0f, 0.0f);
-        glVertex2f(1920.0f, 250.0f);
-        glVertex2f(0.0f, 250.0f);
-        glEnd();
-        */
     }
 
     static void Scene6_7() {
@@ -591,3 +555,5 @@ public:
         glEnd();
     }
 };
+
+LittleGirl girl(0, 200, 210, 0, false);

@@ -1,5 +1,4 @@
-#ifndef HOUSE_H
-#define HOUSE_H
+#pragma once
 
 #include <GL/glut.h>
 
@@ -150,5 +149,3 @@ public:
         }
     }
 };
-
-#endif // HOUSE_H
