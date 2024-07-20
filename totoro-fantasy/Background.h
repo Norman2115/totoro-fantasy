@@ -556,4 +556,4 @@ public:
     }
 };
 
-LittleGirl girl(0, 200, 210, 0, false);
+//LittleGirl girl(0, 200, 210, 0, false);

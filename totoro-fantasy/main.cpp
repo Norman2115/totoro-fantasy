@@ -131,7 +131,7 @@ bool isScene8End = false;
 bool isScene9End = false;
 bool isScene10End = false;  
 
-int currentScene = 10;
+int currentScene = 1;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -520,9 +520,6 @@ static void displayScene3() {
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
     sound.stopPortalSound();
-    // Play portal sound for 1 second
-        sound.playPortalSoundForDuration(1);
-
 
     Background::Scene4();
     RainbowOne rainbow;
@@ -884,43 +881,7 @@ static void displayScene8() {
     glutSwapBuffers();
 }
 
-static void displayScene9() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene9();
-
-    FullMoon moon1;
-    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
-    FullMoon moon2;
-    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
-
-    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
-
-    mushroomThree mushroom4;
-    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
-    mushroomOne mushroom5;
-    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
-
-    IslandTwo island1;
-    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom6;
-    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomTwo mushroom7;
-    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
-
-    catbus.drawRunningView();
-
-    cloud1_scene9.draw();
-    cloud2_scene9.draw();
-    cloud3_scene9.draw();
-    cloud4_scene9.draw();
-    cloud5_scene9.draw();
-
-    glFlush();
-    glutSwapBuffers();
-
-}
-
-static void displayScene9Half() {
+static void displayScene8Half() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
@@ -1015,6 +976,41 @@ static void displayScene9Half() {
     glutSwapBuffers();
 }
 
+static void displayScene9() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene9();
+
+    FullMoon moon1;
+    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
+    FullMoon moon2;
+    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
+
+    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
+
+    mushroomThree mushroom4;
+    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
+    mushroomOne mushroom5;
+    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+
+    IslandTwo island1;
+    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
+    mushroomOne mushroom6;
+    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+
+    catbus.drawRunningView();
+
+    cloud1_scene9.draw();
+    cloud2_scene9.draw();
+    cloud3_scene9.draw();
+    cloud4_scene9.draw();
+    cloud5_scene9.draw();
+
+    glFlush();
+    glutSwapBuffers();
+
+}
 
 static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1766,7 +1762,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(displayScene5);
+    glutDisplayFunc(display);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer();
@@ -1794,7 +1790,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateCatbusExitPortal, 0);
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;
