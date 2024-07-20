@@ -21,11 +21,16 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
+#include "sound.h"
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
 
-/////   Declare global variables    /////
 
+/////   Declare global variables    /////
+Sound sound;
+bool isRainSoundPlaying = false;
+bool isThunderSoundPlaying = false;
+bool isPortalSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -124,7 +129,7 @@ bool isScene6End = false;
 bool isScene8End = false;
 bool isScene9End = false;
 
-int currentScene = 8;
+int currentScene = 1;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -218,6 +223,11 @@ static void init() {
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    if (!isThunderSoundPlaying) {
+        sound.playThunderSound();
+        isRainSoundPlaying = true;
+    }
     Background::Scene1();
 
     House house;
@@ -287,6 +297,15 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (isThunderSoundPlaying) {
+        sound.stopSound();
+        isThunderSoundPlaying = false;
+    }
+    // Start playing the rain sound if it's not already playing
+    if (!isRainSoundPlaying) {
+        sound.playRainSound();
+        isRainSoundPlaying = true;
+    }
     Background::Scene2();
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
@@ -381,6 +400,10 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (!isPortalSoundPlaying) {
+        sound.playPortalSound();
+        isPortalSoundPlaying = true;
+    }
     Background::Scene3();
 
     FullMoon moon;
@@ -422,28 +445,6 @@ static void displayScene3() {
     SmallRockTwo rock2;
     rock2.draw(1190, 235, 150, Colors::ROCK);
 
-    //Second Layer
-    TreeTwo tree6;
-    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
-    GrassOne grass21;
-    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
-    TreeTwo tree7;
-    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
-    GrassTwo grass22;
-    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
-
-    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
-
-    switch (currentGirlState) {
-    case LITTLE_GIRL_FRONT_VIEW:
-        girl.drawFrontView();
-        break;
-    case LITTLE_GIRL_SIDE_VIEW:
-    case LITTLE_GIRL_MOVING:
-        girl.drawSideView();
-        break;
-    }
-
     //Lower Level
     GrassOne grass7;
     grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
@@ -474,6 +475,30 @@ static void displayScene3() {
     GrassOne grass20;
     grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
 
+    //Second Layer
+    TreeTwo tree6;
+    tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
+    GrassOne grass21;
+    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
+    TreeTwo tree7;
+    tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
+    GrassTwo grass22;
+    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
+
+    portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
+
+    switch (currentGirlState) {
+    case LITTLE_GIRL_FRONT_VIEW:
+        girl.drawFrontView();
+        break;
+    case LITTLE_GIRL_SIDE_VIEW:
+    case LITTLE_GIRL_MOVING:
+        girl.drawSideView();
+        break;
+    }
+
+
+
     //Third Layer
     tree8_scene3.draw(900, 150, 350, Colors::TREE_NIGHT);
     GrassOne grass23;
@@ -498,6 +523,19 @@ static void displayScene3() {
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
+    // Stop playing the rain sound
+    if (isRainSoundPlaying) {
+        sound.stopSound();
+        isRainSoundPlaying = false;
+    }
+
+    // Stop playing the rain sound
+    if (isPortalSoundPlaying) {
+        sound.stopSound();
+        isPortalSoundPlaying = false;
+    }
+
+
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -592,6 +630,17 @@ static void displayScene4() {
             break;
     }
 
+    Flower flower1;
+    flower1.draw(80, 200, 40, 40, Colors::FLOWER_BLUE);
+    Flower flower3;
+    flower3.draw(1050, 190, 40, 50, Colors::FLOWER_ORANGE);
+    Flower flower4;
+    flower4.draw(790, 20, 40, 60, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(1800, 100, 40, 80, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(400, 50, 40, 90, Colors::FLOWER_YELLOW);
+
     glFlush();
     glutSwapBuffers();
 }
@@ -651,6 +700,19 @@ static void displayScene6_7() {
     grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
     GrassTwo grass9;
     grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
+
+    Flower flower1;
+    flower1.draw(1050, 100, 40, 60, Colors::FLOWER_BLUE);
+    Flower flower2;
+    flower2.draw(400, 190, 40, 100, Colors::FLOWER_CYAN);
+    Flower flower3;
+    flower3.draw(100, 90, 40, 130, Colors::FLOWER_RED);
+    Flower flower4;
+    flower4.draw(800, 120, 40, 20, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(1300, 190, 40, 60, Colors::FLOWER_RED);
+    Flower flower6;
+    flower6.draw(1800, 50, 40, 40, Colors::FLOWER_PURPLE);
 
     //Lower Level
     GrassOne grass10;
@@ -837,6 +899,17 @@ static void displayScene8() {
     grass8.drawWithRotation(1500, 445, 58, 5, Colors::GRASS_NIGHT);
     GrassTwo grass9;
     grass9.drawWithRotation(80, 10, 40, 30, Colors::GRASS_NIGHT);
+
+    Flower flower1;
+    flower1.draw(1550, 370, 40, 60, Colors::FLOWER_ORANGE);
+    Flower flower2;
+    flower2.draw(1000, 200, 40, 100, Colors::FLOWER_YELLOW);
+    Flower flower3;
+    flower3.draw(1300, 90, 40, 130, Colors::FLOWER_BLUE);
+    Flower flower4;
+    flower4.draw(1850, 30, 40, 20, Colors::FLOWER_PURPLE);
+    Flower flower5;
+    flower5.draw(500, 60, 40, 40, Colors::FLOWER_RED);
 
     //Inner Level
     GrassOne grass10;
@@ -1046,10 +1119,13 @@ static void displayScene11() {
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
 
-    /*
-    Flower flower;
-    flower.draw(200, 200, 200, 40, Colors::DAY_CLOUD);
-    */
+    glFlush();
+    glutSwapBuffers();
+}
+
+static void displayScene12() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene12();
 
     glFlush();
     glutSwapBuffers();
@@ -1623,6 +1699,6 @@ int main(int argc, char** argv) {
 
     glutFullScreen();
     glutMainLoop();
-
+    
     return 0;
 }

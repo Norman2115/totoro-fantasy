@@ -11,6 +11,15 @@
 #include "Elements.h"
 #include "Star.h"
 #include "Mushroom1.h"
+#include "Cloud.h"
+#include "Island.h"
+
+    DayCloudTwo cloud1_scene5{ 1080, 920, 130, Colors::DAY_CLOUD };
+    DayCloudTwo cloud2_scene5{ 400, 880, 130, Colors::DAY_CLOUD };
+    DayCloudOne cloud3_scene5{ 1600, 830, 130, Colors::DAY_CLOUD };
+    DayCloudOne cloud4_scene5{ -10, 850, 130, Colors::DAY_CLOUD };
+    DayCloudOne cloud5_scene5{ 1950, 900, 130, Colors::DAY_CLOUD };
+
 
 class Background {
 private:
@@ -218,7 +227,7 @@ public:
 
     
     static void Scene5() { 
-        int transitionTime = 10000; // 10 seconds
+        int transitionTime = 5000; // 10 seconds
         int steps = 100;
         int delay = transitionTime / steps;
 
@@ -267,6 +276,19 @@ public:
             glVertex2f(1920.0f, 250.0f);
             glEnd();
 
+            DaySunOne sun;
+            sun.draw(160, 930, 110, Colors::DAY_SUN);
+
+            cloud1_scene5.draw();
+            cloud2_scene5.draw();
+            cloud3_scene5.draw();
+            cloud4_scene5.draw();
+            cloud5_scene5.draw();
+
+            IslandOne island1;
+            island1.draw(700, 700, 250, Colors::ISLAND_DAY);
+            IslandTwo island2;
+            island2.draw(1800, 600, 200, Colors::ISLAND_DAY);
 
             //Lower Level
             GrassLineTwo grass1;
@@ -518,5 +540,20 @@ public:
         glVertex2f(1920.0f, 250.0f);
         glEnd();
     }
+
+    static void Scene12() {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBegin(GL_POLYGON);
+        glColor3f(0, 0, 0);
+        glVertex2f(0, 0);
+        glVertex2f(0, 1080);
+        glVertex2f(1920, 0);
+        glVertex2f(1920, 1080);
+        glEnd();
+    }
 };
 
+        /*  Line for Sunset
+        glColor3f(0.39, 0.64, 0.24);
+        Circle::draw(-490.0f, -2617.0f, 3600.0f);
+        */
