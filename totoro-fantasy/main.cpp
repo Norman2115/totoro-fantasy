@@ -27,9 +27,9 @@
 
 /////   Declare global variables    /////
 Sound sound;
-bool isRainSoundPlaying = false;
-bool isThunderSoundPlaying = false;
-bool isPortalSoundPlaying = false;
+//bool isRainSoundPlaying = false;
+//bool isThunderSoundPlaying = false;
+//bool isPortalSoundPlaying = false;
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -186,7 +186,7 @@ bool isScene8End = false;
 bool isScene9End = false;
 bool isScene10End = false;  
 
-float currentScene = 5;
+int currentScene = 1;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -287,10 +287,8 @@ static void init() {
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (!isThunderSoundPlaying) {
-        sound.playThunderSound();
-        isRainSoundPlaying = true;
-    }
+    sound.playDoorSound();
+        sound.playThunderSoundWithDelay(3);
     Background::Scene1();
 
     House house;
@@ -360,15 +358,10 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (isThunderSoundPlaying) {
-        sound.stopSound();
-        isThunderSoundPlaying = false;
-    }
-    // Start playing the rain sound if it's not already playing
-    if (!isRainSoundPlaying) {
+
         sound.playRainSound();
-        isRainSoundPlaying = true;
-    }
+
+
     Background::Scene2();
     FullMoon moon;
     moon.draw(1530, 950, 140, Colors::NIGHT_FULL_MOON, 1);
@@ -463,10 +456,8 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!isPortalSoundPlaying) {
-        sound.playPortalSound();
-        isPortalSoundPlaying = true;
-    }
+    sound.playRainSoundForDuration(7);
+    sound.playPortalSoundWithDelay(7);
     Background::Scene3();
 
     FullMoon moon;
@@ -584,18 +575,8 @@ static void displayScene3() {
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
-    // Stop playing the rain sound
-    if (isRainSoundPlaying) {
-        sound.stopSound();
-        isRainSoundPlaying = false;
-    }
-
-    // Stop playing the rain sound
-    if (isPortalSoundPlaying) {
-        sound.stopSound();
-        isPortalSoundPlaying = false;
-    }
-
+    sound.stopPortalSound();
+  
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -946,43 +927,7 @@ static void displayScene8() {
     glutSwapBuffers();
 }
 
-static void displayScene9() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene9();
-
-    FullMoon moon1;
-    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
-    FullMoon moon2;
-    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
-
-    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
-
-    mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
-    mushroom4.draw(true);
-    mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
-    mushroom5.draw(true);
-
-    IslandTwo island1;
-    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom6(1310, 400, 20, Colors::MUSHROOM_NIGHT);
-    mushroom6.draw(false);
-    mushroomTwo mushroom7(1290, 400, 10, Colors::MUSHROOM_NIGHT);
-    mushroom7.draw(false);
-
-    catbus.drawRunningView();
-
-    cloud1_scene9.draw();
-    cloud2_scene9.draw();
-    cloud3_scene9.draw();
-    cloud4_scene9.draw();
-    cloud5_scene9.draw();
-
-    glFlush();
-    glutSwapBuffers();
-
-}
-
-static void displayScene9Half() {
+static void displayScene8Half() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
@@ -1076,6 +1021,41 @@ static void displayScene9Half() {
     glutSwapBuffers();
 }
 
+static void displayScene9() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene9();
+
+    FullMoon moon1;
+    moon1.draw(137, 900, 140, Colors::NIGHT_FULL_MOON, 0.35);
+    FullMoon moon2;
+    moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
+
+    portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
+
+    mushroomThree mushroom4;
+    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
+    mushroomOne mushroom5;
+    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+
+    IslandTwo island1;
+    island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
+    mushroomOne mushroom6;
+    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
+    mushroomTwo mushroom7;
+    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+
+    catbus.drawRunningView();
+
+    cloud1_scene9.draw();
+    cloud2_scene9.draw();
+    cloud3_scene9.draw();
+    cloud4_scene9.draw();
+    cloud5_scene9.draw();
+
+    glFlush();
+    glutSwapBuffers();
+
+}
 
 static void displayScene10() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1256,7 +1236,7 @@ static void display() {
         displayScene9();
     }
     else if (currentScene == 9.5) {
-        displayScene9Half();
+        displayScene8Half();
     }
     else if (currentScene == 10) {
         displayScene10();
