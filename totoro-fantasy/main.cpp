@@ -128,8 +128,9 @@ bool isScene4End = false;
 bool isScene6End = false;
 bool isScene8End = false;
 bool isScene9End = false;
+bool isScene10End = false;  
 
-int currentScene = 1;
+int currentScene = 10;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -147,6 +148,7 @@ bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
 bool isEnterPortal = false;
 bool isCatbusEnterPortal = false;
+bool isCatbusExitPortal = false;
 bool isPortalActivatedScene9 = false;
 bool isPortalDeactivatedScene9 = false;
 bool isPortalActivatedScene10 = false;
@@ -159,6 +161,7 @@ bool isFinishCrying = false;
 bool isFadeOutScene6 = false;
 bool isDoneFadeOutScene6 = false;
 bool isPickup = false;
+bool isCatbusReachedGround = false;
 
 ///// Delay Variables /////
 
@@ -188,6 +191,9 @@ const int transitionScene9to10DurationCounter = 20;
 
 int portalActivationScene10DelayCounter = 0;
 const int portalActivationScene10DurationCounter = 20;
+
+int portalDeactivationScene10DelayCounter = 0;
+const int portalDeactivationScene10DurationCounter = 60;
 
 /////   Declare states  /////
 
@@ -992,7 +998,7 @@ static void displayScene10() {
     cloud3_scene10.draw();
     cloud4_scene10.draw();
 
-    portal.draw(1800.0f, 630.0f, 90.0f, 140.0f);
+    portal.draw(1920.0f, 630.0f, 90.0f, 140.0f);
 
     House house;
     house.draw(20.0f, 595.0f, 200, false);
@@ -1055,6 +1061,8 @@ static void displayScene10() {
     grass19.drawWithRotation(1100, 70, 25, 2, Colors::GRASS_DAY);
     GrassTwo grass20;
     grass20.drawWithRotation(1450, 25, 20, 350, Colors::GRASS_DAY);
+
+    catbus.drawRunningView();
 
     glFlush();
     glutSwapBuffers();
@@ -1332,7 +1340,31 @@ static void updateGirlPosition(int value) {
     else if (currentScene == 10) {
         if (!isScene10Initialized) {
             portal.setOpacity(0.0f);
+            catbus.setPosX(2200);
+            catbus.setPosY(650);
+            catbus.setOpacity(0.0f);
             isScene10Initialized = true;
+        }
+
+        if (catbus.getPosX() <= 800) {
+            isCatbusReachedGround = true;
+        }
+
+        if (currentCatbusState == CATBUS_RUNNING) {
+            if (!isCatbusReachedGround) {
+                catbus.moveDiagonal(-6.0f, -2.0f);
+                if (catbus.getBusSize() > 300.0f) {
+                    catbus.setBusSize(catbus.getBusSize() - 1.5f);
+                }
+            }
+            else {
+                catbus.moveDiagonal(-6.0f, 3.8f);
+            }
+        }
+
+        if (catbus.getPosX() <= 600) {
+            isScene10End = true;
+            currentScene = 11;
         }
     }
 
@@ -1485,6 +1517,21 @@ static void updatePortalActivationScene10(int value) {
     glutTimerFunc(16, updatePortalActivationScene10, 0);
 }
 
+static void updatePortalDeactivationScene10(int value) {
+    if (currentScene == 10 && !isPortalDeactivatedScene10) {
+        if (isCatbusExitPortal) {
+            portal.setOpacity(portal.getOpacity() - 0.03f);
+
+            if (portal.getOpacity() <= 0) {
+                portal.setOpacity(0);
+                isPortalDeactivatedScene10 = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatePortalDeactivationScene10, 0);
+}
+
 static void updateCatbusEnterPortal(int value) {
     if (currentScene == 9) {
         if (catbus.getPosX() <= 500) {
@@ -1498,6 +1545,24 @@ static void updateCatbusEnterPortal(int value) {
     }
     glutPostRedisplay();
     glutTimerFunc(16, updateCatbusEnterPortal, 0);
+}
+
+static void updateCatbusExitPortal(int value) {
+    if (currentScene == 10) {
+        if (isPortalActivatedScene10) {
+            catbus.setOpacity(catbus.getOpacity() + 0.03f);
+        }
+
+        if (catbus.getOpacity() >= 1) {
+            catbus.setOpacity(1.0f);
+            portalDeactivationScene10DelayCounter++;
+            if (portalDeactivationScene10DelayCounter >= portalDeactivationScene10DurationCounter) {
+                isCatbusExitPortal = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCatbusExitPortal, 0);
 }
 
 static void updateCloudPosition(int value) {
@@ -1696,6 +1761,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updatedPortalActivationScene9, 0);
     glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
     glutTimerFunc(16, updatePortalActivationScene10, 0);
+    glutTimerFunc(16, updateCatbusExitPortal, 0);
+    glutTimerFunc(16, updatePortalDeactivationScene10, 0);
 
     glutFullScreen();
     glutMainLoop();
