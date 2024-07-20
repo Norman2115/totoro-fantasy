@@ -186,7 +186,7 @@ bool isScene8End = false;
 bool isScene9End = false;
 bool isScene10End = false;  
 
-int currentScene = 1;
+int currentScene = 10;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
@@ -200,6 +200,7 @@ bool isScene6Initialized = false;
 bool isScene8Initialized = false;
 bool isScene9Initialized = false;
 bool isScene10Initialized = false;
+bool isScene11Initialized = false;
 bool isSunsetAngleInitialized = false;
 
 bool isDiagonalMovement = false;
@@ -359,8 +360,7 @@ static void displayScene1() {
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-        sound.playRainSound();
-
+    sound.playRainSound();
 
     Background::Scene2();
     FullMoon moon;
@@ -1031,10 +1031,9 @@ static void displayScene9() {
     moon2.draw(237, 855, 30, Colors::NIGHT_FULL_MOON, 0.35);
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
-
+  
     mushroomOne mushroom11(1818, 730, 20, Colors::MUSHROOM_NIGHT);
     mushroom11.draw(false);
-
     mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
     mushroom4.draw(true);
     mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
@@ -1200,6 +1199,16 @@ static void displayScene11() {
     grass19.draw(1830, 90, 46, Colors::GRASS_DAY);
     GrassTwo grass20;
     grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
+
+    switch (currentCatbusState) {
+        case CATBUS_INVISIBLE:
+            break;
+        case CATBUS_RUNNING:
+            catbus.drawRunningView();
+            break;
+        case CATBUS_STANDSTILL:
+            catbus.drawStandstillView();
+    }
 
     glFlush();
     glutSwapBuffers();
@@ -1430,7 +1439,7 @@ static void updateGirlPosition(int value) {
 
         if (isPortalDeactivatedScene9) {
             isScene9End = true;
-            currentScene = 9.5;
+            currentScene = 10;
         }
     }
     else if (currentScene == 9.5) {
@@ -1464,6 +1473,22 @@ static void updateGirlPosition(int value) {
         if (catbus.getPosX() <= 600) {
             isScene10End = true;
             currentScene = 11;
+        }
+    }
+    else if (currentScene == 11) {
+        if (!isScene11Initialized) {
+            catbus.setPosX(1920);
+            catbus.setPosY(200);
+            catbus.setBusSize(500);
+            isScene11Initialized = true;
+        }
+
+        if (currentCatbusState == CATBUS_RUNNING) {
+            catbus.move(3.0f);
+        }
+
+        if (catbus.getPosX() <= 1400) {
+            currentCatbusState = CATBUS_STANDSTILL;
         }
     }
 
