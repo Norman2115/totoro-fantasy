@@ -1505,7 +1505,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Little Girl's Adventure");
     init();
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(displayScene5);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer(); 

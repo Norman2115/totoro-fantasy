@@ -13,12 +13,15 @@
 #include "Mushroom1.h"
 #include "Cloud.h"
 #include "Island.h"
+#include "Flower.h"
 
     DayCloudTwo cloud1_scene5{ 1080, 920, 130, Colors::DAY_CLOUD };
     DayCloudTwo cloud2_scene5{ 400, 880, 130, Colors::DAY_CLOUD };
     DayCloudOne cloud3_scene5{ 1600, 830, 130, Colors::DAY_CLOUD };
     DayCloudOne cloud4_scene5{ -10, 850, 130, Colors::DAY_CLOUD };
     DayCloudOne cloud5_scene5{ 1950, 900, 130, Colors::DAY_CLOUD };
+    DayCloudTwo cloud6_scene5{ 1320, 695, 15, Colors::DAY_CLOUD };
+
 
 
 class Background {
@@ -227,7 +230,7 @@ public:
 
     
     static void Scene5() { 
-        int transitionTime = 5000; // 10 seconds
+        int transitionTime = 5000; // 5 seconds
         int steps = 100;
         int delay = transitionTime / steps;
 
@@ -276,19 +279,54 @@ public:
             glVertex2f(1920.0f, 250.0f);
             glEnd();
 
+            // Sun is Sun
             DaySunOne sun;
             sun.draw(160, 930, 110, Colors::DAY_SUN);
 
+            // Dont Move
+            IslandTwo island1;
+            island1.draw(700, 850, 150, Colors::ISLAND_DAY);
+            IslandOne island2;
+            island2.draw(1300, 700, 120, Colors::ISLAND_DAY);
+            mushroomTwo mushroom1;
+            mushroom1.draw(695, 880, 13, Colors::MUSHROOM_DAY, false);
+            mushroomThree mushroom2;
+            mushroom2.draw(710, 880, 10, Colors::MUSHROOM_DAY, false);
+            mushroomThree mushroom3;
+            mushroom3.draw(1305, 733, 15, Colors::MUSHROOM_DAY, false);
+
+            // Move Fast
             cloud1_scene5.draw();
             cloud2_scene5.draw();
             cloud3_scene5.draw();
             cloud4_scene5.draw();
             cloud5_scene5.draw();
+            cloud6_scene5.draw();
 
-            IslandOne island1;
-            island1.draw(700, 700, 250, Colors::ISLAND_DAY);
-            IslandTwo island2;
-            island2.draw(1800, 600, 200, Colors::ISLAND_DAY);
+            /*  Line for Sunset
+            glColor3f(0.39, 0.64, 0.24);
+            Circle::draw(-490.0f, -2617.0f, 3600.0f);
+            */
+
+
+            // Move Infinite
+            mushroomThree mushroom5;
+            mushroom5.draw(600, 250, 275, Colors::MUSHROOM_DAY, true);
+            mushroomOne mushroom4;
+            mushroom4.draw(450, 250, 300, Colors::MUSHROOM_DAY, true);
+            mushroomThree mushroom6;
+            mushroom6.draw(1000, 250, 150, Colors::MUSHROOM_DAY, true);
+            mushroomThree mushroom7;
+            mushroom7.draw(1500, 250, 300, Colors::MUSHROOM_DAY, true);
+            mushroomThree mushroom8;
+            mushroom8.draw(1600, 250, 200, Colors::MUSHROOM_DAY, true);
+
+            Flower flower1;
+            flower1.draw(1650, 90, 40, 60, Colors::FLOWER_BLUE);
+            Flower flower2;
+            flower2.draw(1000, 170, 40, 100, Colors::FLOWER_PURPLE);
+            Flower flower3;
+            flower3.draw(550, 60, 40, 130, Colors::FLOWER_RED);
 
             //Lower Level
             GrassLineTwo grass1;
@@ -552,8 +590,3 @@ public:
         glEnd();
     }
 };
-
-        /*  Line for Sunset
-        glColor3f(0.39, 0.64, 0.24);
-        Circle::draw(-490.0f, -2617.0f, 3600.0f);
-        */
