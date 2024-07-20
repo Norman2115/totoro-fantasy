@@ -238,7 +238,7 @@ static void displayScene1() {
     Background::Scene1();
 
     House house;
-    house.draw(200.0f, 550.0f, 700.0f, true, false);
+    house.draw(200.0f, 550.0f, 700.0f, true);
 
     //Upper Level
     GrassTwo grass1;
@@ -363,7 +363,7 @@ static void displayScene2() {
     grass8.drawWithRotation(1800, 200, 50, 10, Colors::GRASS_NIGHT);
 
     House house;
-    house.draw(20.0f, 350.0f, 250, false,false);
+    house.draw(20.0f, 350.0f, 250, false);
     GrassTwo grass15;
     grass15.drawWithRotation(65, 227, 20, 0, Colors::GRASS_NIGHT);
     GrassOne grass16;
@@ -503,8 +503,6 @@ static void displayScene3() {
         girl.drawSideView();
         break;
     }
-
-
 
     //Third Layer
     tree8_scene3.draw(900, 150, 350, Colors::TREE_NIGHT);
@@ -1050,7 +1048,7 @@ static void displayScene10() {
     portal.draw(1920.0f, 630.0f, 90.0f, 140.0f);
 
     House house;
-    house.draw(20.0f, 595.0f, 200, false,true);
+    house.draw(20.0f, 595.0f, 200, false);
 
     TreeTwo tree1;
     tree1.draw(1930, 180, 140, Colors::TREE_DAY);
@@ -1131,7 +1129,7 @@ static void displayScene11() {
     cloud4_scene11.draw();
 
     House house;
-    house.draw(200.0f, 600.0f, 700.0f, true,true);
+    house.draw(200.0f, 600.0f, 700.0f, true);
 
     //Upper Level
     GrassTwo grass1;
