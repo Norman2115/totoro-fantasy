@@ -14,7 +14,6 @@ protected:
     Sun(float x, float y, float size, Color color)
         : posX(x), posY(y), size(size), color(color), currentAngle(Constants::PI / 2.27) {}
 
-
 public:
     virtual void draw() = 0;
 
