@@ -374,7 +374,7 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!isRainSoundPlaying) {
+    if (!isPortalSoundPlaying) {
         sound.playPortalSound();
         isPortalSoundPlaying = true;
     }
