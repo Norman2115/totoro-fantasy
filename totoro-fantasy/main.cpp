@@ -231,7 +231,7 @@ static void displayScene1() {
     Background::Scene1();
 
     House house;
-    house.draw(200.0f, 550.0f, 700.0f, true);
+    house.draw(200.0f, 550.0f, 700.0f, true, false);
 
     //Upper Level
     GrassTwo grass1;
@@ -356,7 +356,7 @@ static void displayScene2() {
     grass8.drawWithRotation(1800, 200, 50, 10, Colors::GRASS_NIGHT);
 
     House house;
-    house.draw(20.0f, 350.0f, 250, false);
+    house.draw(20.0f, 350.0f, 250, false,false);
     GrassTwo grass15;
     grass15.drawWithRotation(65, 227, 20, 0, Colors::GRASS_NIGHT);
     GrassOne grass16;
@@ -995,7 +995,7 @@ static void displayScene10() {
     portal.draw(1800.0f, 630.0f, 90.0f, 140.0f);
 
     House house;
-    house.draw(20.0f, 595.0f, 200, false);
+    house.draw(20.0f, 595.0f, 200, false,true);
 
     TreeTwo tree1;
     tree1.draw(1930, 180, 140, Colors::TREE_DAY);
@@ -1074,7 +1074,7 @@ static void displayScene11() {
     cloud4_scene11.draw();
 
     House house;
-    house.draw(200.0f, 600.0f, 700.0f, true);
+    house.draw(200.0f, 600.0f, 700.0f, true,true);
 
     //Upper Level
     GrassTwo grass1;
@@ -1697,7 +1697,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
     glutTimerFunc(16, updatePortalActivationScene10, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
     
     return 0;
