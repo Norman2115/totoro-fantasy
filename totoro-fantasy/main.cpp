@@ -21,15 +21,18 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
-#include "sound.h"
+#include "Sounds.h"
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
 
 /////   Declare global variables    /////
-Sound sound;
-//bool isRainSoundPlaying = false;
-//bool isThunderSoundPlaying = false;
-//bool isPortalSoundPlaying = false;
+Sounds sounds;
+bool isDoorOpeningPlayed = false;
+bool isThunderStormTimerSet = false;
+bool isThunderStormPlaying = false;
+bool isRainPlaying = false;
+bool isTeleportSoundPlayed = false;
+
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -37,6 +40,23 @@ LittleGirl girl(500, 150, 180, 0, false);
 Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
 FadeEffect fadeOutScene6;
+
+// Function to play thunderstorm sound after a delay
+static void playThunderstormSound(int value) {
+    sounds.playThunderStorm();
+    isThunderStormPlaying = true;
+}
+
+
+// Function to play teleport sound after a delay
+static void playTeleportSound(int value) {
+    sounds.playTeleport();
+    isTeleportSoundPlayed = true;
+
+    // Set a timer to stop the teleport sound after it has played for a certain amount of time
+    int durationInMilliseconds = 3000; // Duration for which the sound should play
+    glutTimerFunc(durationInMilliseconds, [](int) { sounds.stopTeleport(); }, 0);
+}
 
 // For totoro side view walking
 int state = 0;
@@ -286,9 +306,17 @@ static void init() {
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (!isDoorOpeningPlayed) {
+        sounds.playDoorOpening();
+        isDoorOpeningPlayed = true;
+    }
 
-    sound.playDoorSound();
-        sound.playThunderSoundWithDelay(3);
+    if (!isThunderStormTimerSet) {
+        int delayInMilliseconds = 3000; // Delay in milliseconds
+        glutTimerFunc(delayInMilliseconds, playThunderstormSound, 0);
+        isThunderStormTimerSet = true;
+    }
+
     Background::Scene1();
 
     House house;
@@ -358,9 +386,10 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-
-        sound.playRainSound();
-
+    if (!isRainPlaying) {
+        sounds.playRain();
+        isRainPlaying = true;
+    }
 
     Background::Scene2();
     FullMoon moon;
@@ -456,8 +485,10 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    sound.playRainSoundForDuration(7);
-    sound.playPortalSoundWithDelay(7);
+    if (!isTeleportSoundPlayed) {
+        int delayInMilliseconds = 8000; // Delay in milliseconds
+        glutTimerFunc(delayInMilliseconds, playTeleportSound, 0);
+    }
     Background::Scene3();
 
     FullMoon moon;
@@ -575,8 +606,14 @@ static void displayScene3() {
 
 static void displayScene4() {
     glClear(GL_COLOR_BUFFER_BIT);
-    sound.stopPortalSound();
-  
+    // Stop the rain sound when entering scene 3
+    sounds.stopRain();
+    isRainPlaying = false;
+
+    // Stop the thunderstorm sound when entering scene 3
+    sounds.stopThunderStorm();
+    isThunderStormPlaying = false;
+
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -685,6 +722,7 @@ static void displayScene4() {
 
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
+
     Background::Scene5(girl, islands_scene5, grass_scene5, clouds_scene5, mushrooms_scene5, flowers_scene5, sun_scene5, currentStep, sunsetSteps);
     glFlush();
     glutSwapBuffers();
@@ -1032,17 +1070,17 @@ static void displayScene9() {
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
 
-    mushroomThree mushroom4;
-    mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
-    mushroomOne mushroom5;
-    mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
+    //mushroomThree mushroom4;
+    //mushroom4.draw(800, -250, 400, Colors::MUSHROOM_NIGHT, true);
+    //mushroomOne mushroom5;
+    //mushroom5.draw(350, -165, 200, Colors::MUSHROOM_NIGHT, true);
 
     IslandTwo island1;
     island1.draw(1300, 380, 100, Colors::ISLAND_NIGHT);
-    mushroomOne mushroom6;
-    mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
-    mushroomTwo mushroom7;
-    mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
+    //mushroomOne mushroom6;
+    //mushroom6.draw(1310, 400, 20, Colors::MUSHROOM_NIGHT, false);
+    //mushroomTwo mushroom7;
+    //mushroom7.draw(1290, 400, 10, Colors::MUSHROOM_NIGHT, false);
 
     catbus.drawRunningView();
 
@@ -1851,6 +1889,11 @@ static void infiniteBackgroundScrollingScene5(int value) {
 }
 
 int main(int argc, char** argv) {
+    // Load sounds
+    sounds.loadSound("doorOpening", "doorOpening.wav");
+    sounds.loadSound("thunderStorm", "thunderStorm.wav");
+    sounds.loadSound("raining", "heavyRain.wav");
+    sounds.loadSound("teleport", "teleport.wav");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
@@ -1888,8 +1931,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
     glutTimerFunc(16, infiniteBackgroundScrollingScene5, 0);
     glutTimerFunc(delay, updateSunset, 0);
-
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
     
     return 0;
