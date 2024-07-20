@@ -59,7 +59,7 @@ const Color Colors::ISLAND_NIGHT{ 0.39, 0.64, 0.24 };
 const Color Colors::THUNDER_CLOUD{ 0.85, 0.82, 0.1 };
 const Color Colors::CHARACTER_SKIN{ 0.94, 0.64, 0.32 };
 const Color Colors::GIRL_DRESS{ 0.91, 0.09, 0.21 };
-const Color Colors::MOM_DRESS{ 0.96, 0.76, 0.69 };
+const Color Colors::MOM_DRESS{ 0.57, 0.22, 0.8 };
 
 const Color Colors::FLOWER_BLUE{ 0.39, 0.74, 1 };
 const Color Colors::FLOWER_PURPLE{ 0.77, 0.39, 0.94 };

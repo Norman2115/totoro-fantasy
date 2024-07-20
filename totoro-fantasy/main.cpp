@@ -2,6 +2,7 @@
 #include <iostream>
 #include <gl/glut.h>
 #include <vector>
+#include <cmath>
 #include "Cloud.h"
 #include "Sun.h"
 #include "Moon.h"
@@ -24,8 +25,13 @@
 #include "sound.h"
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
+#include "Subtitle.h"
+
+
+float currentScene = 8;
 
 /////   Declare global variables    /////
+
 Sound sound;
 //bool isRainSoundPlaying = false;
 //bool isThunderSoundPlaying = false;
@@ -34,9 +40,10 @@ Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
 LittleGirl girl(500, 150, 180, 0, false);
+Mother mother(600, 200, 230);
 Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
-FadeEffect fadeOutScene6;
+Subtitle subtitle("This is the initial text.");
 
 // For totoro side view walking
 int state = 0;
@@ -46,10 +53,14 @@ const float endX = 1020.0f;
 int steps = 0;
 
 // For sunset effect
-int transitionTime = 8000; // 8 seconds
+int transitionTime = 15000; // 15 seconds
 int sunsetSteps = 100;
 int delay = transitionTime / sunsetSteps;
 int currentStep = 0;
+
+// For scene 11 keypress animation
+float stepSize = 5.0f; // Step size for each move
+float leftLimit = 0.0f, rightLimit = 1920.0f, bottomLimit = 0.0f, topLimit = 250.0f;
 
 std::vector<Cloud*> clouds_scene1{
     new DayCloudTwo(1080, 900, 150, Colors::NIGHT_CLOUD),
@@ -101,30 +112,41 @@ std::vector<Cloud*> clouds_scene5{
 };
 
 
-DayCloudTwo cloud1_scene8{ 1000, 940, 120, Colors::NIGHT_CLOUD };
-DayCloudOne cloud2_scene8{ 440, 910, 120, Colors::NIGHT_CLOUD };
-DayCloudOne cloud3_scene8{ 1700, 860, 120, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud4_scene8{ 0, 860, 120, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene8{
+    new DayCloudTwo(1000, 940, 120, Colors::NIGHT_CLOUD),
+    new DayCloudOne(440, 910, 120, Colors::NIGHT_CLOUD),
+    new DayCloudOne(1700, 860, 120, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(0, 860, 120, Colors::NIGHT_CLOUD)
+};
 
-DayCloudTwo cloud1_scene9{ 1000, 440, 120, Colors::NIGHT_CLOUD };
-DayCloudOne cloud2_scene9{ 440, 410, 120, Colors::NIGHT_CLOUD };
-DayCloudOne cloud3_scene9{ 1700, 360, 120, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud4_scene9{ 0, 360, 120, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud5_scene9{ 1930, 460, 120, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene8Half{
+    new DayCloudTwo(1080, 950, 130, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(400, 900, 130, Colors::NIGHT_CLOUD),
+    new DayCloudOne(1600, 850, 130, Colors::NIGHT_CLOUD)
+};
 
-DayCloudTwo cloud1_scene9Half{ 1080, 950, 130, Colors::NIGHT_CLOUD };
-DayCloudTwo cloud2_scene9Half{ 400, 900, 130, Colors::NIGHT_CLOUD };
-DayCloudOne cloud3_scene9Half{ 1600, 850, 130, Colors::NIGHT_CLOUD };
+std::vector<Cloud*> clouds_scene9{
+    new DayCloudTwo(1000, 440, 120, Colors::NIGHT_CLOUD),
+    new DayCloudOne(440, 410, 120, Colors::NIGHT_CLOUD),
+    new DayCloudOne(1700, 360, 120, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(0, 360, 120, Colors::NIGHT_CLOUD),
+    new DayCloudTwo(1930, 460, 120, Colors::NIGHT_CLOUD)
+};
 
-DayCloudTwo cloud1_scene10{ 1080, 950, 110, Colors::DAY_CLOUD };
-DayCloudTwo cloud2_scene10{ 400, 900, 110, Colors::DAY_CLOUD };
-DayCloudOne cloud3_scene10{ 1600, 850, 110, Colors::DAY_CLOUD };
-DayCloudTwo cloud4_scene10{ 1930, 885, 110, Colors::DAY_CLOUD };
 
-DayCloudTwo cloud1_scene11{ 1080, 900, 140, Colors::DAY_CLOUD };
-DayCloudTwo cloud2_scene11{ 400, 850, 140, Colors::DAY_CLOUD };
-DayCloudOne cloud3_scene11{ 1600, 800, 140, Colors::DAY_CLOUD };
-DayCloudTwo cloud4_scene11{ 1930, 900, 140, Colors::DAY_CLOUD };
+std::vector<Cloud*> clouds_scene10{
+    new DayCloudTwo(1080, 950, 110, Colors::DAY_CLOUD),
+    new DayCloudTwo(400, 900, 110, Colors::DAY_CLOUD),
+    new DayCloudOne(1600, 850, 110, Colors::DAY_CLOUD),
+    new DayCloudTwo(1930, 885, 110, Colors::DAY_CLOUD)
+};
+
+std::vector<Cloud*> clouds_scene11{
+    new DayCloudTwo(1080, 900, 140, Colors::DAY_CLOUD),
+    new DayCloudTwo(400, 850, 140, Colors::DAY_CLOUD),
+    new DayCloudOne(1600, 800, 140, Colors::DAY_CLOUD),
+    new DayCloudTwo(1930, 900, 140, Colors::DAY_CLOUD)
+};
 
 ///// Tree /////
 
@@ -137,15 +159,48 @@ TreeTwo tree13_scene3;
 
 ///// Grass /////
 
-std::vector<Elements*> grass_scene5{
+std::vector<Elements*> grass_scene5 {
+    new GrassLineTwo(200, 220, 45, Colors::GRASS_NIGHT),
+    new GrassLineOne(280, 230, 55, Colors::GRASS_NIGHT),
+    new GrassLineTwo(30, 218, 46, Colors::GRASS_NIGHT),
+    new GrassLineOne(40, 150, 60, Colors::GRASS_NIGHT),
+    new GrassLineOne(190, 80, 59, Colors::GRASS_NIGHT),
+    new GrassLineOne(760, 190, 61, Colors::GRASS_NIGHT),
+    new GrassLineOne(1230, 44, 62, Colors::GRASS_NIGHT),
+    new GrassLineOne(1450, 90, 59, Colors::GRASS_NIGHT),
+    new GrassLineTwo(350, 160, 46, Colors::GRASS_NIGHT),
+    new GrassLineTwo(550, 190, 44, Colors::GRASS_NIGHT),
+    new GrassLineTwo(900, 120, 43, Colors::GRASS_NIGHT),
+    new GrassLineTwo(1200, 200, 44, Colors::GRASS_NIGHT),
+    new GrassLineTwo(1800, 110, 46, Colors::GRASS_NIGHT),
+    new GrassLineTwo(1600, 220, 47, Colors::GRASS_NIGHT),
+    new GrassLineOne(1290, 220, 59, Colors::GRASS_NIGHT),
+    new GrassLineTwo(1895, 203, 48, Colors::GRASS_NIGHT)
+};
 
+std::vector<Elements*> grass_scene8half{
+    new GrassTwo(190, 250, 55, Colors::GRASS_NIGHT),
+    new GrassOne(456, 249, 50, Colors::GRASS_NIGHT),
+    new GrassTwo(1210, 250, 50, Colors::GRASS_NIGHT),
+    new GrassOne(266, 250, 52, Colors::GRASS_NIGHT),
+    new GrassOne(766, 250, 55, Colors::GRASS_NIGHT),
+    new GrassOne(1730, 249, 53, Colors::GRASS_NIGHT),
+    new GrassTwo(1820, 250, 49, Colors::GRASS_NIGHT),
+    new GrassTwo(810, 248, 52, Colors::GRASS_NIGHT),
+    new GrassTwo(20, 248, 52, Colors::GRASS_NIGHT),
+    new GrassOne(50, 150, 60, Colors::GRASS_NIGHT),
+    new GrassOne(180, 70, 59, Colors::GRASS_NIGHT),
+    new GrassOne(1240, 80, 62, Colors::GRASS_NIGHT),
+    new GrassOne(1550, 60, 59, Colors::GRASS_NIGHT),
+    new GrassTwo(300, 140, 46, Colors::GRASS_NIGHT),
+    new GrassTwo(540, 120, 44, Colors::GRASS_NIGHT),
+    new GrassTwo(890, 95, 43, Colors::GRASS_NIGHT),
+    new GrassTwo(1100, 150, 44, Colors::GRASS_NIGHT),
+    new GrassTwo(1830, 30, 46, Colors::GRASS_NIGHT),
+    new GrassTwo(1450, 180, 47, Colors::GRASS_NIGHT)
 };
 
 ///// Mushrooms /////
-
-
-
-///// Sun /////
 
 std::vector<Mushroom1*> mushrooms_scene5{
     new mushroomTwo(695, 880, 13, Colors::MUSHROOM_DAY),
@@ -158,10 +213,31 @@ std::vector<Mushroom1*> mushrooms_scene5{
     new mushroomThree(1600, 250, 200, Colors::MUSHROOM_DAY)
 };
 
+std::vector<Mushroom1*> mushrooms_scene8half{
+    new mushroomThree(360, 250, 500, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(820, 250, 600, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(1500, 250, 500, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(500, 250, 400, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(1210, 250, 350, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(1650, 250, 150, Colors::MUSHROOM_NIGHT),
+    new mushroomThree(155, 250, 120, Colors::MUSHROOM_NIGHT)
+};
+
 ///// Flower /////
 
 std::vector<Flower*> flowers_scene5{
+    new Flower(1650, 90, 40, Colors::FLOWER_BLUE),
+    new Flower(1000, 170, 40, Colors::FLOWER_PURPLE),
+    new Flower(550, 60, 40, Colors::FLOWER_RED)
+};
 
+std::vector<Flower*> flowers_scene8half{
+    new  Flower(1050, 100, 40, Colors::FLOWER_BLUE),
+    new Flower(400, 190, 40, Colors::FLOWER_CYAN),
+    new Flower(100, 90, 40, Colors::FLOWER_RED),
+    new Flower(800, 50, 40, Colors::FLOWER_PURPLE),
+    new Flower(1300, 190, 40, Colors::FLOWER_RED),
+    new Flower(1800, 120, 40, Colors::FLOWER_PURPLE)
 };
 
 ///// Island /////
@@ -183,15 +259,16 @@ bool isScene4End = false;
 bool isScene5End = false;
 bool isScene6End = false;
 bool isScene8End = false;
+bool isScene8HalfEnd = false;
 bool isScene9End = false;
 bool isScene10End = false;  
-
-int currentScene = 10;
+bool isScene11End = false;
 
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 
-bool isScene2ArcAngleInitialized = false;
+bool isScene1Initialized = false;
+bool isScene2Initialized = false;
 bool isScene3GirlPosInitialized = false;
 bool isScene4Initialized = false;
 bool isScene4AfterBounceInitialized = false;
@@ -202,6 +279,8 @@ bool isScene9Initialized = false;
 bool isScene10Initialized = false;
 bool isScene11Initialized = false;
 bool isSunsetAngleInitialized = false;
+bool isScene8HalfInitialized = false;
+bool isScene11AfterDropOffInitialized = false;
 
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
@@ -219,9 +298,20 @@ bool isTotoroComforting = false;
 bool isFinishCrying = false;
 
 bool isPickup = false;
+bool isDropOff = false;
 bool isCatbusReachedGround = false;
 
-///// Delay Variables /////
+bool isGirlAtScreenCenterScene5 = false;
+bool isSunPartiallySet = false;
+
+bool isCatbusAtScreenCenterScene8Half = false;
+bool isCatbusFastForwardDurationEnd = false;
+
+bool keyPressed = false;
+bool isSpecialKeyPressed = false;
+bool isWalkingAnimationActive = false;
+
+///// Timer and Delay Variables /////
 
 int delayCounterScene3 = 0;
 const int delayDurationScene3 = 60;
@@ -239,10 +329,10 @@ int finishCryingDelayCounter = 0;
 const int finishCryingDurationCounter = 75;
 
 int fadeOutScene6DelayCounter = 0;
-const int fadeOutScene6DurationCounter = 60;
+const int fadeOutScene6DurationCounter = 110;
 
-int pickupBeforeDelayCounter = 0;
-const int pickupBeforeDurationCounter = 60;
+int pickupDelayCounter = 0;
+const int pickupDurationCounter = 60;
 
 int transitionScene9to10DelayCounter = 0;
 const int transitionScene9to10DurationCounter = 20;
@@ -253,12 +343,26 @@ const int portalActivationScene10DurationCounter = 20;
 int portalDeactivationScene10DelayCounter = 0;
 const int portalDeactivationScene10DurationCounter = 60;
 
+int dropOffDelayCounter = 0;
+const int dropOffDurationCounter = 60;
+
+int catbusRunCounter = 0;
+const int catbusRunDuration = 500;
+
+int hugDelayAfterDropOffCounter = 0;
+const int hugDelayAfterDropOffDuration = 120;
+
+int afterHugEndingDelayCounter = 0;
+const int afterHugEndingDelayDuration = 120;
+
+
 /////   Declare states  /////
 
 enum LittleGirlState {
     LITTLE_GIRL_FRONT_VIEW,
     LITTLE_GIRL_SIDE_VIEW,
-    LITTLE_GIRL_MOVING
+    LITTLE_GIRL_MOVING,
+    LITTLE_GIRL_HUG
 };
 
 enum TotoroState {
@@ -273,9 +377,15 @@ enum CatbusState {
     CATBUS_RUNNING
 };
 
+enum MotherState {
+    MOTHER_FRONT_VIEW,
+    MOTHER_HUG
+};
+
 LittleGirlState currentGirlState = LITTLE_GIRL_FRONT_VIEW;
 TotoroState currentTotoroState = TOTORO_INVISIBLE;
 CatbusState currentCatbusState = CATBUS_RUNNING;
+MotherState currentMotherState = MOTHER_FRONT_VIEW;
 
 static void init() {
     glMatrixMode(GL_PROJECTION);
@@ -296,46 +406,45 @@ static void displayScene1() {
     house.draw(200.0f, 550.0f, 700.0f, true, false);
 
     //Upper Level
-    GrassTwo grass1;
-    grass1.draw(200, 203, 45, Colors::GRASS_NIGHT);
-    GrassTwo grass2;
-    grass2.draw(400, 203, 47, Colors::GRASS_NIGHT);
-    GrassTwo grass3;
-    grass3.draw(1200, 200, 46, Colors::GRASS_NIGHT);
-    GrassOne grass4;
-    grass4.draw(260, 203, 55, Colors::GRASS_NIGHT);
-    GrassOne grass5;
-    grass5.draw(760, 200, 60, Colors::GRASS_NIGHT);
-    GrassOne grass6;
-    grass6.draw(1700, 199, 57, Colors::GRASS_NIGHT);
-    GrassTwo grass7;
-    grass7.draw(1800, 200, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass8;
-    grass8.draw(830, 198, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass9;
-    grass9.draw(30, 203, 46, Colors::GRASS_NIGHT);
+    GrassTwo grass1(200, 203, 45, Colors::GRASS_NIGHT);
+    grass1.draw();
+    GrassTwo grass2(400, 203, 47, Colors::GRASS_NIGHT);
+    grass2.draw();
+    GrassTwo grass3(1200, 200, 46, Colors::GRASS_NIGHT);
+    grass3.draw();
+    GrassOne grass4(260, 203, 55, Colors::GRASS_NIGHT);
+    grass4.draw();
+    GrassOne grass5(760, 200, 60, Colors::GRASS_NIGHT);
+    grass5.draw();
+    GrassOne grass6(1700, 199, 57, Colors::GRASS_NIGHT);
+    grass6.draw();
+    GrassTwo grass7(1800, 200, 44, Colors::GRASS_NIGHT);
+    grass7.draw();
+    GrassTwo grass8(830, 198, 46, Colors::GRASS_NIGHT);
+    grass8.draw();
+    GrassTwo grass9(30, 203, 46, Colors::GRASS_NIGHT);
+    grass9.draw();
     //Lower Level
-    GrassOne grass10;
-    grass10.draw(50, 100, 60, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
-    GrassOne grass12;
-    grass12.draw(750, 160, 61, Colors::GRASS_NIGHT);
-    GrassOne grass13;
-    grass13.draw(1240, 30, 62, Colors::GRASS_NIGHT);
-    GrassOne grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.draw(300, 110, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass17;
-    grass17.draw(890, 65, 43, Colors::GRASS_NIGHT);
-    GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass19;
-    grass19.draw(1830, 90, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
-
+    GrassOne grass10(50, 100, 60, Colors::GRASS_NIGHT);
+    grass10.draw();
+    GrassOne grass11(180, 70, 59, Colors::GRASS_NIGHT);
+    grass11.draw();
+    GrassOne grass12(750, 160, 61, Colors::GRASS_NIGHT);
+    grass12.draw();
+    GrassOne grass13(1240, 30, 62, Colors::GRASS_NIGHT);
+    grass13.draw();
+    GrassOne grass14(1550, 60, 59, Colors::GRASS_NIGHT);
+    grass14.draw();
+    GrassTwo grass15(300, 110, 46, Colors::GRASS_NIGHT);
+    grass15.draw();
+    GrassTwo grass17(890, 65, 43, Colors::GRASS_NIGHT);
+    grass17.draw();
+    GrassTwo grass18(1100, 150, 44, Colors::GRASS_NIGHT);
+    grass18.draw();
+    GrassTwo grass19(1830, 90, 46, Colors::GRASS_NIGHT);
+    grass19.draw();
+    GrassTwo grass20(1450, 180, 47, Colors::GRASS_NIGHT);
+    grass20.draw();
     FullMoon moon;
     moon.draw(1520, 950, 140, Colors::NIGHT_FULL_MOON, 1);
 
@@ -351,7 +460,11 @@ static void displayScene1() {
     case LITTLE_GIRL_MOVING:
         girl.drawSideView();
         break;
+    case LITTLE_GIRL_HUG:
+        girl.hug();
     }
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -374,51 +487,52 @@ static void displayScene2() {
     tree1.draw(1900, 380, 300, Colors::TREE_NIGHT);
     TreeTwo tree2;
     tree2.draw(1582, 385, 280, Colors::TREE_NIGHT);
-    GrassOne grass21;
-    grass21.draw(1613, 386, 40, Colors::GRASS_NIGHT);
+    GrassTwo grass21(1613, 386, 40, Colors::GRASS_NIGHT);
+    grass21.draw();
     TreeTwo tree3;
     tree3.draw(1300, 320, 250, Colors::TREE_NIGHT);
-    GrassTwo grass20;
-    grass20.draw(1317, 322, 30, Colors::GRASS_NIGHT);
+    GrassTwo grass20(1317, 322, 30, Colors::GRASS_NIGHT);
+    grass20.draw();
 
     //Upper Level
-    GrassTwo grass1;
-    grass1.drawWithRotation(1550, 388, 57, 9, Colors::GRASS_NIGHT);
-    GrassTwo grass2;
-    grass2.drawWithRotation(800, 160, 55, 25, Colors::GRASS_NIGHT);
-    GrassTwo grass3;
-    grass3.drawWithRotation(600, 45, 55, 33, Colors::GRASS_NIGHT);
-    GrassTwo grass4;
-    grass4.drawWithRotation(400, 157, 20, 340, Colors::GRASS_NIGHT);
-    GrassTwo grass5;
-    grass5.drawWithRotation(30, 258, 20, 345, Colors::GRASS_NIGHT);
-    GrassOne grass9;
-    grass9.drawWithRotation(1750, 400, 65, 1, Colors::GRASS_NIGHT);
-    GrassOne grass10;
-    grass10.drawWithRotation(900, 208, 60, 22, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.drawWithRotation(550, 98, 30, 335, Colors::GRASS_NIGHT);
+//Upper Level
+    GrassTwo grass1(1550, 388, 57, Colors::GRASS_NIGHT);
+    grass1.drawWithRotation(9);
+    GrassTwo grass2(800, 160, 55, Colors::GRASS_NIGHT);
+    grass2.drawWithRotation(25);
+    GrassTwo grass3(600, 45, 55, Colors::GRASS_NIGHT);
+    grass3.drawWithRotation(33);
+    GrassTwo grass4(400, 157, 20, Colors::GRASS_NIGHT);
+    grass4.drawWithRotation(340);
+    GrassTwo grass5(30, 258, 20, Colors::GRASS_NIGHT);
+    grass5.drawWithRotation(345);
+    GrassOne grass9(1750, 400, 65, Colors::GRASS_NIGHT);
+    grass9.drawWithRotation(1);
+    GrassOne grass10(900, 208, 60, Colors::GRASS_NIGHT);
+    grass10.drawWithRotation(22);
+    GrassOne grass11(550, 98, 30, Colors::GRASS_NIGHT);
+    grass11.drawWithRotation(335);
 
     //Lower Level
-    GrassOne grass12;
-    grass12.drawWithRotation(90, 40, 30, 330, Colors::GRASS_NIGHT);
-    GrassTwo grass7;
-    grass7.drawWithRotation(440, 85, 20, 335, Colors::GRASS_NIGHT);
-    GrassOne grass13;
-    grass13.drawWithRotation(950, 85, 46, 30, Colors::GRASS_NIGHT);
-    GrassTwo grass14;
-    grass14.drawWithRotation(1400, 250, 43, 13, Colors::GRASS_NIGHT);
-    GrassTwo grass8;
-    grass8.drawWithRotation(1800, 200, 50, 10, Colors::GRASS_NIGHT);
+    GrassOne grass12(90, 40, 30, Colors::GRASS_NIGHT);
+    grass12.drawWithRotation(330);
+    GrassTwo grass7(440, 85, 20, Colors::GRASS_NIGHT);
+    grass7.drawWithRotation(335);
+    GrassOne grass13(950, 85, 46, Colors::GRASS_NIGHT);
+    grass13.drawWithRotation(30);
+    GrassTwo grass14(1400, 250, 43, Colors::GRASS_NIGHT);
+    grass14.drawWithRotation(13);
+    GrassTwo grass8(1800, 200, 50, Colors::GRASS_NIGHT);
+    grass8.drawWithRotation(10);
 
     House house;
     house.draw(20.0f, 350.0f, 250, false, false);
-    GrassTwo grass15;
-    grass15.drawWithRotation(65, 227, 20, 0, Colors::GRASS_NIGHT);
-    GrassOne grass16;
-    grass16.drawWithRotation(10, 227, 20, 0, Colors::GRASS_NIGHT);
-    GrassOne grass17;
-    grass17.drawWithRotation(145, 225, 20, 0, Colors::GRASS_NIGHT);
+    GrassTwo grass15(65, 227, 20, Colors::GRASS_NIGHT);
+    grass15.drawWithRotation(0);
+    GrassOne grass16(10, 227, 20, Colors::GRASS_NIGHT);
+    grass16.drawWithRotation(0);
+    GrassOne grass17(145, 225, 20, Colors::GRASS_NIGHT);
+    grass17.drawWithRotation(0);
 
     //Second Layer
     TreeTwo tree5;
@@ -433,12 +547,12 @@ static void displayScene2() {
     tree7.draw(1120, 170, 230, Colors::TREE_NIGHT);
     TreeTwo tree8;
     tree8.draw(1550, 150, 220, Colors::TREE_NIGHT);
-    GrassOne grass22;
-    grass22.draw(1568, 153, 50, Colors::GRASS_NIGHT);
+    GrassOne grass22(1568, 153, 50, Colors::GRASS_NIGHT);
+    grass22.draw();
     TreeTwo tree9;
     tree9.draw(1850, 80, 210, Colors::TREE_NIGHT);
-    GrassTwo grass23;
-    grass23.draw(1840, 82, 30, Colors::GRASS_NIGHT);
+    GrassTwo grass23(1840, 82, 30, Colors::GRASS_NIGHT);
+    grass23.draw();
 
     //Fourth Layer
     TreeTwo tree10;
@@ -449,6 +563,8 @@ static void displayScene2() {
     tree11.draw(1720, -210, 255, Colors::TREE_NIGHT);
 
     rain.renderRain();
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -482,62 +598,62 @@ static void displayScene3() {
     Background::Cave();
 
     //Upper Level
-    SmallRockOne rock1;
-    rock1.draw(1800, 210, 150, Colors::ROCK);
-    GrassTwo grass1;
-    grass1.draw(200, 250, 45, Colors::GRASS_NIGHT);
-    GrassTwo grass2;
-    grass2.draw(460, 249, 47, Colors::GRASS_NIGHT);
-    GrassOne grass3;
-    grass3.draw(260, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass4;
-    grass4.draw(760, 250, 60, Colors::GRASS_NIGHT);
-    GrassTwo grass5;
-    grass5.draw(30, 248, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass6;
-    grass6.draw(1150, 250, 46, Colors::GRASS_NIGHT);
-    SmallRockTwo rock2;
-    rock2.draw(1190, 235, 150, Colors::ROCK);
+    SmallRockOne rock1(1800, 210, 150, Colors::ROCK);
+    rock1.draw();
+    GrassTwo grass1(200, 250, 45, Colors::GRASS_NIGHT);
+    grass1.draw();
+    GrassTwo grass2(460, 249, 47, Colors::GRASS_NIGHT);
+    grass2.draw();
+    GrassOne grass3(260, 250, 55, Colors::GRASS_NIGHT);
+    grass3.draw();
+    GrassOne grass4(760, 250, 60, Colors::GRASS_NIGHT);
+    grass4.draw();
+    GrassTwo grass5(30, 248, 46, Colors::GRASS_NIGHT);
+    grass5.draw();
+    GrassTwo grass6(1150, 250, 46, Colors::GRASS_NIGHT);
+    grass6.draw();
+    SmallRockTwo rock2(1190, 235, 150, Colors::ROCK);
+    rock2.draw();
 
     //Lower Level
-    GrassOne grass7;
-    grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
-    GrassOne grass8;
-    grass8.draw(190, 80, 59, Colors::GRASS_NIGHT);
-    GrassOne grass9;
-    grass9.draw(760, 190, 61, Colors::GRASS_NIGHT);
-    GrassOne grass10;
-    grass10.draw(1230, 44, 62, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.draw(1450, 90, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass12;
-    grass12.draw(350, 160, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass13;
-    grass13.draw(550, 190, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass14;
-    grass14.draw(900, 120, 43, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.draw(1200, 200, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass16;
-    grass16.draw(1800, 110, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass17;
-    grass17.draw(1600, 220, 47, Colors::GRASS_NIGHT);
-    GrassOne grass18;
-    grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass19;
-    grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
-    GrassOne grass20;
-    grass20.draw(1676, 205, 55, Colors::GRASS_NIGHT);
+    GrassOne grass7(40, 150, 60, Colors::GRASS_NIGHT);
+    grass7.draw();
+    GrassOne grass8(190, 80, 59, Colors::GRASS_NIGHT);
+    grass8.draw();
+    GrassOne grass9(760, 190, 61, Colors::GRASS_NIGHT);
+    grass9.draw();
+    GrassOne grass10(1230, 44, 62, Colors::GRASS_NIGHT);
+    grass10.draw();
+    GrassOne grass11(1450, 90, 59, Colors::GRASS_NIGHT);
+    grass11.draw();
+    GrassTwo grass12(350, 160, 46, Colors::GRASS_NIGHT);
+    grass12.draw();
+    GrassTwo grass13(550, 190, 44, Colors::GRASS_NIGHT);
+    grass13.draw();
+    GrassTwo grass14(900, 120, 43, Colors::GRASS_NIGHT);
+    grass14.draw();
+    GrassTwo grass15(1200, 200, 44, Colors::GRASS_NIGHT);
+    grass15.draw();
+    GrassTwo grass16(1800, 110, 46, Colors::GRASS_NIGHT);
+    grass16.draw();
+    GrassTwo grass17(1600, 220, 47, Colors::GRASS_NIGHT);
+    grass17.draw();
+    GrassOne grass18(1290, 220, 59, Colors::GRASS_NIGHT);
+    grass18.draw();
+    GrassTwo grass19(1895, 203, 48, Colors::GRASS_NIGHT);
+    grass19.draw();
+    GrassOne grass20(1676, 205, 55, Colors::GRASS_NIGHT);
+    grass20.draw();
 
     //Second Layer
     TreeTwo tree6;
     tree6.draw(1040, 225, 330, Colors::TREE_NIGHT);
-    GrassOne grass21;
-    grass21.draw(1060, 224, 55, Colors::GRASS_NIGHT);
+    GrassOne grass21(1060, 224, 55, Colors::GRASS_NIGHT);
+    grass21.draw();
     TreeTwo tree7;
     tree7.draw(220, 215, 320, Colors::TREE_NIGHT);
-    GrassTwo grass22;
-    grass22.draw(209, 217, 38, Colors::GRASS_NIGHT);
+    GrassTwo grass22(209, 217, 38, Colors::GRASS_NIGHT);
+    grass22.draw();
 
     portal.draw(1500.0f, 410.0f, 90.0f, 140.0f);
 
@@ -549,15 +665,17 @@ static void displayScene3() {
     case LITTLE_GIRL_MOVING:
         girl.drawSideView();
         break;
+    case LITTLE_GIRL_HUG:
+        girl.hug();
     }
 
     //Third Layer
     tree8_scene3.draw(900, 150, 350, Colors::TREE_NIGHT);
-    GrassOne grass23;
-    grass23.draw(875, 152, 45, Colors::GRASS_NIGHT);
+    GrassOne grass23(875, 152, 45, Colors::GRASS_NIGHT);
+    grass23.draw();
     tree9_scene3.draw(500, 90, 360, Colors::TREE_NIGHT);
-    GrassTwo grass24;
-    grass24.draw(515, 91, 30, Colors::GRASS_NIGHT);
+    GrassTwo grass24(515, 91, 30, Colors::GRASS_NIGHT);
+    grass24.draw();
 
     //Fourth Layer
     tree10_scene3.draw(100, -200, 360, Colors::TREE_NIGHT);
@@ -568,6 +686,8 @@ static void displayScene3() {
     tree14.draw(1900, -400, 360, Colors::TREE_NIGHT);
 
     rain.renderRain();
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -617,46 +737,46 @@ static void displayScene4() {
     mushroom8.draw(false);
 
     //Upper Level
-    GrassOne grass1;
-    grass1.draw(190, 250, 55, Colors::GRASS_DAY);
-    GrassTwo grass2;
-    grass2.draw(456, 249, 50, Colors::GRASS_DAY);
-    GrassOne grass3;
-    grass3.draw(1210, 250, 50, Colors::GRASS_DAY);
-    GrassTwo grass4;
-    grass4.draw(266, 250, 52, Colors::GRASS_DAY);
-    GrassTwo grass5;
-    grass5.draw(766, 250, 55, Colors::GRASS_DAY);
-    GrassTwo grass6;
-    grass6.draw(1730, 249, 53, Colors::GRASS_DAY);
-    GrassOne grass7;
-    grass7.draw(1820, 250, 49, Colors::GRASS_DAY);
-    GrassOne grass8;
-    grass8.draw(810, 248, 52, Colors::GRASS_DAY);
-    GrassOne grass9;
-    grass9.draw(20, 248, 52, Colors::GRASS_DAY);
+    GrassOne grass1(190, 250, 55, Colors::GRASS_DAY);
+    grass1.draw();
+    GrassTwo grass2(456, 249, 50, Colors::GRASS_DAY);
+    grass2.draw();
+    GrassOne grass3(1210, 250, 50, Colors::GRASS_DAY);
+    grass3.draw();
+    GrassTwo grass4(266, 250, 52, Colors::GRASS_DAY);
+    grass4.draw();
+    GrassTwo grass5(766, 250, 55, Colors::GRASS_DAY);
+    grass5.draw();
+    GrassTwo grass6(1730, 249, 53, Colors::GRASS_DAY);
+    grass6.draw();
+    GrassOne grass7(1820, 250, 49, Colors::GRASS_DAY);
+    grass7.draw();
+    GrassOne grass8(810, 248, 52, Colors::GRASS_DAY);
+    grass8.draw();
+    GrassOne grass9(20, 248, 52, Colors::GRASS_DAY);
+    grass9.draw();
 
     //Lower Level
-    GrassTwo grass10;
-    grass10.draw(50, 150, 60, Colors::GRASS_DAY);
-    GrassTwo grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_DAY);
-    GrassTwo grass13;
-    grass13.draw(1240, 80, 62, Colors::GRASS_DAY);
-    GrassTwo grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_DAY);
-    GrassOne grass15;
-    grass15.draw(300, 140, 46, Colors::GRASS_DAY);
-    GrassOne grass16;
-    grass16.draw(540, 120, 44, Colors::GRASS_DAY);
-    GrassOne grass17;
-    grass17.draw(890, 95, 43, Colors::GRASS_DAY);
-    GrassOne grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_DAY);
-    GrassOne grass19;
-    grass19.draw(1830, 30, 46, Colors::GRASS_DAY);
-    GrassOne grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
+    GrassTwo grass10(50, 150, 60, Colors::GRASS_DAY);
+    grass10.draw();
+    GrassTwo grass11(180, 70, 59, Colors::GRASS_DAY);
+    grass11.draw();
+    GrassTwo grass13(1240, 80, 62, Colors::GRASS_DAY);
+    grass13.draw();
+    GrassTwo grass14(1550, 60, 59, Colors::GRASS_DAY);
+    grass14.draw();
+    GrassOne grass15(300, 140, 46, Colors::GRASS_DAY);
+    grass15.draw();
+    GrassOne grass16(540, 120, 44, Colors::GRASS_DAY);
+    grass16.draw();
+    GrassOne grass17(890, 95, 43, Colors::GRASS_DAY);
+    grass17.draw();
+    GrassOne grass18(1100, 150, 44, Colors::GRASS_DAY);
+    grass18.draw();
+    GrassOne grass19(1830, 30, 46, Colors::GRASS_DAY);
+    grass19.draw();
+    GrassOne grass20(1450, 180, 47, Colors::GRASS_DAY);
+    grass20.draw();
 
     switch (currentGirlState) {
         case LITTLE_GIRL_FRONT_VIEW:
@@ -666,18 +786,23 @@ static void displayScene4() {
         case LITTLE_GIRL_MOVING:
             girl.drawSideView();
             break;
+        case LITTLE_GIRL_HUG:
+            girl.hug();
     }
 
-    Flower flower1;
-    flower1.draw(80, 200, 40, 40, Colors::FLOWER_BLUE);
-    Flower flower3;
-    flower3.draw(1050, 190, 40, 50, Colors::FLOWER_ORANGE);
-    Flower flower4;
-    flower4.draw(790, 20, 40, 60, Colors::FLOWER_PURPLE);
-    Flower flower5;
-    flower5.draw(1800, 100, 40, 80, Colors::FLOWER_RED);
-    Flower flower6;
-    flower6.draw(400, 50, 40, 90, Colors::FLOWER_YELLOW);
+    // Flowers
+    Flower flower1(80, 200, 40, Colors::FLOWER_BLUE);
+    flower1.draw(40);
+    Flower flower3(1050, 190, 40, Colors::FLOWER_ORANGE);
+    flower3.draw(50);
+    Flower flower4(790, 20, 40, Colors::FLOWER_PURPLE);
+    flower4.draw(60);
+    Flower flower5(1800, 100, 40, Colors::FLOWER_RED);
+    flower5.draw(80);
+    Flower flower6(400, 50, 40, Colors::FLOWER_YELLOW);
+    flower6.draw(90);
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -686,6 +811,7 @@ static void displayScene4() {
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene5(girl, islands_scene5, grass_scene5, clouds_scene5, mushrooms_scene5, flowers_scene5, sun_scene5, currentStep, sunsetSteps);
+    subtitle.draw();
     glFlush();
     glutSwapBuffers();
 }
@@ -719,60 +845,60 @@ static void displayScene6_7() {
     mushroomThree mushroom3(1200, 250, 820, Colors::MUSHROOM_NIGHT);
     mushroom3.draw(true);
 
-    //Upper Level
-    GrassTwo grass1;
-    grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass2;
-    grass2.draw(456, 249, 50, Colors::GRASS_NIGHT);
-    GrassTwo grass3;
-    grass3.draw(1210, 250, 50, Colors::GRASS_NIGHT);
-    GrassOne grass4;
-    grass4.draw(266, 250, 52, Colors::GRASS_NIGHT);
-    GrassOne grass5;
-    grass5.draw(766, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass6;
-    grass6.draw(1730, 249, 53, Colors::GRASS_NIGHT);
-    GrassTwo grass7;
-    grass7.draw(1820, 250, 49, Colors::GRASS_NIGHT);
-    GrassTwo grass8;
-    grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
-    GrassTwo grass9;
-    grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
+    GrassTwo grass1(190, 250, 55, Colors::GRASS_NIGHT);
+    grass1.draw();
+    GrassOne grass2(456, 249, 50, Colors::GRASS_NIGHT);
+    grass2.draw();
+    GrassTwo grass3(1210, 250, 50, Colors::GRASS_NIGHT);
+    grass3.draw();
+    GrassOne grass4(266, 250, 52, Colors::GRASS_NIGHT);
+    grass4.draw();
+    GrassOne grass5(766, 250, 55, Colors::GRASS_NIGHT);
+    grass5.draw();
+    GrassOne grass6(1730, 249, 53, Colors::GRASS_NIGHT);
+    grass6.draw();
+    GrassTwo grass7(1820, 250, 49, Colors::GRASS_NIGHT);
+    grass7.draw();
+    GrassTwo grass8(810, 248, 52, Colors::GRASS_NIGHT);
+    grass8.draw();
+    GrassTwo grass9(20, 248, 52, Colors::GRASS_NIGHT);
+    grass9.draw();
 
-    Flower flower1;
-    flower1.draw(1050, 100, 40, 60, Colors::FLOWER_BLUE);
-    Flower flower2;
-    flower2.draw(400, 190, 40, 100, Colors::FLOWER_CYAN);
-    Flower flower3;
-    flower3.draw(100, 90, 40, 130, Colors::FLOWER_RED);
-    Flower flower4;
-    flower4.draw(800, 120, 40, 20, Colors::FLOWER_PURPLE);
-    Flower flower5;
-    flower5.draw(1300, 190, 40, 60, Colors::FLOWER_RED);
-    Flower flower6;
-    flower6.draw(1800, 50, 40, 40, Colors::FLOWER_PURPLE);
+    // Flowers
+    Flower flower1(1050, 100, 40, Colors::FLOWER_BLUE);
+    flower1.draw(60);
+    Flower flower2(400, 190, 40, Colors::FLOWER_CYAN);
+    flower2.draw(100);
+    Flower flower3(100, 90, 40, Colors::FLOWER_RED);
+    flower3.draw(130);
+    Flower flower4(800, 120, 40, Colors::FLOWER_PURPLE);
+    flower4.draw(20);
+    Flower flower5(1300, 190, 40, Colors::FLOWER_RED);
+    flower5.draw(60);
+    Flower flower6(1800, 50, 40, Colors::FLOWER_PURPLE);
+    flower6.draw(40);
 
     //Lower Level
-    GrassOne grass10;
-    grass10.draw(50, 150, 60, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
-    GrassOne grass13;
-    grass13.draw(1240, 80, 62, Colors::GRASS_NIGHT);
-    GrassOne grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.draw(300, 140, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass16;
-    grass16.draw(540, 120, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass17;
-    grass17.draw(890, 95, 43, Colors::GRASS_NIGHT);
-    GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass19;
-    grass19.draw(1830, 30, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
+    GrassOne grass10(50, 150, 60, Colors::GRASS_NIGHT);
+    grass10.draw();
+    GrassOne grass11(180, 70, 59, Colors::GRASS_NIGHT);
+    grass11.draw();
+    GrassOne grass13(1240, 80, 62, Colors::GRASS_NIGHT);
+    grass13.draw();
+    GrassOne grass14(1550, 60, 59, Colors::GRASS_NIGHT);
+    grass14.draw();
+    GrassTwo grass15(300, 140, 46, Colors::GRASS_NIGHT);
+    grass15.draw();
+    GrassTwo grass16(540, 120, 44, Colors::GRASS_NIGHT);
+    grass16.draw();
+    GrassTwo grass17(890, 95, 43, Colors::GRASS_NIGHT);
+    grass17.draw();
+    GrassTwo grass18(1100, 150, 44, Colors::GRASS_NIGHT);
+    grass18.draw();
+    GrassTwo grass19(1830, 30, 46, Colors::GRASS_NIGHT);
+    grass19.draw();
+    GrassTwo grass20(1450, 180, 47, Colors::GRASS_NIGHT);
+    grass20.draw();
 
     switch (currentGirlState) {
         case LITTLE_GIRL_FRONT_VIEW:
@@ -782,6 +908,8 @@ static void displayScene6_7() {
         case LITTLE_GIRL_MOVING:
             girl.drawSideView();
             break;
+        case LITTLE_GIRL_HUG:
+            girl.hug();
     }
     
     switch (currentTotoroState) {
@@ -794,6 +922,8 @@ static void displayScene6_7() {
             totoroSide.draw(positionX, 420.0f, 270.0f);
             break;
     }
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -848,10 +978,9 @@ static void displayScene8() {
     FullMoon moon2;
     moon2.draw(234, 915, 30, Colors::NIGHT_FULL_MOON, 1);
 
-    cloud1_scene8.draw();
-    cloud2_scene8.draw();
-    cloud3_scene8.draw();
-    cloud4_scene8.draw();
+    for (auto& cloud : clouds_scene8) {
+        cloud->draw();
+    }
 
     IslandOne island1;
     island1.draw(1400, 900, 100, Colors::ISLAND_NIGHT);
@@ -864,51 +993,52 @@ static void displayScene8() {
     sign.draw(1200, 530, 100, 3);
   
     //Upper Level
-    GrassOne grass1;
-    grass1.drawWithRotation(1750, 450, 60, 2, Colors::GRASS_NIGHT);
-    GrassOne grass2;
-    grass2.drawWithRotation(800, 320, 58, 12, Colors::GRASS_NIGHT);
-    GrassOne grass3;
-    grass3.drawWithRotation(300, 128, 55, 24, Colors::GRASS_NIGHT);
-    GrassTwo grass4;
-    grass4.drawWithRotation(1850, 448, 65, 358, Colors::GRASS_NIGHT);
-    GrassTwo grass5;
-    grass5.drawWithRotation(900, 350, 60, 15, Colors::GRASS_NIGHT);
-    GrassTwo grass6;
-    grass6.drawWithRotation(550, 237, 60, 22, Colors::GRASS_NIGHT);
-    GrassOne grass7;
-    grass7.drawWithRotation(1300, 425, 56, 5, Colors::GRASS_NIGHT);
-    GrassOne grass8;
-    grass8.drawWithRotation(1500, 445, 58, 5, Colors::GRASS_NIGHT);
-    GrassTwo grass9;
-    grass9.drawWithRotation(80, 10, 40, 30, Colors::GRASS_NIGHT);
+    GrassOne grass1(1750, 450, 60, Colors::GRASS_NIGHT);
+    grass1.drawWithRotation(2);
+    GrassOne grass2(800, 320, 58, Colors::GRASS_NIGHT);
+    grass2.drawWithRotation(12);
+    GrassOne grass3(300, 128, 55, Colors::GRASS_NIGHT);
+    grass3.drawWithRotation(24);
+    GrassTwo grass4(1850, 448, 65, Colors::GRASS_NIGHT);
+    grass4.drawWithRotation(358);
+    GrassTwo grass5(900, 350, 60, Colors::GRASS_NIGHT);
+    grass5.drawWithRotation(15);
+    GrassTwo grass6(550, 237, 60, Colors::GRASS_NIGHT);
+    grass6.drawWithRotation(22);
+    GrassOne grass7(1300, 425, 56, Colors::GRASS_NIGHT);
+    grass7.drawWithRotation(5);
+    GrassOne grass8(1500, 445, 58, Colors::GRASS_NIGHT);
+    grass8.drawWithRotation(5);
+    GrassTwo grass9(80, 10, 40, Colors::GRASS_NIGHT);
+    grass9.drawWithRotation(30);
 
-    Flower flower1;
-    flower1.draw(1550, 370, 40, 60, Colors::FLOWER_ORANGE);
-    Flower flower2;
-    flower2.draw(1000, 200, 40, 100, Colors::FLOWER_YELLOW);
-    Flower flower3;
-    flower3.draw(1300, 90, 40, 130, Colors::FLOWER_BLUE);
-    Flower flower4;
-    flower4.draw(1850, 30, 40, 20, Colors::FLOWER_PURPLE);
-    Flower flower5;
-    flower5.draw(500, 60, 40, 40, Colors::FLOWER_RED);
+    // Flowers
+    Flower flower1(1550, 370, 40, Colors::FLOWER_ORANGE);
+    flower1.draw(60);
+    Flower flower2(1000, 200, 40, Colors::FLOWER_YELLOW);
+    flower2.draw(100);
+    Flower flower3(1300, 90, 40, Colors::FLOWER_BLUE);
+    flower3.draw(130);
+    Flower flower4(1850, 30, 40, Colors::FLOWER_PURPLE);
+    flower4.draw(20);
+    Flower flower5(500, 60, 40, Colors::FLOWER_RED);
+    flower5.draw(40);
 
     //Inner Level
-    GrassOne grass10;
-    grass10.drawWithRotation(380, 90, 60, 20, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.drawWithRotation(1000, 300, 58, 8, Colors::GRASS_NIGHT);
-    GrassOne grass12;
-    grass12.drawWithRotation(1700, 350, 55, 3, Colors::GRASS_NIGHT);
-    GrassTwo grass13;
-    grass13.drawWithRotation(600, 75, 65, 355, Colors::GRASS_NIGHT);
-    GrassTwo grass14;
-    grass14.drawWithRotation(1200, 180, 60, 15, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.drawWithRotation(1500, 60, 60, 12, Colors::GRASS_NIGHT);
-    GrassOne grass16;
-    grass16.drawWithRotation(1850, 100, 58, 357, Colors::GRASS_NIGHT);
+    GrassOne grass10(380, 90, 60, Colors::GRASS_NIGHT);
+    grass10.drawWithRotation(20);
+    GrassOne grass11(1000, 300, 58, Colors::GRASS_NIGHT);
+    grass11.drawWithRotation(8);
+    GrassOne grass12(1700, 350, 55, Colors::GRASS_NIGHT);
+    grass12.drawWithRotation(3);
+    GrassTwo grass13(600, 75, 65, Colors::GRASS_NIGHT);
+    grass13.drawWithRotation(355);
+    GrassTwo grass14(1200, 180, 60, Colors::GRASS_NIGHT);
+    grass14.drawWithRotation(15);
+    GrassTwo grass15(1500, 60, 60, Colors::GRASS_NIGHT);
+    grass15.drawWithRotation(12);
+    GrassOne grass16(1850, 100, 58, Colors::GRASS_NIGHT);
+    grass16.drawWithRotation(357);
 
     totoroFront.draw(1000.0f, 520.0f, 270.0f);
     girl.drawFrontView();
@@ -922,6 +1052,8 @@ static void displayScene8() {
         case CATBUS_STANDSTILL:
             catbus.drawStandstillView();
     }
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -943,79 +1075,53 @@ static void displayScene8Half() {
     mushroomThree mushroom12(1840, 730, 13, Colors::MUSHROOM_NIGHT);
     mushroom12.draw(false);
 
-    cloud1_scene9Half.draw();
-    cloud2_scene9Half.draw();
-    cloud3_scene9Half.draw();
+    for (auto& cloud : clouds_scene8Half) {
+        cloud->draw();
+    }
 
-    mushroomThree mushroom5(360, 250, 500, Colors::MUSHROOM_NIGHT);
-    mushroom5.draw(true);
-    mushroomThree mushroom6(820, 250, 600, Colors::MUSHROOM_NIGHT);
-    mushroom6.draw(true);
-    mushroomThree mushroom7(1500, 250, 500, Colors::MUSHROOM_NIGHT);
-    mushroom7.draw(true);
-    mushroomThree mushroom2(500, 250, 400, Colors::MUSHROOM_NIGHT);
-    mushroom2.draw(true);
-    mushroomThree mushroom3(1210, 250, 350, Colors::MUSHROOM_NIGHT);
-    mushroom3.draw(true);
-    mushroomThree mushroom10(1650, 250, 150, Colors::MUSHROOM_NIGHT);
-    mushroom10.draw(true);
-    mushroomThree mushroom8(155, 250, 120, Colors::MUSHROOM_NIGHT);
-    mushroom8.draw(true);
+    mushrooms_scene8half.at(0)->draw(true);
+    mushrooms_scene8half.at(1)->draw(true);
+    mushrooms_scene8half.at(2)->draw(true);
+    mushrooms_scene8half.at(3)->draw(true);
+    mushrooms_scene8half.at(4)->draw(true);
+    mushrooms_scene8half.at(5)->draw(true);
+    mushrooms_scene8half.at(6)->draw(true);
 
     //Upper Level
-    GrassTwo grass1;
-    grass1.draw(190, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass2;
-    grass2.draw(456, 249, 50, Colors::GRASS_NIGHT);
-    GrassTwo grass3;
-    grass3.draw(1210, 250, 50, Colors::GRASS_NIGHT);
-    GrassOne grass4;
-    grass4.draw(266, 250, 52, Colors::GRASS_NIGHT);
-    GrassOne grass5;
-    grass5.draw(766, 250, 55, Colors::GRASS_NIGHT);
-    GrassOne grass6;
-    grass6.draw(1730, 249, 53, Colors::GRASS_NIGHT);
-    GrassTwo grass7;
-    grass7.draw(1820, 250, 49, Colors::GRASS_NIGHT);
-    GrassTwo grass8;
-    grass8.draw(810, 248, 52, Colors::GRASS_NIGHT);
-    GrassTwo grass9;
-    grass9.draw(20, 248, 52, Colors::GRASS_NIGHT);
+    grass_scene8half.at(0)->draw();
+    grass_scene8half.at(1)->draw();
+    grass_scene8half.at(2)->draw();
+    grass_scene8half.at(3)->draw();
+    grass_scene8half.at(4)->draw();
+    grass_scene8half.at(5)->draw();
+    grass_scene8half.at(6)->draw();
+    grass_scene8half.at(7)->draw();
+    grass_scene8half.at(8)->draw();
 
-    Flower flower1;
-    flower1.draw(1050, 100, 40, 60, Colors::FLOWER_BLUE);
-    Flower flower2;
-    flower2.draw(400, 190, 40, 100, Colors::FLOWER_CYAN);
-    Flower flower3;
-    flower3.draw(100, 90, 40, 130, Colors::FLOWER_RED);
-    Flower flower4;
-    flower4.draw(800, 50, 40, 20, Colors::FLOWER_PURPLE);
-    Flower flower5;
-    flower5.draw(1300, 190, 40, 60, Colors::FLOWER_RED);
-    Flower flower6;
-    flower6.draw(1800, 120, 40, 40, Colors::FLOWER_PURPLE);
+
+    // Flowers
+    flowers_scene8half.at(0)->draw(60);
+    flowers_scene8half.at(0)->draw(100);
+    flowers_scene8half.at(0)->draw(130);
+    flowers_scene8half.at(0)->draw(20);
+    flowers_scene8half.at(0)->draw(60);
+    flowers_scene8half.at(0)->draw(40);
 
     //Lower Level
-    GrassOne grass10;
-    grass10.draw(50, 150, 60, Colors::GRASS_NIGHT);
-    GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_NIGHT);
-    GrassOne grass13;
-    grass13.draw(1240, 80, 62, Colors::GRASS_NIGHT);
-    GrassOne grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_NIGHT);
-    GrassTwo grass15;
-    grass15.draw(300, 140, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass16;
-    grass16.draw(540, 120, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass17;
-    grass17.draw(890, 95, 43, Colors::GRASS_NIGHT);
-    GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_NIGHT);
-    GrassTwo grass19;
-    grass19.draw(1830, 30, 46, Colors::GRASS_NIGHT);
-    GrassTwo grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_NIGHT);
+    grass_scene8half.at(9)->draw();
+    grass_scene8half.at(10)->draw();
+    grass_scene8half.at(11)->draw();
+    grass_scene8half.at(12)->draw();
+    grass_scene8half.at(13)->draw();
+    grass_scene8half.at(14)->draw();
+    grass_scene8half.at(15)->draw();
+    grass_scene8half.at(16)->draw();
+    grass_scene8half.at(17)->draw();
+    grass_scene8half.at(18)->draw();
+
+    catbus.drawRunningView();
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -1048,11 +1154,11 @@ static void displayScene9() {
 
     catbus.drawRunningView();
 
-    cloud1_scene9.draw();
-    cloud2_scene9.draw();
-    cloud3_scene9.draw();
-    cloud4_scene9.draw();
-    cloud5_scene9.draw();
+    for (auto& cloud : clouds_scene9) {
+        cloud->draw();
+    }
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -1066,10 +1172,9 @@ static void displayScene10() {
     DaySunOne sun(150, 940, 110, Colors::DAY_SUN);
     sun.draw();
 
-    cloud1_scene10.draw();
-    cloud2_scene10.draw();
-    cloud3_scene10.draw();
-    cloud4_scene10.draw();
+    for (auto& cloud : clouds_scene10) {
+        cloud->draw();
+    }
 
     portal.draw(1920.0f, 630.0f, 90.0f, 140.0f);
 
@@ -1096,46 +1201,48 @@ static void displayScene10() {
     tree8.draw(1580, -100, 140, Colors::TREE_DAY);
 
     //Upper level
-    GrassTwo grass1;
-    grass1.drawWithRotation(30, 496, 20, 358, Colors::GRASS_DAY);
-    GrassTwo grass2;
-    grass2.drawWithRotation(123, 495, 17, 355, Colors::GRASS_DAY);
-    GrassOne grass3;
-    grass3.drawWithRotation(250, 483, 20, 347, Colors::GRASS_DAY);
-    GrassTwo grass5;
-    grass5.drawWithRotation(550, 420, 20, 345, Colors::GRASS_DAY);
-    GrassOne grass6;
-    grass6.drawWithRotation(700, 369, 25, 342, Colors::GRASS_DAY);
-    GrassOne grass7;
-    grass7.drawWithRotation(900, 280, 25, 332, Colors::GRASS_DAY);
-    GrassTwo grass8;
-    grass8.drawWithRotation(1050, 195, 25, 325, Colors::GRASS_DAY);
-    GrassOne grass9;
-    grass9.drawWithRotation(1250, 52, 25, 315, Colors::GRASS_DAY);
-    GrassTwo grass10;
-    grass10.drawWithRotation(1300, 108, 20, 10, Colors::GRASS_DAY);
-    GrassOne grass11;
-    grass11.drawWithRotation(1350, 120, 20, 15, Colors::GRASS_DAY);
-    GrassTwo grass12;
-    grass12.drawWithRotation(1500, 153, 20, 5, Colors::GRASS_DAY);
+    GrassTwo grass1(30, 496, 20, Colors::GRASS_DAY);
+    grass1.drawWithRotation(358);
+    GrassTwo grass2(123, 495, 17, Colors::GRASS_DAY);
+    grass2.drawWithRotation(355);
+    GrassOne grass3(250, 483, 20, Colors::GRASS_DAY);
+    grass3.drawWithRotation(347);
+    GrassTwo grass5(550, 420, 20, Colors::GRASS_DAY);
+    grass5.drawWithRotation(345);
+    GrassOne grass6(700, 369, 25, Colors::GRASS_DAY);
+    grass6.drawWithRotation(342);
+    GrassOne grass7(900, 280, 25, Colors::GRASS_DAY);
+    grass7.drawWithRotation(332);
+    GrassTwo grass8(1050, 195, 25, Colors::GRASS_DAY);
+    grass8.drawWithRotation(325);
+    GrassOne grass9(1250, 52, 25, Colors::GRASS_DAY);
+    grass9.drawWithRotation(315);
+    GrassTwo grass10(1300, 108, 20, Colors::GRASS_DAY);
+    grass10.drawWithRotation(10);
+    GrassOne grass11(1350, 120, 20, Colors::GRASS_DAY);
+    grass11.drawWithRotation(15);
+    GrassTwo grass12(1500, 153, 20, Colors::GRASS_DAY);
+    grass12.drawWithRotation(5);
 
     //Lower Level
-    GrassTwo grass13;
-    grass13.drawWithRotation(60, 100, 20, 358, Colors::GRASS_DAY);
-    GrassTwo grass14;
-    grass14.drawWithRotation(100, 400, 20, 355, Colors::GRASS_DAY);
-    GrassOne grass15;
-    grass15.drawWithRotation(220, 150, 20, 355, Colors::GRASS_DAY);
-    GrassOne grass17;
-    grass17.drawWithRotation(500, 300, 25, 342, Colors::GRASS_DAY);
-    GrassOne grass18;
-    grass18.drawWithRotation(780, 50, 25, 332, Colors::GRASS_DAY);
-    GrassTwo grass19;
-    grass19.drawWithRotation(1100, 70, 25, 2, Colors::GRASS_DAY);
-    GrassTwo grass20;
-    grass20.drawWithRotation(1450, 25, 20, 350, Colors::GRASS_DAY);
+    GrassTwo grass13(60, 100, 20, Colors::GRASS_DAY);
+    grass13.drawWithRotation(358);
+    GrassTwo grass14(100, 400, 20, Colors::GRASS_DAY);
+    grass14.drawWithRotation(355);
+    GrassOne grass15(220, 150, 20, Colors::GRASS_DAY);
+    grass15.drawWithRotation(355);
+    GrassOne grass17(500, 300, 25, Colors::GRASS_DAY);
+    grass17.drawWithRotation(342);
+    GrassOne grass18(780, 50, 25, Colors::GRASS_DAY);
+    grass18.drawWithRotation(332);
+    GrassTwo grass19(1100, 70, 25, Colors::GRASS_DAY);
+    grass19.drawWithRotation(2);
+    GrassTwo grass20(1450, 25, 20, Colors::GRASS_DAY);
+    grass20.drawWithRotation(350);
 
     catbus.drawRunningView();
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -1149,56 +1256,66 @@ static void displayScene11() {
     DaySunOne sun(155, 940, 110, Colors::DAY_SUN);
     sun.draw();
 
-    cloud1_scene11.draw();
-    cloud2_scene11.draw();
-    cloud3_scene11.draw();
-    cloud4_scene11.draw();
+    for (auto& cloud : clouds_scene11) {
+        cloud->draw();
+    }
 
     House house;
     house.draw(200.0f, 600.0f, 700.0f, true, true);
 
     //Upper Level
-    GrassTwo grass1;
-    grass1.draw(200, 250, 45, Colors::GRASS_DAY);
-    GrassTwo grass2;
-    grass2.draw(400, 253, 47, Colors::GRASS_DAY);
-    GrassTwo grass3;
-    grass3.draw(1200, 250, 46, Colors::GRASS_DAY);
-    GrassOne grass4;
-    grass4.draw(260, 250, 55, Colors::GRASS_DAY);
-    GrassOne grass5;
-    grass5.draw(760, 250, 60, Colors::GRASS_DAY);
-    GrassOne grass6;
-    grass6.draw(1700, 249, 57, Colors::GRASS_DAY);
-    GrassTwo grass7;
-    grass7.draw(1800, 250, 44, Colors::GRASS_DAY);
-    GrassTwo grass8;
-    grass8.draw(830, 248, 46, Colors::GRASS_DAY);
-    GrassTwo grass9;
-    grass9.draw(30, 248, 46, Colors::GRASS_DAY);
+    GrassTwo grass1(200, 250, 45, Colors::GRASS_DAY);
+    grass1.draw();
+    GrassTwo grass2(400, 253, 47, Colors::GRASS_DAY);
+    grass2.draw();
+    GrassTwo grass3(1200, 250, 46, Colors::GRASS_DAY);
+    grass3.draw();
+    GrassOne grass4(260, 250, 55, Colors::GRASS_DAY);
+    grass4.draw();
+    GrassOne grass5(760, 250, 60, Colors::GRASS_DAY);
+    grass5.draw();
+    GrassOne grass6(1700, 249, 57, Colors::GRASS_DAY);
+    grass6.draw();
+    GrassTwo grass7(1800, 250, 44, Colors::GRASS_DAY);
+    grass7.draw();
+    GrassTwo grass8(830, 248, 46, Colors::GRASS_DAY);
+    grass8.draw();
+    GrassTwo grass9(30, 248, 46, Colors::GRASS_DAY);
+    grass9.draw();
 
     //Lower Level
-    GrassOne grass10;
-    grass10.draw(50, 100, 60, Colors::GRASS_DAY);
-    GrassOne grass11;
-    grass11.draw(180, 70, 59, Colors::GRASS_DAY);
-    GrassOne grass12;
-    grass12.draw(750, 160, 61, Colors::GRASS_DAY);
-    GrassOne grass13;
-    grass13.draw(1240, 30, 62, Colors::GRASS_DAY);
-    GrassOne grass14;
-    grass14.draw(1550, 60, 59, Colors::GRASS_DAY);
-    GrassTwo grass15;
-    grass15.draw(300, 140, 46, Colors::GRASS_DAY);
+    GrassOne grass10(50, 100, 60, Colors::GRASS_DAY);
+    grass10.draw();
+    GrassOne grass11(180, 70, 59, Colors::GRASS_DAY);
+    grass11.draw();
+    GrassOne grass12(750, 160, 61, Colors::GRASS_DAY);
+    grass12.draw();
+    GrassOne grass13(1240, 30, 62, Colors::GRASS_DAY);
+    grass13.draw();
+    GrassOne grass14(1550, 60, 59, Colors::GRASS_DAY);
+    grass14.draw();
+    GrassTwo grass15(300, 140, 46, Colors::GRASS_DAY);
+    grass15.draw();
+    GrassTwo grass17(890, 65, 43, Colors::GRASS_DAY);
+    grass17.draw();
+    GrassTwo grass18(1100, 150, 44, Colors::GRASS_DAY);
+    grass18.draw();
+    GrassTwo grass19(1830, 90, 46, Colors::GRASS_DAY);
+    grass19.draw();
+    GrassTwo grass20(1450, 180, 47, Colors::GRASS_DAY);
+    grass20.draw();
 
-    GrassTwo grass17;
-    grass17.draw(890, 65, 43, Colors::GRASS_DAY);
-    GrassTwo grass18;
-    grass18.draw(1100, 150, 44, Colors::GRASS_DAY);
-    GrassTwo grass19;
-    grass19.draw(1830, 90, 46, Colors::GRASS_DAY);
-    GrassTwo grass20;
-    grass20.draw(1450, 180, 47, Colors::GRASS_DAY);
+    switch (currentGirlState) {
+        case LITTLE_GIRL_FRONT_VIEW:
+            girl.drawFrontView();
+            break;
+        case LITTLE_GIRL_SIDE_VIEW:
+        case LITTLE_GIRL_MOVING:
+            girl.drawSideView();
+            break;
+        case LITTLE_GIRL_HUG:
+            girl.hug();
+    }
 
     switch (currentCatbusState) {
         case CATBUS_INVISIBLE:
@@ -1209,6 +1326,17 @@ static void displayScene11() {
         case CATBUS_STANDSTILL:
             catbus.drawStandstillView();
     }
+
+    switch (currentMotherState) {
+        case MOTHER_FRONT_VIEW:
+            mother.drawFrontView();
+            break;
+        case MOTHER_HUG:
+            mother.hug();
+            break;
+    }
+
+    subtitle.draw();
 
     glFlush();
     glutSwapBuffers();
@@ -1244,17 +1372,20 @@ static void display() {
     else if (currentScene == 8) {
         displayScene8();
     }
+    else if (currentScene == 8.5) {
+        displayScene8Half();
+    }
     else if (currentScene == 9) {
         displayScene9();
-    }
-    else if (currentScene == 9.5) {
-        displayScene8Half();
     }
     else if (currentScene == 10) {
         displayScene10();
     }
     else if (currentScene == 11) {
         displayScene11();
+    }
+    else if (currentScene == 12) {
+        displayScene12();
     }
 }
 
@@ -1289,10 +1420,15 @@ static void triggerThunder(int value) {
     glutPostRedisplay();
 }
 
-static void updateGirlPosition(int value) {
+static void updateScene(int value) {
     if (currentScene == 1) {
+        if (!isScene1Initialized) {
+            subtitle.setText("After a heated argument with his mother");
+            isScene1Initialized = true;
+        }
+
         if (currentGirlState == LITTLE_GIRL_MOVING) {
-            girl.move(3.5f);
+            girl.move(4.0f);
         }
 
         if (girl.getPosX() > 1920) {
@@ -1302,11 +1438,11 @@ static void updateGirlPosition(int value) {
         }
     }
     else if (currentScene == 2) {
-        currentGirlState = LITTLE_GIRL_MOVING;
-
-        if (!isScene2ArcAngleInitialized) {
+        if (!isScene2Initialized) {
+            currentGirlState = LITTLE_GIRL_MOVING;
             girl.setCurrentAngle(2.2f);
-            isScene2ArcAngleInitialized = true;
+            subtitle.setText("Rain started pouring down, as the girl start walks into the forest");
+            isScene2Initialized = true;
         }
 
         girl.moveInArc(0.05f, 0.05f);
@@ -1322,11 +1458,13 @@ static void updateGirlPosition(int value) {
             currentGirlState = LITTLE_GIRL_MOVING;
             girl.setPosX(0);
             girl.setPosY(155);
+            girl.setOpacity(1.0f);
+            subtitle.setText("In the heart of the forest, there lies a mysterious portal");
             isScene3GirlPosInitialized = true;
         }
         if (currentGirlState == LITTLE_GIRL_MOVING) {
             if (!isDiagonalMovement) {
-                girl.move(3.5f);
+                girl.move(4.0f);
             }
             else {
                 girl.moveDiagonally(1.8f, 1.8f);
@@ -1346,6 +1484,7 @@ static void updateGirlPosition(int value) {
             girl.setPosY(400);
             girl.setCharacterSize(210);
             girl.setOpacity(0.0f);
+            subtitle.setText("She was greeted by a wonderful and mystical new place");
             isScene4Initialized = true;
         }
 
@@ -1354,7 +1493,7 @@ static void updateGirlPosition(int value) {
                 currentGirlState = LITTLE_GIRL_SIDE_VIEW;
                 currentGirlState = LITTLE_GIRL_MOVING;
             }
-            girl.move(3.5f);
+            girl.move(4.0f);
 
             if (girl.getPosX() > 1920) {
                 isScene4End = true;
@@ -1368,11 +1507,21 @@ static void updateGirlPosition(int value) {
             girl.setPosX(0);
             girl.setPosY(200);
             girl.setCharacterSize(210);
+            subtitle.setText("The little girl happily explores the land with excitement");
             isScene5Initialized = true;
         }
 
         if (currentGirlState == LITTLE_GIRL_MOVING) {
-            girl.move(6.0f);
+            if (!isGirlAtScreenCenterScene5) {
+                girl.move(6.0f);
+            }
+            else {
+                girl.move(0.0f);
+            }
+        }
+
+        if (girl.getPosX() >= 960 && !isSunPartiallySet) {
+            isGirlAtScreenCenterScene5 = true;
         }
 
         if (girl.getPosX() >= 1920) {
@@ -1386,12 +1535,13 @@ static void updateGirlPosition(int value) {
             girl.setPosX(0);
             girl.setPosY(200);
             girl.setCharacterSize(210);
+            subtitle.setText("Despite this, she couldn't help but started to miss the comfort of her own home");
             isScene6Initialized = true;
         }
 
         if (currentGirlState == LITTLE_GIRL_MOVING) {
             if (!isVerticalMovement) {
-                girl.move(3.0f);
+                girl.move(4.0f);
             }
             else {
                 girl.moveVertically(1.8f);
@@ -1407,10 +1557,10 @@ static void updateGirlPosition(int value) {
             girl.setPosX(1200);
             girl.setPosY(350);
             girl.setCharacterSize(210);
-
             currentCatbusState = CATBUS_RUNNING;
             catbus.setBusSize(600);
             catbus.setCurrentAngle(Constants::PI / 3);
+            subtitle.setText("Totoro brought the little girl to a bus stop, a way to bring her home");
             isScene8Initialized = true;
         }
 
@@ -1419,8 +1569,42 @@ static void updateGirlPosition(int value) {
 
             if (catbus.getPosX() < 10) {
                 isScene8End = true;
-                currentScene = 9;
+                currentScene = 8.5;
             }
+        }
+    }
+    else if (currentScene == 8.5) {
+        if (!isScene8HalfInitialized) {
+            currentCatbusState = CATBUS_RUNNING;
+            catbus.setPosX(2000);
+            catbus.setPosY(230);
+            catbus.setBusSize(600);
+            catbus.setIsBoarded(true);
+            subtitle.setText("Press [ L ] to turn on/off the magical headlights");
+            isScene8HalfInitialized = true;
+        }
+
+        if (currentCatbusState == CATBUS_RUNNING) {
+            if (!isCatbusAtScreenCenterScene8Half) {
+                if (catbus.getPosX() <= 800) {
+                    catbus.moveDiagonal(-30.0f, 8.0f);
+                }
+                else {
+                    catbus.move(30.0f);
+                }
+            }
+            else {
+                catbus.move(0.0f);
+            }
+        }
+
+        if (catbus.getPosX() <= 960 && !isCatbusFastForwardDurationEnd) {
+            isCatbusAtScreenCenterScene8Half = true;
+        }
+
+        if (catbus.getPosX() <= 0) {
+            isScene8HalfEnd = true;
+            currentScene = 9;
         }
     }
     else if (currentScene == 9) {
@@ -1430,11 +1614,13 @@ static void updateGirlPosition(int value) {
             catbus.setBusSize(450);
             catbus.setOpacity(1.0f);
             portal.setOpacity(0.0f);
+            catbus.setIsBoarded(true);
+            subtitle.setText("The Catbus's magical journey made her feel like she was floating through a dream");
             isScene9Initialized = true;
         }
 
         if (currentCatbusState == CATBUS_RUNNING) {
-            catbus.move(5.0f);
+            catbus.move(8.0f);
         }
 
         if (isPortalDeactivatedScene9) {
@@ -1442,15 +1628,15 @@ static void updateGirlPosition(int value) {
             currentScene = 10;
         }
     }
-    else if (currentScene == 9.5) {
-
-    }
     else if (currentScene == 10) {
         if (!isScene10Initialized) {
             portal.setOpacity(0.0f);
             catbus.setPosX(2200);
             catbus.setPosY(650);
             catbus.setOpacity(0.0f);
+            catbus.setIsBoarded(true);
+            catbus.setIsDay(true);
+            subtitle.setText("The sight of her beloved home growing ever closer filled her with an overwhelming sense of relief and joy");
             isScene10Initialized = true;
         }
 
@@ -1461,12 +1647,12 @@ static void updateGirlPosition(int value) {
         if (currentCatbusState == CATBUS_RUNNING) {
             if (!isCatbusReachedGround) {
                 catbus.moveDiagonal(-6.0f, -2.0f);
-                if (catbus.getBusSize() > 300.0f) {
+                if (catbus.getBusSize() > 350.0f) {
                     catbus.setBusSize(catbus.getBusSize() - 1.5f);
                 }
             }
             else {
-                catbus.moveDiagonal(-6.0f, 3.8f);
+                catbus.moveDiagonal(-5.0f, 3.8f);
             }
         }
 
@@ -1477,23 +1663,46 @@ static void updateGirlPosition(int value) {
     }
     else if (currentScene == 11) {
         if (!isScene11Initialized) {
+            currentCatbusState = CATBUS_RUNNING;
             catbus.setPosX(1920);
             catbus.setPosY(200);
             catbus.setBusSize(500);
+            catbus.setIsBoarded(true);
+            catbus.setIsDay(true);
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            girl.setPosX(1150);
+            girl.setPosY(200);
+            girl.setOpacity(0.0f);
+            mother.setPosX(600);
+            mother.setPosY(200);
+            mother.setCharacterSize(230);
+            subtitle.setText("As she arrived, she saw her mother standing outside, her face filled with worry and hope as she anxiously awaited her return");
             isScene11Initialized = true;
         }
 
         if (currentCatbusState == CATBUS_RUNNING) {
-            catbus.move(3.0f);
+            catbus.move(8.0f);
         }
 
-        if (catbus.getPosX() <= 1400) {
-            currentCatbusState = CATBUS_STANDSTILL;
+        if (isDropOff && !isScene11AfterDropOffInitialized) {
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            isScene11AfterDropOffInitialized = true;
+        }
+
+        float posXDiff = abs(girl.getPosX() - mother.getPosX());
+        float posYDiff = abs(girl.getPosY() - mother.getPosY());
+
+        if ((posXDiff <= 40.0f && posYDiff <= 40.0f) && currentGirlState == LITTLE_GIRL_HUG) {
+            afterHugEndingDelayCounter++;
+            if (afterHugEndingDelayCounter >= afterHugEndingDelayDuration) {
+                isScene11End = true;
+                currentScene = 12;
+            }
         }
     }
 
     glutPostRedisplay();
-    glutTimerFunc(16, updateGirlPosition, 0);
+    glutTimerFunc(16, updateScene, 0);
 }
 
 static void updateGirlFrame(int value) {
@@ -1713,19 +1922,55 @@ static void updateCloudPosition(int value) {
         clouds_scene4.at(5)->move(0.1f, true);
     }
     else if (currentScene == 5) {
-    //    std::vector<Cloud*> clouds_scene5{
-        clouds_scene5.at(0)->moveInfinite(10.0f, false);
-        clouds_scene5.at(1)->moveInfinite(10.0f, true);
-        clouds_scene5.at(2)->moveInfinite(10.0f, true);
-        clouds_scene5.at(3)->moveInfinite(10.0f, true);
-        clouds_scene5.at(4)->moveInfinite(10.0f, false);
-        clouds_scene5.at(5)->move(6.0f, true);
+        if (isGirlAtScreenCenterScene5 && !isSunPartiallySet) {
+            clouds_scene5.at(0)->moveInfinite(8.0f, false);
+            clouds_scene5.at(1)->moveInfinite(8.0f, true);
+            clouds_scene5.at(2)->moveInfinite(8.0f, true);
+            clouds_scene5.at(3)->moveInfinite(8.0f, true);
+            clouds_scene5.at(4)->moveInfinite(8.0f, false);
+            clouds_scene5.at(5)->move(6.0f, true);
+        }
+        else {
+            clouds_scene5.at(0)->moveInfinite(0.1f, false);
+            clouds_scene5.at(1)->moveInfinite(0.1f, true);
+            clouds_scene5.at(2)->moveInfinite(0.1f, true);
+            clouds_scene5.at(3)->moveInfinite(0.1f, true);
+            clouds_scene5.at(4)->moveInfinite(0.1f, false);
+            clouds_scene5.at(5)->move(6.0f, true);
+        }
     }
     else if (currentScene == 6) {
         clouds_scene6.at(0)->move(0.1f, true);
         clouds_scene6.at(1)->move(0.1f, true);
         clouds_scene6.at(2)->move(0.1f, false);
     }
+    else if (currentScene == 8) {
+        clouds_scene8.at(0)->move(0.1f, true);
+        clouds_scene8.at(1)->move(0.1f, true);
+        clouds_scene8.at(2)->move(0.1f, false);
+        clouds_scene8.at(3)->move(0.1f, true);
+    }
+    else if (currentScene == 8.5) {
+        if (isCatbusAtScreenCenterScene8Half && !isCatbusFastForwardDurationEnd) {
+            clouds_scene8Half.at(0)->moveInfinite(0.15f, false);
+            clouds_scene8Half.at(1)->moveInfinite(0.15f, true);
+            clouds_scene8Half.at(2)->moveInfinite(0.15f, true);
+        }
+        else {
+            clouds_scene8Half.at(0)->moveInfinite(0.1f, false);
+            clouds_scene8Half.at(1)->moveInfinite(0.1f, true);
+            clouds_scene8Half.at(2)->moveInfinite(0.1f, true);
+        }
+    }
+    else if (currentScene == 9) {
+
+    }
+    else if (currentScene == 10) {
+
+    }
+    else if (currentScene == 11) {
+
+    }   
 
     glutPostRedisplay();
     glutTimerFunc(16, updateCloudPosition, 0);
@@ -1832,8 +2077,9 @@ static void updateCatbusPickup(int value) {
     if (currentScene == 8) {
         if (catbus.getPosX() <= 1100 && !isPickup) {
             currentCatbusState = CATBUS_STANDSTILL;
-            pickupBeforeDelayCounter++;
-            if (pickupBeforeDelayCounter >= pickupBeforeDurationCounter) {
+            pickupDelayCounter++;
+            if (pickupDelayCounter >= pickupDurationCounter) {
+                currentTotoroState = TOTORO_FRONT_VIEW;
                 catbus.setIsBoarded(true);
                 girl.setOpacity(0.0f);
                 isPickup = true;
@@ -1848,6 +2094,27 @@ static void updateCatbusPickup(int value) {
     glutTimerFunc(16, updateCatbusPickup, 0);
 }
 
+static void updateCatbusDropOff(int value) {
+    if (currentScene == 11) {
+        if (catbus.getPosX() <= 1200 && !isDropOff) {
+            currentCatbusState = CATBUS_STANDSTILL;
+            catbus.setIsBoarded(false);
+            dropOffDelayCounter++;
+            if (dropOffDelayCounter >= dropOffDurationCounter) {
+                isDropOff = true;
+            }
+        }
+
+        if (isDropOff) {
+            currentCatbusState = CATBUS_RUNNING;
+            girl.setOpacity(1.0f);
+            catbus.setMovingRight(true);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCatbusDropOff, 0);
+}
+
 static void updateSunset(int value) {
     if (currentScene == 5) {
         if (currentStep <= sunsetSteps) {
@@ -1858,8 +2125,18 @@ static void updateSunset(int value) {
             sun_scene5.setCurrentAngle(Constants::PI / 2.27);
             isSunsetAngleInitialized = true;
         }
+        
+        if (!isGirlAtScreenCenterScene5) {
+            sun_scene5.moveInArc(0.01f, 0.05f);
+        }
+        else {
+            sun_scene5.moveInArc(0.18f, 0.05f);
+        }
 
-        sun_scene5.moveInArc(0.15f, 0.05f);
+        if (sun_scene5.getPosX() >= 1800) {
+            isSunPartiallySet = true;
+            isGirlAtScreenCenterScene5 = false;
+        }
     }
 
     glutPostRedisplay();
@@ -1868,14 +2145,328 @@ static void updateSunset(int value) {
 
 static void infiniteBackgroundScrollingScene5(int value) {
     if (currentScene == 5) {
-        mushrooms_scene5.at(3)->moveInfinite(7.0f, false);
-        mushrooms_scene5.at(4)->moveInfinite(7.0f, false);
-        mushrooms_scene5.at(5)->moveInfinite(7.0f, false);
-        mushrooms_scene5.at(6)->moveInfinite(7.0f, false);
-        mushrooms_scene5.at(7)->moveInfinite(7.0f, false);
+        if (isGirlAtScreenCenterScene5 && !isSunPartiallySet) {
+            mushrooms_scene5.at(3)->moveInfinite(7.0f, false);
+            mushrooms_scene5.at(4)->moveInfinite(7.0f, false);
+            mushrooms_scene5.at(5)->moveInfinite(7.0f, false);
+            mushrooms_scene5.at(6)->moveInfinite(7.0f, false);
+            mushrooms_scene5.at(7)->moveInfinite(7.0f, false);
+
+            for (auto& grass : grass_scene5) {
+                grass->moveInfinite(8.0f, false);
+            }
+
+            for (auto& flower : flowers_scene5) {
+                flower->moveInfinite(8.0f, false);
+            }
+        }
     }
     glutPostRedisplay();
     glutTimerFunc(16, infiniteBackgroundScrollingScene5, 0);
+}
+
+static void updateCatbusFastForwardTimer(int value) {
+    if (currentScene == 8.5) {
+        if (isCatbusAtScreenCenterScene8Half && !isCatbusFastForwardDurationEnd) {
+            catbusRunCounter++;
+            if (catbusRunCounter >= catbusRunDuration) {
+                isCatbusFastForwardDurationEnd = true;
+                isCatbusAtScreenCenterScene8Half = false;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateCatbusFastForwardTimer, 0);
+}
+
+static void infiniteBackgroundScrollingScene8Half(int value) {
+    if (currentScene == 8.5) {
+        if (isCatbusAtScreenCenterScene8Half && !isCatbusFastForwardDurationEnd) {
+            for (auto& mushroom : mushrooms_scene8half) {
+                mushroom->moveInfinite(30.0f, true);
+            }
+
+            for (auto& grass : grass_scene8half) {
+                grass->moveInfinite(30.0f, true);
+            }
+
+            for (auto& flower : flowers_scene8half) {
+                flower->moveInfinite(30.0f, true);
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, infiniteBackgroundScrollingScene8Half, 0);
+}
+
+static void updateMotherGivingHugDelay(int value) {
+    if (currentScene == 11 && isDropOff) {
+        hugDelayAfterDropOffCounter++;
+        if (hugDelayAfterDropOffCounter >= hugDelayAfterDropOffDuration) {
+            currentMotherState = MOTHER_HUG;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateMotherGivingHugDelay, 0);
+}
+
+static void handleKeypressScene11(int key, int x, int y) {
+    if (currentScene == 11) {
+        float posX = girl.getPosX();
+        float posY = girl.getPosY();
+
+        if (!isWalkingAnimationActive) {
+            currentGirlState = LITTLE_GIRL_MOVING;
+            isWalkingAnimationActive = true;
+        }
+
+        switch (key) {
+            case GLUT_KEY_LEFT:
+                girl.setMovingRight(false);
+                if (posX - stepSize > leftLimit) {
+                    posX -= stepSize;
+                    girl.setPosX(posX);
+                }
+                keyPressed = true;
+                break;
+            case GLUT_KEY_RIGHT:
+                girl.setMovingRight(true);
+                if (posX + stepSize < rightLimit) {
+                    posX += stepSize;
+                    girl.setPosX(posX);
+                }
+                keyPressed = true;
+                break;
+            case GLUT_KEY_UP:
+                if (posY + stepSize < topLimit) {
+                    posY += stepSize;
+                    girl.setPosY(posY);
+                }
+                keyPressed = true;
+                break;
+            case GLUT_KEY_DOWN:
+                if (posY - stepSize > bottomLimit) {
+                    posY -= stepSize;
+                    girl.setPosY(posY);
+                }
+                keyPressed = true;
+                break;
+        }
+
+        glutPostRedisplay();
+    }
+}
+
+static void handleNormalKeyPress(unsigned char key, int x, int y) {
+    if (currentScene == 11) {
+        keyPressed = true;
+
+        switch (key) {
+            case 'H':
+            case 'h':
+                if (currentGirlState != LITTLE_GIRL_HUG) {
+                    currentGirlState = LITTLE_GIRL_HUG;
+                }
+                else {
+                    currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+                }
+                break;
+        }
+    }
+
+    if (currentScene == 8.5 || currentScene == 9) {
+        keyPressed = true;
+        switch (key) {
+            case 'L':
+            case 'l':
+                if (catbus.getIsLightOn()) {
+                    catbus.setIsLightOn(false);
+                }
+                else {
+                    catbus.setIsLightOn(true);
+                }
+                break;
+        }
+    }
+}
+
+static void handleKeyRelease(unsigned char key, int x, int y) {
+    if (currentScene == 11 && currentGirlState != LITTLE_GIRL_HUG) {
+        keyPressed = false;
+
+        if (!keyPressed) {
+            isWalkingAnimationActive = false;
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            glutPostRedisplay();
+        }
+    }
+}
+
+static void handleSpecialKeyRelease(int key, int x, int y) {
+    if (currentScene == 11 && currentGirlState != LITTLE_GIRL_HUG) {
+        keyPressed = false;
+
+        if (!keyPressed) {
+            isWalkingAnimationActive = false;
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
+            glutPostRedisplay();
+        }
+    }
+}
+
+///// Subtitles /////
+
+int nextSubstitleScene1DelayCounter = 0;
+const int nextSubtitleScene1DelayDuration = 200;
+
+static void updateNextSubtitleScene1(int value) {
+    if (currentScene == 1) {
+        nextSubstitleScene1DelayCounter++;
+        if (nextSubstitleScene1DelayCounter >= nextSubtitleScene1DelayDuration) {
+            subtitle.setText("The little girl decided to run away from home");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene1, 0);
+}   
+
+int nextSubstitleScene3DelayCounter = 0;
+const int nextSubtitleScene3DelayDuration = 360;
+
+static void updateNextSubtitleScene3(int value) {
+    if (currentScene == 3) {
+        nextSubstitleScene3DelayCounter++;
+        if (nextSubstitleScene3DelayCounter >= nextSubtitleScene3DelayDuration) {
+            subtitle.setText("The little girl walks in the portal");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene3, 0);
+}
+
+int nextSubstitleScene4DelayCounter = 0;
+const int nextSubtitleScene4DelayDuration = 200;
+
+static void updateNextSubtitleScene4(int value) {
+    if (currentScene == 4) {
+        nextSubstitleScene4DelayCounter++;
+        if (nextSubstitleScene4DelayCounter >= nextSubtitleScene4DelayDuration) {
+            subtitle.setText("Feeling relieved that she is far from home");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene4, 0);
+}
+
+int nextSubstitleScene5DelayCounter = 0;
+const int nextSubtitleScene5DelayDuration = 520;
+
+static void updateNextSubtitleScene5(int value) {
+    if (currentScene == 5) {
+        nextSubstitleScene5DelayCounter++;
+        if (nextSubstitleScene5DelayCounter >= nextSubtitleScene5DelayDuration) {
+            subtitle.setText("Despite this, she couldn't help but started to miss the comfort of her own home");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene5, 0);
+}
+
+int nextSubstitleScene6DelayCounter1 = 0;
+const int nextSubtitleScene6DelayDuration1 = 120;
+int nextSubstitleScene6DelayCounter2 = 0;
+const int nextSubtitleScene6DelayDuration2 = 120;
+bool isSubtitleChangedScene6_1 = false;
+bool isSubtitleChangedScene6_2 = false;
+
+static void updateNextSubtitleScene6(int value) {
+    if (currentScene == 6) {
+        if (!isSubtitleChangedScene6_1) {
+            nextSubstitleScene6DelayCounter1++;
+            if (nextSubstitleScene6DelayCounter1 >= nextSubtitleScene6DelayDuration1) {
+                subtitle.setText("Eventually, she stopped and stood behind a giant mushroom");
+            }
+        }
+
+        if (isCrying && !isSubtitleChangedScene6_1) {
+            subtitle.setText("Tears began to stream down as she started to cry, longing to return home");
+            isSubtitleChangedScene6_1 = true;
+        }
+
+        if (isTotoroAppeared && !isSubtitleChangedScene6_2) {
+            nextSubstitleScene6DelayCounter2++;
+            if (nextSubstitleScene6DelayCounter2 >= nextSubtitleScene6DelayDuration2) {
+                subtitle.setText("The sound of the girl's sobs soon attracted the attention of Totoro");
+                isSubtitleChangedScene6_2 = true;
+            }
+        }
+
+        if (isFinishCrying) {
+            subtitle.setText("Feeling the warmth and kindness radiating from Totoro, the girl gradually stopped crying");
+        }
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene6, 0);
+}
+
+int nextSubstitleScene8DelayCounter = 0;
+const int nextSubtitleScene8DelayDuration = 150;
+
+static void updateNextSubtitleScene8(int value) {
+    if (currentScene == 8) {
+        nextSubstitleScene8DelayCounter++;
+        if (nextSubstitleScene8DelayCounter >= nextSubtitleScene8DelayDuration) {
+            subtitle.setText("The bus arrived with Totoro waving goodbye");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene8, 0);
+}
+
+int nextSubstitleScene8HalfDelayCounter = 0;
+const int nextSubtitleScene8HalfDelayDuration = 230;
+
+static void updateNextSubtitleScene8Half(int value) {
+    if (currentScene == 8.5) {
+        nextSubstitleScene8HalfDelayCounter++;
+        if (nextSubstitleScene8HalfDelayCounter >= nextSubtitleScene8HalfDelayDuration) {
+            subtitle.setText("As the girl enjoyed the ride on the Catbus, she felt a sense of wonder and excitement");
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene8Half, 0);
+}
+
+int nextSubstitleScene11DelayCounter = 0;
+const int nextSubtitleScene11DelayDuration = 240;
+bool isSubtitleChangedScene11_1 = false;
+bool isSubtitleChangedScene11_2 = false;
+
+static void updateNextSubtitleScene11(int value) {
+    if (currentScene == 11) {
+        if (!isSubtitleChangedScene11_1) {
+            nextSubstitleScene11DelayCounter++;
+            if (nextSubstitleScene11DelayCounter >= nextSubtitleScene11DelayDuration) {
+                subtitle.setText("Move using the arrow keys, then press \"H\" to give her a hug!");
+            }
+        }
+
+        float posXDiff = abs(girl.getPosX() - mother.getPosX());
+        float posYDiff = abs(girl.getPosY() - mother.getPosY());
+
+        if ((currentGirlState == LITTLE_GIRL_HUG) && (posXDiff > 40.0f || posYDiff > 40.0f) && !isSubtitleChangedScene11_2) {
+            subtitle.setText("Move closer!");
+            isSubtitleChangedScene11_1 = true;
+        }
+        else if ((currentGirlState == LITTLE_GIRL_HUG) && (posXDiff <= 40.0f && posYDiff <= 40.0f)) {
+            subtitle.setText("You've hugged her! Well done!");
+            isSubtitleChangedScene11_1 = true;
+            isSubtitleChangedScene11_2 = true;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateNextSubtitleScene11, 0);
 }
 
 int main(int argc, char** argv) {
@@ -1889,12 +2480,16 @@ int main(int argc, char** argv) {
     init();
 
     glutDisplayFunc(display);
+    glutSpecialFunc(handleKeypressScene11);
+    glutSpecialUpFunc(handleSpecialKeyRelease);
+    glutKeyboardFunc(handleNormalKeyPress);
+    glutKeyboardUpFunc(handleKeyRelease);
 
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer();
     glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
     glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
-    glutTimerFunc(16, updateGirlPosition, 0);
+    glutTimerFunc(16, updateScene, 0);
     glutTimerFunc(250, updateGirlFrame, 0);
     glutTimerFunc(16, updateCloudPosition, 0);
     glutTimerFunc(3000, triggerThunder, 0);
@@ -1916,6 +2511,19 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
     glutTimerFunc(16, infiniteBackgroundScrollingScene5, 0);
     glutTimerFunc(delay, updateSunset, 0);
+    glutTimerFunc(16, infiniteBackgroundScrollingScene8Half, 0);
+    glutTimerFunc(16, updateCatbusFastForwardTimer, 0);
+    glutTimerFunc(16, updateCatbusDropOff, 0);
+    glutTimerFunc(16, updateMotherGivingHugDelay, 0);
+
+    glutTimerFunc(16, updateNextSubtitleScene1, 0);
+    glutTimerFunc(16, updateNextSubtitleScene3, 0);
+    glutTimerFunc(16, updateNextSubtitleScene4, 0);
+    glutTimerFunc(16, updateNextSubtitleScene5, 0);
+    glutTimerFunc(16, updateNextSubtitleScene6, 0);
+    glutTimerFunc(16, updateNextSubtitleScene8, 0);
+    glutTimerFunc(16, updateNextSubtitleScene8Half, 0);
+    glutTimerFunc(16, updateNextSubtitleScene11, 0);
 
     glutFullScreen();
     glutMainLoop();

@@ -295,53 +295,15 @@ public:
         mushrooms.at(6)->draw(true);
         mushrooms.at(7)->draw(true);
 
-        Flower flower1;
-        flower1.draw(1650, 90, 40, 60, Colors::FLOWER_BLUE);
-        Flower flower2;
-        flower2.draw(1000, 170, 40, 100, Colors::FLOWER_PURPLE);
-        Flower flower3;
-        flower3.draw(550, 60, 40, 130, Colors::FLOWER_RED);
+        flower.at(0)->draw(60);
+        flower.at(1)->draw(100);
+        flower.at(2)->draw(130);
 
-        //Lower Level
-        GrassLineTwo grass1;
-        grass1.draw(200, 220, 45, Colors::GRASS_NIGHT);
-        GrassLineOne grass3;
-        grass3.draw(280, 230, 55, Colors::GRASS_NIGHT);
-        GrassLineTwo grass5;
-        grass5.draw(30, 218, 46, Colors::GRASS_NIGHT);
-        GrassLineOne grass7;
-        grass7.draw(40, 150, 60, Colors::GRASS_NIGHT);
-        GrassLineOne grass8;
-        grass8.draw(190, 80, 59, Colors::GRASS_NIGHT);
-        GrassLineOne grass9;
-        grass9.draw(760, 190, 61, Colors::GRASS_NIGHT);
-        GrassLineOne grass10;
-        grass10.draw(1230, 44, 62, Colors::GRASS_NIGHT);
-        GrassLineOne grass11;
-        grass11.draw(1450, 90, 59, Colors::GRASS_NIGHT);
-        GrassLineTwo grass12;
-        grass12.draw(350, 160, 46, Colors::GRASS_NIGHT);
-        GrassLineTwo grass13;
-        grass13.draw(550, 190, 44, Colors::GRASS_NIGHT);
-        GrassLineTwo grass14;
-        grass14.draw(900, 120, 43, Colors::GRASS_NIGHT);
-        GrassLineTwo grass15;
-        grass15.draw(1200, 200, 44, Colors::GRASS_NIGHT);
-        GrassLineTwo grass16;
-        grass16.draw(1800, 110, 46, Colors::GRASS_NIGHT);
-        GrassLineTwo grass17;
-        grass17.draw(1600, 220, 47, Colors::GRASS_NIGHT);
-        GrassLineOne grass18;
-        grass18.draw(1290, 220, 59, Colors::GRASS_NIGHT);
-        GrassLineTwo grass19;
-        grass19.draw(1895, 203, 48, Colors::GRASS_NIGHT);
+        for (auto& grass : grass) {
+            grass->draw();
+        }
 
         girl.drawSideView();
-
-        glFlush();
-        glutSwapBuffers();
-
-        // std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
 
     static void Scene6_7() {
