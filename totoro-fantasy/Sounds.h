@@ -1,6 +1,4 @@
-#ifndef SOUNDS_H
-#define SOUNDS_H
-
+#pragma once
 #include <string>
 #include <map>
 #include <AL/al.h>
@@ -144,4 +142,3 @@ private:
     DebugSounds debug;
 };
 
-#endif // SOUNDS_H

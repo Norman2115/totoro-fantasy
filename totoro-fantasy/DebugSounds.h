@@ -1,6 +1,4 @@
-#ifndef DEBUGSOUNDS_H
-#define DEBUGSOUNDS_H
-
+#pragma once 
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -140,4 +138,3 @@ private:
     }
 };
 
-#endif // DEBUGSOUNDS_H

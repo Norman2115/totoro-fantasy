@@ -28,11 +28,9 @@
 #include "Subtitle.h"
 #include "Title.h"
 
-
 float currentScene = 0;
 
 /////   Declare global variables    /////
-
 Sounds sounds;
 bool isDoorOpeningPlayed = false;
 bool isThunderStormTimerSet = false;
@@ -56,21 +54,44 @@ Title introTitle("Lost in Fantasia");
 Title outroTitle("The End");
 Subtitle subtitle("This is the initial subtitle");
 
+std::map<std::string, bool> soundStates;
+
+void initializeSoundStates() {
+    soundStates["teleport"] = false;
+    soundStates["running"] = false;
+}
+
+void playAndStopSound(const std::string& soundName, int playDelay, int stopDuration) {
+    // Function to play the sound
+    auto playSoundFunction = [](int soundValue) {
+        std::string* soundName = reinterpret_cast<std::string*>(soundValue);
+        sounds.playSound(*soundName);
+        soundStates[*soundName] = true;
+        delete soundName; // Clean up
+        };
+
+    // Function to stop the sound
+    auto stopSoundFunction = [](int soundValue) {
+        std::string* soundName = reinterpret_cast<std::string*>(soundValue);
+        sounds.stopSound(*soundName);
+        soundStates[*soundName] = false;
+        delete soundName; // Clean up
+        };
+
+    // Schedule play sound
+    std::string* playSoundName = new std::string(soundName);
+    glutTimerFunc(playDelay, playSoundFunction, reinterpret_cast<int>(playSoundName));
+
+    // Schedule stop sound
+    std::string* stopSoundName = new std::string(soundName);
+    glutTimerFunc(playDelay + stopDuration, stopSoundFunction, reinterpret_cast<int>(stopSoundName));
+}
+
+
 // Function to play thunderstorm sound after a delay
 static void playThunderstormSound(int value) {
     sounds.playThunderStorm();
     isThunderStormPlaying = true;
-}
-// Function to play the teleport sound after a delay
-static void playTeleportSound(int value) {
-    sounds.playTeleport();
-    isTeleportSoundPlayed = true;
-}
-
-// Function to stop the teleport sound
-static void stopTeleportSound() {
-    sounds.stopTeleport();
-    isTeleportSoundPlayed = false;
 }
 
 // Function to play the girl landing sound after a delay
@@ -691,9 +712,8 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!isTeleportSoundPlayed) {
-        int delayInMilliseconds = 7000; // Delay in milliseconds to start the teleport sound
-        glutTimerFunc(delayInMilliseconds, playTeleportSound, 0);
+    if (!soundStates["teleport"]) {
+        playAndStopSound("teleport", 0000, 11500);
     }
     Background::Scene3();
 
@@ -816,11 +836,10 @@ static void displayScene3() {
 
 static void displayScene4() {
     if (!isBackgroundPlaying) {
-        int backgroundDelayInMilliseconds = 2000; // Delay to start background sound
+        int backgroundDelayInMilliseconds = 3000; // Delay to start background sound
         glutTimerFunc(backgroundDelayInMilliseconds, playBackgroundSoundWithDelay, 0);
         isBackgroundPlaying = true;
     }
-    glClear(GL_COLOR_BUFFER_BIT);
     
     sounds.stopRain();
     isRainPlaying = false;
@@ -828,13 +847,14 @@ static void displayScene4() {
     sounds.stopThunderStorm();
     isThunderStormPlaying = false;
 
-    stopTeleportSound();
-
     if (!isLandingPlayed) {
-        int delayInMilliseconds = 500; // Delay in milliseconds
+        int delayInMilliseconds = 1350; // Delay in milliseconds
         glutTimerFunc(delayInMilliseconds, playLandingSound, 0);
     }
 
+    glClear(GL_COLOR_BUFFER_BIT);
+
+  
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -959,15 +979,15 @@ static void displayScene5() {
 static void displayScene6_7() {
 
     if (!isCryingPlayed) {
-        int playDelayInMilliseconds = 6500; // Delay to start crying sound
-        int stopDelayInMilliseconds = 15000; // Delay to stop crying sound (6000ms to start + 9000ms to play)
+        int playDelayInMilliseconds = 5000; // Delay to start crying sound
+        int stopDelayInMilliseconds = 14000; // Delay to stop crying sound (6000ms to start + 9000ms to play)
         glutTimerFunc(playDelayInMilliseconds, playCryingSound, 0);
         glutTimerFunc(stopDelayInMilliseconds, stopCryingSound, 0);
         isCryingPlayed = true;
     }
 
     if (!isLandingPlayed) {
-        int delayInMilliseconds = 14000; // Delay in milliseconds
+        int delayInMilliseconds = 13000; // Delay in milliseconds
         glutTimerFunc(delayInMilliseconds, playLandingSound, 0);
         isLandingPlayed = true;
     }
@@ -1103,16 +1123,10 @@ static void displayScene8() {
     
     if (!isWindPlayed) {
         int playDelayInMilliseconds = 4700; // Delay to start wind sound
-        int stopDelayInMilliseconds = 15000; // Delay to stop wind sound (8000ms to start + 9000ms to play)
         glutTimerFunc(playDelayInMilliseconds, playWindSound, 0);
-        glutTimerFunc(stopDelayInMilliseconds, stopWindSound, 0);
         isWindPlayed = true;
     }
 
-    if (!isTeleportSoundPlayed) {
-        int delayInMilliseconds = 8000; // Delay in milliseconds to start the teleport sound
-        glutTimerFunc(delayInMilliseconds, playTeleportSound, 0);
-    }
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
@@ -1205,6 +1219,19 @@ static void displayScene8() {
 }
 
 static void displayScene8Half() {
+    isRunningPlayed = false;
+    if (!isRunningPlayed) {
+        int playDelayInMilliseconds = 0; // Delay to start running sound
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+        isRunningPlayed = true;
+    }
+
+    if (!isWindPlayed) {
+        int playDelayInMilliseconds = 0; // Delay to start wind sound
+        glutTimerFunc(playDelayInMilliseconds, playWindSound, 0);
+        isWindPlayed = true;
+    }
+
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
@@ -1274,9 +1301,13 @@ static void displayScene8Half() {
 
 static void displayScene9() {
 
+    if (!soundStates["teleport"]) {
+        playAndStopSound("teleport", 0000, 4000);
+    }
+
     if (!isRunningPlayed) {
         int playDelayInMilliseconds = 00; // Delay to start running sound
-        int stopDelayInMilliseconds = 21000; // Delay to stop running sound (2000ms to start + 9000ms to play)
+        int stopDelayInMilliseconds = 40000; // Delay to stop running sound (2000ms to start + 9000ms to play)
         glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
         glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
         isRunningPlayed = true;
@@ -1318,12 +1349,14 @@ static void displayScene9() {
 }
 
 static void displayScene10() {
-    isRunningPlayed = false;
-    if (!isRunningPlayed) {
+
+
+  if (!isRunningPlayed) {
         int playDelayInMilliseconds = 500; // Delay to start running sound
-        int stopDelayInMilliseconds = 18000; // Delay to stop running sound (2000ms to start + 9000ms to play)
+        //int stopDelayInMilliseconds = 7000;
         glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
         glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+        isRunningPlayed = true;
     }
     
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1410,6 +1443,13 @@ static void displayScene10() {
 }
 
 static void displayScene11() {
+
+        int playDelayInMilliseconds = 1000; // Delay to start running sound
+        //int stopDelayInMilliseconds = 7000;
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+        // glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+        isRunningPlayed = true;
+    
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
@@ -1633,7 +1673,7 @@ static void updateScene(int value) {
         if (!isScene2Initialized) {
             currentGirlState = LITTLE_GIRL_MOVING;
             girl.setCurrentAngle(2.2f);
-            subtitle.setText("Rain started pouring down, as the girl start walks into the forest");
+            subtitle.setText("Rain started pouring down, as the girl starts to walk into the forest");
             isScene2Initialized = true;
         }
 
@@ -2746,16 +2786,15 @@ static void updateNextSubtitleScene11(int value) {
 
 int main(int argc, char** argv) {
     // Load sounds
-
     sounds.loadSound("doorOpening", "doorOpening.wav");
     sounds.loadSound("thunderStorm", "thunderStorm.wav");
-    sounds.loadSound("raining", "forestRain.wav");
-    sounds.loadSound("teleport", "teleport.wav");
-    sounds.loadSound("landing", "landing.wav");
-    sounds.loadSound("crying", "girlCrying.wav");
-    sounds.loadSound("running", "run.wav");
+    sounds.loadSound("raining", "HeavyRaining.wav");
+    sounds.loadSound("teleport", "Teleport.wav");
+    sounds.loadSound("landing", "Bouncing.wav");
+    sounds.loadSound("crying", "Sobbing.wav");
+    sounds.loadSound("running", "CatbusRun.wav");
     sounds.loadSound("wind", "wind.wav");
-    sounds.loadSound("background", "backgroundMusic.wav");
+    sounds.loadSound("background", "backgroundSound.wav");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
@@ -2814,7 +2853,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateNextSubtitleScene8Half, 0);
     glutTimerFunc(16, updateNextSubtitleScene11, 0);
 
-    glutFullScreen();
+    //glutFullScreen();
     glutMainLoop();
     
     return 0;
