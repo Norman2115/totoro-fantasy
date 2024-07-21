@@ -101,6 +101,12 @@
     <ClInclude Include="FadeEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subtitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Sounds.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -160,6 +160,7 @@
     <ClInclude Include="Rainbow.h" />
     <ClInclude Include="Sounds.h" />
     <ClInclude Include="Star.h" />
+    <ClInclude Include="Subtitle.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Thunder.h" />
     <ClInclude Include="totoro.h" />
