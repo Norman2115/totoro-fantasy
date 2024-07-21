@@ -16,6 +16,7 @@ private:
     bool isDay;
     bool isBoarded;
     float currentAngle;
+    bool isLightOn;
 
     void drawBody() const {
         glEnable(GL_BLEND);
@@ -98,13 +99,13 @@ private:
         glColor4ub(0, 0, 0, opacity * 255);
         Ellipse::drawEllipse(-0.525f, 0.15f, 0.011f, 0.025f, 80);
         // Light
-        if (!isDay) {
+        if (isLightOn && !isDay) {
             glBegin(GL_POLYGON);
             glColor4ub(255, 253, 175, opacity * 50);
             glVertex2f(-0.515f, 0.155);
             glVertex2f(-0.515f, 0.096);
-            glVertex2f(-0.9, 0.07);
-            glVertex2f(-0.9, 0.165);
+            glVertex2f(-0.7f, -0.1f);    // Further down right
+            glVertex2f(-0.9f, -0.1f);    // Further down right
             glEnd();
         }
 
@@ -162,7 +163,7 @@ private:
 
         // Windows
         if (isDay) {
-            glColor4ub(0, 0, 0, opacity * 255);
+            glColor4f(0.7, 0.87, 1, opacity);
         }
         else {
             glColor4ub(0, 0, 0, opacity * 255);
@@ -344,13 +345,18 @@ private:
 
 public:
     Catbus(float startX, float startY, float size, bool isDay)
-        : posX(startX), posY(startY), busSize(size), opacity(1.0f), currentFrame(0), movingRight(true), isDay(isDay), isBoarded(false), currentAngle(Constants::PI / 3) {
+        : posX(startX), posY(startY), busSize(size), opacity(1.0f), currentFrame(0), movingRight(false), isDay(isDay), isBoarded(false), currentAngle(Constants::PI / 3), isLightOn(isDay ? false : true) {
     }
 
     void drawStandstillView() {
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
-        glScalef(busSize, busSize, 1.0f);
+        if (!movingRight) {
+            glScalef(busSize, busSize, 1.0f);
+        }
+        else {
+            glScalef(-busSize, busSize, 1.0f);
+        }
 
         drawBody();
 
@@ -459,7 +465,12 @@ public:
     void drawRunningView() {
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
-        glScalef(busSize, busSize, 1.0f);
+        if (!movingRight) {
+            glScalef(busSize, busSize, 1.0f);
+        }
+        else {
+            glScalef(-busSize, busSize, 1.0f);
+        }
 
         drawBody();
 
@@ -1226,8 +1237,42 @@ public:
         this->isBoarded = isBoarded;
     }
 
+    bool getMovingRight() const {
+        return movingRight;
+    }
+
+    void setIsDay(bool isDay) {
+        this->isDay = isDay;
+    }
+
+    bool getIsDay() const {
+        return isDay;
+    }
+
+    void setMovingRight(bool movingRight) {
+        this->movingRight = movingRight;
+    }
+
+    bool getIsLightOn() const {
+        return isLightOn;
+    }
+
+    void setIsLightOn(bool isLightOn) {
+        this->isLightOn = isLightOn;
+    }
+
     void move(float speed) {
-        posX -= speed;
+        if (!movingRight) {
+            posX -= speed;
+        }
+        else {
+            posX += speed;
+        }
+    }
+
+    void moveDiagonal(float speedX, float speedY) {
+        posX += speedX;
+        posY += speedY;
     }
 
     void moveInArc(float speed, float angleIncrement) {

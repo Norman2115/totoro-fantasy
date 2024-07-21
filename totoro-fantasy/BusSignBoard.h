@@ -97,7 +97,6 @@ public:
         glVertex2f(x + 2.03576 * scaledSize, y + 0.26577 * scaledSize);
         glVertex2f(x + 2.05445 * scaledSize, y + 0.18957 * scaledSize);
 
-
         glEnd();
     }
 };

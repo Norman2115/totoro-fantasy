@@ -46,13 +46,15 @@ public:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glColor4f(0.0f, 0.0f, 1.0f, 0.5f); // Blue color with 50% opacity for rain
+        glPushAttrib(GL_LINE_BIT);
+        glLineWidth(3);
         glBegin(GL_LINES);
         for (int i = 0; i < numDroplets; ++i) {
             glVertex2f(droplets[i].x, droplets[i].y);
             glVertex2f(droplets[i].x, droplets[i].y - 10); // Draw a line segment
         }
         glEnd();
-
+        glPopAttrib();
         glDisable(GL_BLEND);
     }
 };

@@ -103,18 +103,19 @@ protected:
         : posX(startX), posY(startY), characterSize(size), currentAngle(currentAngle), currentFrame(0), movingRight(true) {
     }
 
-    void drawFrontView() {
+    void drawFrontView(Color dressColor) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
+        glPushAttrib(GL_LINE_BIT);
         glLineWidth(3);
         // Head
         glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
         // Dress
-        glColor4f(Colors::GIRL_DRESS.getR(), Colors::GIRL_DRESS.getG(), Colors::GIRL_DRESS.getB(), opacity);
+        glColor4f(dressColor.getR(), dressColor.getG(), dressColor.getB(), opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.05f, 0.45f, -0.01f);
         glVertex3f(0.05f, 0.45f, -0.01f);
@@ -144,22 +145,30 @@ protected:
         glVertex2f(0.025f, 0.0f);
         glVertex2f(0.075f, -0.025f);
         glEnd();
+        glPopAttrib();
         glPopMatrix();
         glDisable(GL_BLEND);
     }
 
-    void drawSideView() {
+    void drawSideView(Color dressColor) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
-        glScalef(characterSize, characterSize, 1.0f);
+        if (movingRight) {
+            glScalef(characterSize, characterSize, 1.0f);
+        }
+        else {
+            glScalef(-characterSize, characterSize, 1.0f);
+        }
+
+        glPushAttrib(GL_LINE_BIT);
         glLineWidth(3);
 
         glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
         Circle::draw(0.0f, 0.525f, 0.075f);
 
-        glColor4f(Colors::GIRL_DRESS.getR(), Colors::GIRL_DRESS.getG(), Colors::GIRL_DRESS.getB(), opacity);
+        glColor4f(dressColor.getR(), dressColor.getG(), dressColor.getB(), opacity);
         glBegin(GL_POLYGON);
         glVertex3f(-0.025f, 0.45f, -0.01f);
         glVertex3f(0.025f, 0.45f, -0.01f);
@@ -256,8 +265,37 @@ protected:
             glVertex2f(0.025f, 0.25f);
             glEnd();
         }
+        glPopAttrib();
         glPopMatrix();
         glDisable(GL_BLEND);
+    }
+
+    void drawHugView(Color dressColor) {
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
+        Circle::draw(0.0f, 0.525f, 0.075f);
+
+        glColor4f(dressColor.getR(), dressColor.getG(), dressColor.getB(), opacity);
+        glBegin(GL_POLYGON);
+        glVertex3f(-0.025f, 0.45f, -0.01f);
+        glVertex3f(0.025f, 0.45f, -0.01f);
+        glVertex3f(0.05f, 0.2f, -0.01f);
+        glVertex3f(-0.05f, 0.2f, -0.01f);
+        glEnd();
+
+        glColor4f(Colors::CHARACTER_SKIN.getR(), Colors::CHARACTER_SKIN.getG(), Colors::CHARACTER_SKIN.getB(), opacity);
+
+        // Left leg
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0f, 0.2f);
+        glVertex2f(-0.05f, 0.0f);
+        glVertex2f(0.0f, 0.0f);
+        glEnd();
+        // Right leg
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0f, 0.2f);
+        glVertex2f(0.05f, 0.0f);
+        glVertex2f(0.1f, 0.0f);
+        glEnd();
     }
 };
 
@@ -271,8 +309,8 @@ private:
         glPushMatrix();
         glTranslatef(posX, posY, 0.0f);
         glScalef(characterSize, characterSize, 1.0f);
-        // Circle::draw(0.0f, 0.525f, 0.075f);
-        // Draw the face of two horizontal line eyes and two long lines of tears from the middle of each eye line
+        glPushAttrib(GL_LINE_BIT);
+        glLineWidth(3);
         glColor3f(0.0f, 0.0f, 0.0f);
         glBegin(GL_LINE_STRIP);
         glVertex2f(-0.0125, 0.5375);
@@ -282,6 +320,7 @@ private:
         glVertex2f(0.0125, 0.5375);
         glVertex2f(0.04, 0.5375);
         glEnd();
+        glPopAttrib();
 
         glPushAttrib(GL_LINE_BIT);
         glLineWidth(2);
@@ -312,14 +351,14 @@ public:
     }
 
     void drawFrontView() {
-        Character::drawFrontView();
+        Character::drawFrontView(Colors::GIRL_DRESS);
         if (isCrying) {
             drawCryEffect();
         }
     }
 
     void drawSideView() {
-        Character::drawSideView();
+        Character::drawSideView(Colors::GIRL_DRESS);
     }
 
     bool bounceVertical(float bounceHeight, float targetPosY, float bounceDuration, float updateInterval) {
@@ -347,4 +386,66 @@ public:
     }
 
     void resetBounceTime() { bounceTime = 0; }
+
+    void hug() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        if (movingRight) {
+            glScalef(characterSize, characterSize, 1.0f);
+        }
+        else {
+            glScalef(-characterSize, characterSize, 1.0f);
+        }
+        glPushAttrib(GL_LINE_BIT);
+        glLineWidth(3);
+
+        drawHugView(Colors::GIRL_DRESS);
+
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0f, 0.4f);
+        glVertex2f(0.15f, 0.475f);
+        glEnd();
+
+        glPopAttrib();
+        glPopMatrix();
+        glDisable(GL_BLEND);
+    }   
+};
+
+class Mother : public Character {
+public:
+    Mother(float startX, float startY, float size)
+        : Character(startX, startY, size, 0) {
+    }
+
+    void drawFrontView() {
+        Character::drawFrontView(Colors::MOM_DRESS);
+    }
+
+    void drawSideView() {
+        Character::drawSideView(Colors::MOM_DRESS);
+    }
+
+    void hug() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0f);
+        glScalef(characterSize, characterSize, 1.0f);
+        glPushAttrib(GL_LINE_BIT);
+        glLineWidth(3);
+
+        drawHugView(Colors::MOM_DRESS);
+
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0f, 0.4f);
+        glVertex2f(0.15f, 0.3f);
+        glEnd();
+
+        glPopAttrib();
+        glPopMatrix();
+        glDisable(GL_BLEND);
+    }
 };
