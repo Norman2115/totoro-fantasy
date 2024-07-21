@@ -25,14 +25,18 @@ private:
     std::string text;
 
     void drawBackground() {
+        float margin = screenWidth * 0.05f;
+        float yPosBottom = screenHeight * 0.015f;
+        float yPosTop = screenHeight * 0.1f;
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
         glBegin(GL_QUADS);
-        glVertex2f(0.0f, 0.0f);
-        glVertex2f(screenWidth, 0.0f);
-        glVertex2f(screenWidth, screenHeight * 0.1f);
-        glVertex2f(0.0f, screenHeight * 0.1f);
+        glVertex2f(margin, yPosBottom);
+        glVertex2f(screenWidth - margin, yPosBottom);
+        glVertex2f(screenWidth - margin, yPosTop);
+        glVertex2f(margin, yPosTop);
         glEnd();
         glDisable(GL_BLEND);
     }

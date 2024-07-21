@@ -28,7 +28,7 @@
 #include "Subtitle.h"
 
 
-float currentScene = 8;
+float currentScene = 8.5;
 
 /////   Declare global variables    /////
 
@@ -284,9 +284,13 @@ bool isScene11AfterDropOffInitialized = false;
 
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
-bool isEnterPortal = false;
+bool isGirlEnterPortal = false;
+bool isGirlExitPortal = false;
 bool isCatbusEnterPortal = false;
 bool isCatbusExitPortal = false;
+bool activatePortalScene4 = false;
+bool isPortalActivatedScene4 = false;
+bool isPortalDeactivatedScene4 = false;
 bool isPortalActivatedScene9 = false;
 bool isPortalDeactivatedScene9 = false;
 bool isPortalActivatedScene10 = false;
@@ -328,14 +332,20 @@ const int cryingDurationCounter = 125;
 int finishCryingDelayCounter = 0;
 const int finishCryingDurationCounter = 75;
 
-int fadeOutScene6DelayCounter = 0;
-const int fadeOutScene6DurationCounter = 110;
+int transitionScene6to8DelayCounter = 0;
+const int transitionScene6to8DurationCounter = 110;
 
 int pickupDelayCounter = 0;
 const int pickupDurationCounter = 60;
 
 int transitionScene9to10DelayCounter = 0;
 const int transitionScene9to10DurationCounter = 20;
+
+int portalActivationScene4DelayCounter = 0;
+const int portalActivationScene4DurationCounter = 20;
+
+int portalDeactivationScene4DelayCounter = 0;
+const int portalDeactivationScene4DurationCounter = 120;
 
 int portalActivationScene10DelayCounter = 0;
 const int portalActivationScene10DurationCounter = 20;
@@ -354,7 +364,6 @@ const int hugDelayAfterDropOffDuration = 120;
 
 int afterHugEndingDelayCounter = 0;
 const int afterHugEndingDelayDuration = 120;
-
 
 /////   Declare states  /////
 
@@ -1138,8 +1147,6 @@ static void displayScene9() {
 
     portal.draw(200.0f, 600.0f, 90.0f, 140.0f);
   
-    mushroomOne mushroom11(1818, 730, 20, Colors::MUSHROOM_NIGHT);
-    mushroom11.draw(false);
     mushroomThree mushroom4(800, -250, 400, Colors::MUSHROOM_NIGHT);
     mushroom4.draw(true);
     mushroomOne mushroom5(350, -165, 200, Colors::MUSHROOM_NIGHT);
@@ -1152,11 +1159,11 @@ static void displayScene9() {
     mushroomTwo mushroom7(1290, 400, 10, Colors::MUSHROOM_NIGHT);
     mushroom7.draw(false);
 
-    catbus.drawRunningView();
-
     for (auto& cloud : clouds_scene9) {
         cloud->draw();
     }
+
+    catbus.drawRunningView();
 
     subtitle.draw();
 
@@ -1471,7 +1478,7 @@ static void updateScene(int value) {
             }
         }
 
-        if (isEnterPortal) {
+        if (isGirlEnterPortal) {
             isScene3End = true;
             currentScene = 4;
             isDiagonalMovement = false;
@@ -1484,6 +1491,7 @@ static void updateScene(int value) {
             girl.setPosY(400);
             girl.setCharacterSize(210);
             girl.setOpacity(0.0f);
+            portal.setOpacity(0.0f);
             subtitle.setText("She was greeted by a wonderful and mystical new place");
             isScene4Initialized = true;
         }
@@ -1761,8 +1769,8 @@ static void updateGirlViewScene6(int value) {
         }
 
         if (isFinishCrying) {
-            fadeOutScene6DelayCounter++;
-            if (fadeOutScene6DelayCounter >= fadeOutScene6DurationCounter) {
+            transitionScene6to8DelayCounter++;
+            if (transitionScene6to8DelayCounter >= transitionScene6to8DurationCounter) {
                 isScene6End = true;
             }
         }
@@ -1778,7 +1786,7 @@ static void updateGirlFadeInIntoPortal(int value) {
         }
 
         if (girl.getOpacity() <= 0) {
-            isEnterPortal = true;
+            isGirlEnterPortal = true;
             girl.setOpacity(0);
         }
     }
@@ -1788,8 +1796,19 @@ static void updateGirlFadeInIntoPortal(int value) {
 
 static void updateGirlExitPortal(int value) {
     if (currentScene == 4) {
-        if (girl.getOpacity() < 1) {
-            girl.setOpacity(girl.getOpacity() + 0.1f);
+        portalActivationScene4DelayCounter++;
+        if (portalActivationScene4DelayCounter >= portalActivationScene4DurationCounter) {
+            activatePortalScene4 = true;
+        }
+
+        if (isPortalActivatedScene4) {
+            if (girl.getOpacity() < 1) {
+                girl.setOpacity(girl.getOpacity() + 0.1f);
+            }
+            portalDeactivationScene4DelayCounter++;
+            if (portalDeactivationScene4DelayCounter >= portalDeactivationScene4DurationCounter) {
+                isGirlExitPortal = true;
+            }
         }
     }
     glutPostRedisplay();
@@ -1797,14 +1816,42 @@ static void updateGirlExitPortal(int value) {
 }
 
 static void updateExitPortalBounce(int value) {
-    if (currentScene == 4 && isBouncing) {
+    if (currentScene == 4 && isBouncing && isPortalActivatedScene4) {
         isBouncing = girl.bounceVertical(30.0f, 200.0f, 1.0f, 30);
     }
     glutPostRedisplay();
     glutTimerFunc(30, updateExitPortalBounce, 0);
 }
 
-static void updatedPortalActivationScene9(int value) {
+static void updatePortalActivationScene4(int value) {
+    if (currentScene == 4 && !isPortalActivatedScene4 && activatePortalScene4) {
+        portal.setOpacity(portal.getOpacity() + 0.03f);
+
+        if (portal.getOpacity() >= 1.0f) {
+            isPortalActivatedScene4 = true;
+            portal.setOpacity(1.0f);
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatePortalActivationScene4, 0);
+}
+
+static void updatePortalDeactivationScene4(int value) {
+    if (currentScene == 4 && !isPortalDeactivatedScene4) {
+        if (isGirlExitPortal) {
+            portal.setOpacity(portal.getOpacity() - 0.03f);
+
+            if (portal.getOpacity() <= 0) {
+                portal.setOpacity(0);
+                isPortalDeactivatedScene4 = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updatePortalDeactivationScene4, 0);
+}   
+
+static void updatePortalActivationScene9(int value) {
     if (currentScene == 9 && !isPortalActivatedScene9 && isScene9Initialized) {
         if (catbus.getPosX() <= 1300) {
             portal.setOpacity(portal.getOpacity() + 0.03f);
@@ -1816,10 +1863,10 @@ static void updatedPortalActivationScene9(int value) {
         }
     }
     glutPostRedisplay();
-    glutTimerFunc(16, updatedPortalActivationScene9, 0);
+    glutTimerFunc(16, updatePortalActivationScene9, 0);
 }
 
-static void updatedPortalDeactivationScene9(int value) {
+static void updatePortalDeactivationScene9(int value) {
     if (currentScene == 9 && !isPortalDeactivatedScene9) {
         if (isCatbusEnterPortal) {
             portal.setOpacity(portal.getOpacity() - 0.03f);
@@ -1834,7 +1881,7 @@ static void updatedPortalDeactivationScene9(int value) {
         }
     }
     glutPostRedisplay();
-    glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
+    glutTimerFunc(16, updatePortalDeactivationScene9, 0);
 }
 
 static void updatePortalActivationScene10(int value) {
@@ -1936,7 +1983,7 @@ static void updateCloudPosition(int value) {
             clouds_scene5.at(2)->moveInfinite(0.1f, true);
             clouds_scene5.at(3)->moveInfinite(0.1f, true);
             clouds_scene5.at(4)->moveInfinite(0.1f, false);
-            clouds_scene5.at(5)->move(6.0f, true);
+            clouds_scene5.at(5)->move(0.1f, true);
         }
     }
     else if (currentScene == 6) {
@@ -1953,23 +2000,33 @@ static void updateCloudPosition(int value) {
     else if (currentScene == 8.5) {
         if (isCatbusAtScreenCenterScene8Half && !isCatbusFastForwardDurationEnd) {
             clouds_scene8Half.at(0)->moveInfinite(0.15f, false);
-            clouds_scene8Half.at(1)->moveInfinite(0.15f, true);
-            clouds_scene8Half.at(2)->moveInfinite(0.15f, true);
+            clouds_scene8Half.at(1)->moveInfinite(0.15f, false);
+            clouds_scene8Half.at(2)->moveInfinite(0.15f, false);
         }
         else {
             clouds_scene8Half.at(0)->moveInfinite(0.1f, false);
-            clouds_scene8Half.at(1)->moveInfinite(0.1f, true);
-            clouds_scene8Half.at(2)->moveInfinite(0.1f, true);
+            clouds_scene8Half.at(1)->moveInfinite(0.1f, false);
+            clouds_scene8Half.at(2)->moveInfinite(0.1f, false);
         }
     }
     else if (currentScene == 9) {
-
+        clouds_scene9.at(0)->move(0.1f, false);
+        clouds_scene9.at(1)->move(0.1f, false);
+        clouds_scene9.at(2)->move(0.1f, false);
+        clouds_scene9.at(3)->move(0.1f, true);
+        clouds_scene9.at(4)->move(0.1f, true);
     }
     else if (currentScene == 10) {
-
+        clouds_scene10.at(0)->move(0.1f, true);
+        clouds_scene10.at(1)->move(0.1f, false);
+        clouds_scene10.at(2)->move(0.1f, false);
+        clouds_scene10.at(3)->move(0.1f, false);
     }
     else if (currentScene == 11) {
-
+        clouds_scene11.at(0)->move(0.1f, false);
+        clouds_scene11.at(1)->move(0.1f, false);
+        clouds_scene11.at(2)->move(0.1f, true);
+        clouds_scene11.at(3)->move(0.1f, false);
     }   
 
     glutPostRedisplay();
@@ -2345,7 +2402,7 @@ static void updateNextSubtitleScene3(int value) {
 }
 
 int nextSubstitleScene4DelayCounter = 0;
-const int nextSubtitleScene4DelayDuration = 200;
+const int nextSubtitleScene4DelayDuration = 260;
 
 static void updateNextSubtitleScene4(int value) {
     if (currentScene == 4) {
@@ -2504,8 +2561,10 @@ int main(int argc, char** argv) {
     glutTimerFunc(30, updateCatbusFrame, 0);
     glutTimerFunc(16, updateCatbusPickup, 0);
     glutTimerFunc(16, updateCatbusEnterPortal, 0);
-    glutTimerFunc(16, updatedPortalActivationScene9, 0);
-    glutTimerFunc(16, updatedPortalDeactivationScene9, 0);
+    glutTimerFunc(16, updatePortalActivationScene4, 0);
+    glutTimerFunc(16, updatePortalDeactivationScene4, 0);
+    glutTimerFunc(16, updatePortalActivationScene9, 0);
+    glutTimerFunc(16, updatePortalDeactivationScene9, 0);
     glutTimerFunc(16, updatePortalActivationScene10, 0);
     glutTimerFunc(16, updateCatbusExitPortal, 0);
     glutTimerFunc(16, updatePortalDeactivationScene10, 0);
