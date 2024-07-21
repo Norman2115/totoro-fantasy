@@ -2565,7 +2565,7 @@ int introFadeInDelayCounter = 0;
 const int introFadeInDelayDuration = 120;
 
 int transitionScene0to1DelayCounter = 0;
-const int transitionScene0to1DelayDuration = 120;
+const int transitionScene0to1DelayDuration = 150;
 
 bool isTitleAppear = false;
 
