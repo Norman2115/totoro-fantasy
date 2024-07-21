@@ -22,7 +22,7 @@
 #include "Mushroom1.h"
 #include "Thunder.h"
 #include "Rain.h"
-#include "sound.h"
+#include "Sounds.h"
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
 #include "Subtitle.h"
@@ -32,10 +32,18 @@ float currentScene = 1;
 
 /////   Declare global variables    /////
 
-Sound sound;
-//bool isRainSoundPlaying = false;
-//bool isThunderSoundPlaying = false;
-//bool isPortalSoundPlaying = false;
+Sounds sounds;
+bool isDoorOpeningPlayed = false;
+bool isThunderStormTimerSet = false;
+bool isThunderStormPlaying = false;
+bool isRainPlaying = false;
+bool isTeleportSoundPlayed = false;
+bool isLandingPlayed = false;
+bool isCryingPlayed = false;
+bool isRunningPlayed = false;
+bool isWindPlayed = false;
+bool isBackgroundPlaying = false;
+
 Portal portal;
 Totoro totoroFront;
 TotoroSide totoroSide;
@@ -44,6 +52,75 @@ Mother mother(600, 200, 230);
 Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
 Subtitle subtitle("This is the initial subtitle");
+
+// Function to play thunderstorm sound after a delay
+static void playThunderstormSound(int value) {
+    sounds.playThunderStorm();
+    isThunderStormPlaying = true;
+}
+// Function to play the teleport sound after a delay
+static void playTeleportSound(int value) {
+    sounds.playTeleport();
+    isTeleportSoundPlayed = true;
+}
+
+// Function to stop the teleport sound
+static void stopTeleportSound() {
+    sounds.stopTeleport();
+    isTeleportSoundPlayed = false;
+}
+
+// Function to play the girl landing sound after a delay
+static void playLandingSound(int value) {
+    sounds.playLanding();
+    isLandingPlayed = true;
+}
+
+// Function to play the crying sound after a delay
+static void playCryingSound(int value) {
+    sounds.playCrying();
+}
+
+// Function to stop the crying sound
+static void stopCryingSound(int value) {
+    sounds.stopCrying();
+}
+
+// Function to play running sound after a delay
+static void playRunningSound(int value) {
+    sounds.playRunning();
+}
+
+// Function to stop running sound after a delay
+static void stopRunningSound(int value) {
+    sounds.stopRunning();
+}
+
+// Function to play wind sound after a delay
+static void playWindSound(int value) {
+    sounds.playWind();
+}
+
+// Function to stop wind sound after a delay
+static void stopWindSound(int value) {
+    sounds.stopWind();
+}
+
+// Function to play background sound
+static void playBackgroundSound() {
+    sounds.playBackground();
+    isBackgroundPlaying = true;
+}
+
+static void playBackgroundSoundWithDelay(int value) {
+    playBackgroundSound();
+}
+
+// Function to stop background sound
+static void stopBackgroundSound() {
+    sounds.stopBackground();
+    isBackgroundPlaying = false;
+}
 
 // For totoro side view walking
 int state = 0;
@@ -407,8 +484,17 @@ static void init() {
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    sound.playDoorSound();
-    sound.playThunderSoundWithDelay(3);
+    if (!isDoorOpeningPlayed) {
+        sounds.playDoorOpening();
+        isDoorOpeningPlayed = true;
+    }
+
+    if (!isThunderStormTimerSet) {
+        int delayInMilliseconds = 3000; // Delay in milliseconds
+        glutTimerFunc(delayInMilliseconds, playThunderstormSound, 0);
+        isThunderStormTimerSet = true;
+    }
+
     Background::Scene1();
 
     House house;
@@ -481,8 +567,10 @@ static void displayScene1() {
 
 static void displayScene2() {
     glClear(GL_COLOR_BUFFER_BIT);
-
-    sound.playRainSound();
+    if (!isRainPlaying) {
+        sounds.playRain();
+        isRainPlaying = true;
+    }
 
     Background::Scene2();
     FullMoon moon;
@@ -504,7 +592,6 @@ static void displayScene2() {
     grass20.draw();
 
     //Upper Level
-//Upper Level
     GrassTwo grass1(1550, 388, 57, Colors::GRASS_NIGHT);
     grass1.drawWithRotation(9);
     GrassTwo grass2(800, 160, 55, Colors::GRASS_NIGHT);
@@ -581,8 +668,10 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    sound.playRainSoundForDuration(7);
-    sound.playPortalSoundWithDelay(7);
+    if (!isTeleportSoundPlayed) {
+        int delayInMilliseconds = 7000; // Delay in milliseconds to start the teleport sound
+        glutTimerFunc(delayInMilliseconds, playTeleportSound, 0);
+    }
     Background::Scene3();
 
     FullMoon moon;
@@ -697,15 +786,32 @@ static void displayScene3() {
     rain.renderRain();
 
     subtitle.draw();
-
+  
     glFlush();
     glutSwapBuffers();
 }
 
 static void displayScene4() {
+    if (!isBackgroundPlaying) {
+        int backgroundDelayInMilliseconds = 2000; // Delay to start background sound
+        glutTimerFunc(backgroundDelayInMilliseconds, playBackgroundSoundWithDelay, 0);
+        isBackgroundPlaying = true;
+    }
     glClear(GL_COLOR_BUFFER_BIT);
-    sound.stopPortalSound();
-  
+    
+    sounds.stopRain();
+    isRainPlaying = false;
+
+    sounds.stopThunderStorm();
+    isThunderStormPlaying = false;
+
+    stopTeleportSound();
+
+    if (!isLandingPlayed) {
+        int delayInMilliseconds = 500; // Delay in milliseconds
+        glutTimerFunc(delayInMilliseconds, playLandingSound, 0);
+    }
+
     Background::Scene4();
     RainbowOne rainbow;
 
@@ -819,13 +925,30 @@ static void displayScene4() {
 
 static void displayScene5() {
     glClear(GL_COLOR_BUFFER_BIT);
+
     Background::Scene5(girl, islands_scene5, grass_scene5, clouds_scene5, mushrooms_scene5, flowers_scene5, sun_scene5, currentStep, sunsetSteps);
     subtitle.draw();
     glFlush();
     glutSwapBuffers();
+    isLandingPlayed = false;
 }
 
 static void displayScene6_7() {
+
+    if (!isCryingPlayed) {
+        int playDelayInMilliseconds = 6500; // Delay to start crying sound
+        int stopDelayInMilliseconds = 15000; // Delay to stop crying sound (6000ms to start + 9000ms to play)
+        glutTimerFunc(playDelayInMilliseconds, playCryingSound, 0);
+        glutTimerFunc(stopDelayInMilliseconds, stopCryingSound, 0);
+        isCryingPlayed = true;
+    }
+
+    if (!isLandingPlayed) {
+        int delayInMilliseconds = 14000; // Delay in milliseconds
+        glutTimerFunc(delayInMilliseconds, playLandingSound, 0);
+        isLandingPlayed = true;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
@@ -975,10 +1098,39 @@ static void displayScene7() {
 
     glFlush();
     glutSwapBuffers();
-
+    isTeleportSoundPlayed = false;
 }
 
 static void displayScene8() {
+
+    if (!isRunningPlayed) {
+        int playDelayInMilliseconds = 800; // Delay to start running sound
+        int stopDelayInMilliseconds = 2400; // Delay to stop running sound (2000ms to start + 9000ms to play)
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+        glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+        isRunningPlayed = true;
+    }
+    isRunningPlayed = false;
+    if (!isRunningPlayed) {
+        int playDelayInMilliseconds = 3300; // Delay to start running sound
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+     
+        isRunningPlayed = true;
+    }
+    
+    if (!isWindPlayed) {
+        int playDelayInMilliseconds = 4700; // Delay to start wind sound
+        int stopDelayInMilliseconds = 15000; // Delay to stop wind sound (8000ms to start + 9000ms to play)
+        glutTimerFunc(playDelayInMilliseconds, playWindSound, 0);
+        glutTimerFunc(stopDelayInMilliseconds, stopWindSound, 0);
+        isWindPlayed = true;
+    }
+
+    if (!isTeleportSoundPlayed) {
+        int delayInMilliseconds = 8000; // Delay in milliseconds to start the teleport sound
+        glutTimerFunc(delayInMilliseconds, playTeleportSound, 0);
+    }
+
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
 
@@ -1066,9 +1218,11 @@ static void displayScene8() {
 
     glFlush();
     glutSwapBuffers();
+
 }
 
 static void displayScene8Half() {
+
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
 
@@ -1137,6 +1291,16 @@ static void displayScene8Half() {
 }
 
 static void displayScene9() {
+
+    if (!isRunningPlayed) {
+        int playDelayInMilliseconds = 00; // Delay to start running sound
+        int stopDelayInMilliseconds = 21000; // Delay to stop running sound (2000ms to start + 9000ms to play)
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+        glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+        isRunningPlayed = true;
+    }
+    isRunningPlayed = false;
+
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
 
@@ -1169,10 +1333,18 @@ static void displayScene9() {
 
     glFlush();
     glutSwapBuffers();
-
 }
 
 static void displayScene10() {
+    isRunningPlayed = false;
+    if (!isRunningPlayed) {
+        int playDelayInMilliseconds = 500; // Delay to start running sound
+        int stopDelayInMilliseconds = 18000; // Delay to stop running sound (2000ms to start + 9000ms to play)
+        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+        glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+        
+    }
+    
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene10();
 
@@ -1253,10 +1425,11 @@ static void displayScene10() {
 
     glFlush();
     glutSwapBuffers();
-
+    
 }
 
 static void displayScene11() {
+
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
 
@@ -2527,6 +2700,17 @@ static void updateNextSubtitleScene11(int value) {
 }
 
 int main(int argc, char** argv) {
+    // Load sounds
+
+    sounds.loadSound("doorOpening", "doorOpening.wav");
+    sounds.loadSound("thunderStorm", "thunderStorm.wav");
+    sounds.loadSound("raining", "forestRain.wav");
+    sounds.loadSound("teleport", "teleport.wav");
+    sounds.loadSound("landing", "landing.wav");
+    sounds.loadSound("crying", "girlCrying.wav");
+    sounds.loadSound("running", "run.wav");
+    sounds.loadSound("wind", "wind.wav");
+    sounds.loadSound("background", "backgroundMusic.wav");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
