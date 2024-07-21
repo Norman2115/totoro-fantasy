@@ -26,9 +26,10 @@
 #include "FadeEffect.h"
 #include "BusSignBoard.h"
 #include "Subtitle.h"
+#include "Title.h"
 
 
-float currentScene = 1;
+float currentScene = 0;
 
 /////   Declare global variables    /////
 
@@ -51,6 +52,8 @@ LittleGirl girl(500, 150, 180, 0, false);
 Mother mother(600, 200, 230);
 Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
+Title introTitle("Lost in Fantasia");
+Title outroTitle("The End");
 Subtitle subtitle("This is the initial subtitle");
 
 // Function to play thunderstorm sound after a delay
@@ -319,9 +322,7 @@ std::vector<Flower*> flowers_scene8half{
 
 ///// Island /////
 
-std::vector <Island*> islands_scene5{
-
-};
+std::vector <Island*> islands_scene5{};
 
 
 ///// Sun /////
@@ -329,6 +330,7 @@ std::vector <Island*> islands_scene5{
 DaySunOne sun_scene5(160, 930, 110, Colors::DAY_SUN);
 
 ///// Flags //////
+bool isIntroEnd = false;
 bool isScene1End = false;
 bool isScene2End = false;
 bool isScene3End = false;
@@ -341,9 +343,12 @@ bool isScene9End = false;
 bool isScene10End = false;  
 bool isScene11End = false;
 
+bool triggerThunderScene1 = false;
+bool thunderTriggeredOnScene1 = false;
 bool thunderTriggeredOnScene2 = false;
 bool thunderTriggeredOnScene3 = false;
 
+bool isIntroInitialized = false;
 bool isScene1Initialized = false;
 bool isScene2Initialized = false;
 bool isScene3GirlPosInitialized = false;
@@ -359,6 +364,7 @@ bool isSunsetAngleInitialized = false;
 bool isScene8HalfInitialized = false;
 bool isScene11AfterDropOffInitialized = false;
 
+bool isFirstSceneChangeGirlPosition = false;
 bool isDiagonalMovement = false;
 bool isVerticalMovement = false;
 bool isGirlEnterPortal = false;
@@ -393,6 +399,12 @@ bool isSpecialKeyPressed = false;
 bool isWalkingAnimationActive = false;
 
 ///// Timer and Delay Variables /////
+
+int scene1ChangeGirlPosDelayCounter = 0;
+const int scene1ChangeGirlPosDelayDuration = 60;
+
+int scene1ThunderDelayCounter = 0;
+const int scene1ThunderDelayDuration = 170;
 
 int delayCounterScene3 = 0;
 const int delayDurationScene3 = 60;
@@ -480,6 +492,17 @@ static void init() {
 }
 
 /////   Declare scenes  /////
+
+static void displayScene0() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    Background::Scene0();
+
+    introTitle.draw();
+
+    glFlush();
+    glutSwapBuffers();
+}
+
 
 static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1061,46 +1084,6 @@ static void displayScene6_7() {
     glutSwapBuffers();
 }
 
-static void displayScene7() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    Background::Scene6_7();
-
-    mushroomThree mushroom5(250, 250, 500, Colors::MUSHROOM_NIGHT);
-    mushroom5.draw(true);
-    mushroomThree mushroom6(820, 250, 600, Colors::MUSHROOM_NIGHT);
-    mushroom6.draw(true);
-    mushroomThree mushroom7(1500, 250, 500, Colors::MUSHROOM_NIGHT);
-    mushroom7.draw(true);
-
-    mushroomThree mushroom1(-150, 250, 800, Colors::MUSHROOM_NIGHT);
-    mushroom1.draw(true);
-    mushroomThree mushroom2(500, 250, 700, Colors::MUSHROOM_NIGHT);
-    mushroom2.draw(true);
-    mushroomThree mushroom3(1200, 250, 820, Colors::MUSHROOM_NIGHT);
-    mushroom3.draw(true);
-    mushroomThree mushroom4(1800, 250, 750, Colors::MUSHROOM_NIGHT);
-    mushroom4.draw(true);
-
-    if (state == 0) {
-        // Side view walking
-        totoroSide.draw(positionX, 420.0f, 270.0f); // Adjust the Y position and size as needed
-    }
-    else if (state == 1) {
-        // Front view
-        totoroFront.draw(1080.0f, 450.0f, 300.0f);
-
-    }
-
-    girl.setPosX(850);
-    girl.setPosY(250);
-    girl.setCharacterSize(210);
-    girl.drawFrontView();
-
-    glFlush();
-    glutSwapBuffers();
-    isTeleportSoundPlayed = false;
-}
-
 static void displayScene8() {
 
     if (!isRunningPlayed) {
@@ -1261,7 +1244,6 @@ static void displayScene8Half() {
     grass_scene8half.at(7)->draw();
     grass_scene8half.at(8)->draw();
 
-
     // Flowers
     flowers_scene8half.at(0)->draw(60);
     flowers_scene8half.at(0)->draw(100);
@@ -1342,7 +1324,6 @@ static void displayScene10() {
         int stopDelayInMilliseconds = 18000; // Delay to stop running sound (2000ms to start + 9000ms to play)
         glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
         glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
-        
     }
     
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1526,12 +1507,17 @@ static void displayScene12() {
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene12();
 
+    outroTitle.draw();
+
     glFlush();
     glutSwapBuffers();
 }
 
 static void display() {
-    if (currentScene == 1) {
+    if (currentScene == 0) {
+        displayScene0();
+    }
+    else if (currentScene == 1) {
         displayScene1();
     }
     else if (currentScene == 2) {
@@ -1572,22 +1558,34 @@ static void display() {
 /////   Declare update functions  /////
 
 static void changeGirlStateAfterDelay(int value) {
-    switch (currentGirlState) {
-        case LITTLE_GIRL_FRONT_VIEW:
-            currentGirlState = LITTLE_GIRL_SIDE_VIEW;
-            break;
-        case LITTLE_GIRL_SIDE_VIEW:
-            currentGirlState = LITTLE_GIRL_MOVING;
-            break;
-        default:
-            break;
+    if (currentScene == 1 && !isFirstSceneChangeGirlPosition) {
+        scene1ChangeGirlPosDelayCounter++;
+        if (scene1ChangeGirlPosDelayCounter >= scene1ChangeGirlPosDelayDuration) {
+            if (currentGirlState == LITTLE_GIRL_FRONT_VIEW) {
+                currentGirlState = LITTLE_GIRL_MOVING;
+                isFirstSceneChangeGirlPosition = true;
+            }
+        }
     }
     glutPostRedisplay();
+    glutTimerFunc(16, changeGirlStateAfterDelay, 0);
+}
+
+static void updateDelayThunderScene1(int value) {
+    if (currentScene == 1 && !triggerThunderScene1) {
+        scene1ThunderDelayCounter++;
+        if (scene1ThunderDelayCounter >= scene1ThunderDelayDuration) {
+            triggerThunderScene1 = true;
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateDelayThunderScene1, 0);
 }
 
 static void triggerThunder(int value) {
-    if (currentScene == 1) {
+    if (currentScene == 1 && !thunderTriggeredOnScene1 && triggerThunderScene1) {
         thunderScene1.startThunder();
+        thunderTriggeredOnScene1 = true;
     }
     else if (currentScene == 2 && !thunderTriggeredOnScene2) {
         thunderScene2.startThunder();
@@ -1598,11 +1596,25 @@ static void triggerThunder(int value) {
         thunderTriggeredOnScene3 = true;
     }
     glutPostRedisplay();
+    glutTimerFunc(16, triggerThunder, 0);
 }
 
 static void updateScene(int value) {
-    if (currentScene == 1) {
+    if (currentScene == 0) {
+        if (!isIntroInitialized) {
+            introTitle.setOpacity(0.0f);
+            introTitle.setText("Lost in Fantasia");
+            isIntroInitialized = true;
+        }
+
+        if (isIntroEnd) {
+            currentScene = 1;
+            triggerThunder(0);
+        }
+    }
+    else if (currentScene == 1) {
         if (!isScene1Initialized) {
+            currentGirlState = LITTLE_GIRL_FRONT_VIEW;
             subtitle.setText("After a heated argument with his mother");
             isScene1Initialized = true;
         }
@@ -2440,6 +2452,9 @@ static void updateMotherGivingHugDelay(int value) {
     glutTimerFunc(16, updateMotherGivingHugDelay, 0);
 }
 
+
+///// Keyboard Input Handling /////
+
 static void handleKeypressScene11(int key, int x, int y) {
     if (currentScene == 11) {
         float posX = girl.getPosX();
@@ -2544,7 +2559,37 @@ static void handleSpecialKeyRelease(int key, int x, int y) {
     }
 }
 
-///// Subtitles /////
+///// Title and Subtitles /////
+
+int introFadeInDelayCounter = 0;
+const int introFadeInDelayDuration = 120;
+
+int transitionScene0to1DelayCounter = 0;
+const int transitionScene0to1DelayDuration = 120;
+
+bool isTitleAppear = false;
+
+static void updateIntroFading(int value) {
+    if (currentScene == 0) {
+        introFadeInDelayCounter++;
+        if (introFadeInDelayCounter >= introFadeInDelayDuration) {
+            introTitle.setOpacity(introTitle.getOpacity() + 0.01f);
+            if (introTitle.getOpacity() >= 1.0f) {
+                introTitle.setOpacity(1.0f);
+                isTitleAppear = true;
+            }
+        }
+
+        if (isTitleAppear) {
+            transitionScene0to1DelayCounter++;
+            if (transitionScene0to1DelayCounter >= transitionScene0to1DelayDuration) {
+                isIntroEnd = true;
+            }
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateIntroFading, 0);
+}
 
 int nextSubstitleScene1DelayCounter = 0;
 const int nextSubtitleScene1DelayDuration = 200;
@@ -2726,14 +2771,15 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(handleNormalKeyPress);
     glutKeyboardUpFunc(handleKeyRelease);
 
+    glutTimerFunc(16, updateIntroFading, 0);
     glutTimerFunc(100, totoroTimer, 0);
     portal.startTimer();
-    glutTimerFunc(1000, changeGirlStateAfterDelay, 0);
-    glutTimerFunc(1000, changeGirlStateAfterDelay, 1);
+    glutTimerFunc(16, changeGirlStateAfterDelay, 0);
     glutTimerFunc(16, updateScene, 0);
     glutTimerFunc(250, updateGirlFrame, 0);
     glutTimerFunc(16, updateCloudPosition, 0);
-    glutTimerFunc(3000, triggerThunder, 0);
+    glutTimerFunc(16, updateDelayThunderScene1, 0);
+    glutTimerFunc(16, triggerThunder, 0);
     glutTimerFunc(100, updateThunderEffect, 0);
     glutTimerFunc(16, updateRain, 0);
     glutTimerFunc(16, updateTreeOpacity, 0);

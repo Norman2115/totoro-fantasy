@@ -163,6 +163,7 @@
     <ClInclude Include="Subtitle.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Thunder.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="totoro.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>
