@@ -28,7 +28,7 @@
 #include "Subtitle.h"
 #include "Title.h"
 
-float currentScene = 0;
+float currentScene = 1;
 
 /////   Declare global variables    /////
 Sounds sounds;
@@ -105,32 +105,18 @@ static void playCryingSound(int value) {
     sounds.playCrying();
 }
 
-// Function to stop the crying sound
 static void stopCryingSound(int value) {
     sounds.stopCrying();
 }
 
-// Function to play running sound after a delay
 static void playRunningSound(int value) {
     sounds.playRunning();
 }
 
-// Function to stop running sound after a delay
 static void stopRunningSound(int value) {
     sounds.stopRunning();
 }
 
-// Function to play wind sound after a delay
-static void playWindSound(int value) {
-    sounds.playWind();
-}
-
-// Function to stop wind sound after a delay
-static void stopWindSound(int value) {
-    sounds.stopWind();
-}
-
-// Function to play background sound
 static void playBackgroundSound() {
     sounds.playBackground();
     isBackgroundPlaying = true;
@@ -712,8 +698,8 @@ static void displayScene2() {
 
 static void displayScene3() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!soundStates["teleport"]) {
-        playAndStopSound("teleport", 0000, 11500);
+    if (currentScene==3) {
+        playAndStopSound("teleport", 5850, 6100);
     }
     Background::Scene3();
 
@@ -836,7 +822,7 @@ static void displayScene3() {
 
 static void displayScene4() {
     if (!isBackgroundPlaying) {
-        int backgroundDelayInMilliseconds = 3000; // Delay to start background sound
+        int backgroundDelayInMilliseconds = 3000; 
         glutTimerFunc(backgroundDelayInMilliseconds, playBackgroundSoundWithDelay, 0);
         isBackgroundPlaying = true;
     }
@@ -977,10 +963,10 @@ static void displayScene5() {
 }
 
 static void displayScene6_7() {
-
+    stopBackgroundSound();
     if (!isCryingPlayed) {
         int playDelayInMilliseconds = 5000; // Delay to start crying sound
-        int stopDelayInMilliseconds = 14000; // Delay to stop crying sound (6000ms to start + 9000ms to play)
+        int stopDelayInMilliseconds = 13000; // Delay to stop crying sound (6000ms to start + 9000ms to play)
         glutTimerFunc(playDelayInMilliseconds, playCryingSound, 0);
         glutTimerFunc(stopDelayInMilliseconds, stopCryingSound, 0);
         isCryingPlayed = true;
@@ -1120,13 +1106,6 @@ static void displayScene8() {
      
         isRunningPlayed = true;
     }
-    
-    if (!isWindPlayed) {
-        int playDelayInMilliseconds = 4700; // Delay to start wind sound
-        glutTimerFunc(playDelayInMilliseconds, playWindSound, 0);
-        isWindPlayed = true;
-    }
-
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene8();
@@ -1219,19 +1198,8 @@ static void displayScene8() {
 }
 
 static void displayScene8Half() {
-    isRunningPlayed = false;
-    if (!isRunningPlayed) {
-        int playDelayInMilliseconds = 0; // Delay to start running sound
-        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
-        isRunningPlayed = true;
-    }
-
-    if (!isWindPlayed) {
-        int playDelayInMilliseconds = 0; // Delay to start wind sound
-        glutTimerFunc(playDelayInMilliseconds, playWindSound, 0);
-        isWindPlayed = true;
-    }
-
+    playBackgroundSound();
+    sounds.playRunning();
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene6_7();
@@ -1300,20 +1268,13 @@ static void displayScene8Half() {
 }
 
 static void displayScene9() {
+    
+    sounds.stopRunning();
+    isRunningPlayed = false;
 
     if (!soundStates["teleport"]) {
         playAndStopSound("teleport", 0000, 4000);
     }
-
-    if (!isRunningPlayed) {
-        int playDelayInMilliseconds = 00; // Delay to start running sound
-        int stopDelayInMilliseconds = 40000; // Delay to stop running sound (2000ms to start + 9000ms to play)
-        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
-        glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
-        isRunningPlayed = true;
-    }
-    isRunningPlayed = false;
-
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene9();
 
@@ -1350,13 +1311,8 @@ static void displayScene9() {
 
 static void displayScene10() {
 
-
-  if (!isRunningPlayed) {
-        int playDelayInMilliseconds = 500; // Delay to start running sound
-        //int stopDelayInMilliseconds = 7000;
-        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
-        glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
-        isRunningPlayed = true;
+  if (isCatbusReachedGround) {
+      sounds.playRunning();
     }
     
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1443,13 +1399,17 @@ static void displayScene10() {
 }
 
 static void displayScene11() {
-
-        int playDelayInMilliseconds = 1000; // Delay to start running sound
-        //int stopDelayInMilliseconds = 7000;
-        glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
-        // glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
-        isRunningPlayed = true;
-    
+        if (!isRunningPlayed) {
+            int playDelayInMilliseconds = 2500; 
+                    int stopDelayInMilliseconds = 1800;
+                    glutTimerFunc(stopDelayInMilliseconds, stopRunningSound, 0);
+                    glutTimerFunc(playDelayInMilliseconds, playRunningSound, 0);
+                        
+                        isRunningPlayed = true;
+        }
+        if (catbus.getPosX() > 1920) {
+            		sounds.stopRunning();
+        }
 
     glClear(GL_COLOR_BUFFER_BIT);
     Background::Scene11();
@@ -2795,6 +2755,7 @@ int main(int argc, char** argv) {
     sounds.loadSound("running", "CatbusRun.wav");
     sounds.loadSound("wind", "wind.wav");
     sounds.loadSound("background", "backgroundSound.wav");
+    initializeSoundStates();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA);
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
@@ -2853,7 +2814,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateNextSubtitleScene8Half, 0);
     glutTimerFunc(16, updateNextSubtitleScene11, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;
