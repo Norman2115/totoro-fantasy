@@ -2814,7 +2814,7 @@ int main(int argc, char** argv) {
     glutTimerFunc(16, updateNextSubtitleScene8Half, 0);
     glutTimerFunc(16, updateNextSubtitleScene11, 0);
 
-    //glutFullScreen();
+    glutFullScreen();
     glutMainLoop();
     
     return 0;
