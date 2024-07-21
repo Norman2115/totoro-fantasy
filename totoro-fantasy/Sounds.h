@@ -81,11 +81,11 @@ public:
     }
 
     void playRain() {
-        playSound("rain", true); // Loop the sound
+        playSound("raining");
     }
 
     void stopRain() {
-        stopSound("rain");
+        stopSound("raining");
     }
 
     void playTeleport() {
@@ -94,6 +94,46 @@ public:
 
     void stopTeleport() {
         stopSound("teleport");
+    }
+
+    void playLanding() {
+        playSound("landing");
+    }
+
+    void stopLanding() {
+        stopSound("landing");
+    }
+
+    void playCrying() {
+        playSound("crying");
+    }
+
+    void stopCrying() {
+        stopSound("crying");
+    }
+
+    void playRunning() {
+        playSound("running");
+    }
+
+    void stopRunning() {
+        stopSound("running");
+    }
+
+    void playWind() {
+        playSound("wind");
+    }
+
+    void stopWind() {
+        stopSound("wind");
+    }
+
+    void playBackground() {
+        playSound("background", true); // Loop the background sound
+    }
+
+    void stopBackground() {
+        stopSound("background");
     }
 
 private:
