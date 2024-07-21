@@ -28,7 +28,7 @@
 #include "Subtitle.h"
 
 
-float currentScene = 8.5;
+float currentScene = 1;
 
 /////   Declare global variables    /////
 
@@ -43,7 +43,7 @@ LittleGirl girl(500, 150, 180, 0, false);
 Mother mother(600, 200, 230);
 Catbus catbus{ 3000, 0, 600, false };
 Rain rain{ 500 };
-Subtitle subtitle("This is the initial text.");
+Subtitle subtitle("This is the initial subtitle");
 
 // For totoro side view walking
 int state = 0;
@@ -339,7 +339,7 @@ int pickupDelayCounter = 0;
 const int pickupDurationCounter = 60;
 
 int transitionScene9to10DelayCounter = 0;
-const int transitionScene9to10DurationCounter = 20;
+const int transitionScene9to10DurationCounter = 5;
 
 int portalActivationScene4DelayCounter = 0;
 const int portalActivationScene4DurationCounter = 20;
@@ -375,13 +375,13 @@ enum LittleGirlState {
 };
 
 enum TotoroState {
-    TOTORO_INVISIBLE,
+    TOTORO_INITIAL_STATE,
     TOTORO_FRONT_VIEW,
     TOTORO_SIDE_VIEW_WALKING
 };
 
 enum CatbusState {
-    CATBUS_INVISIBLE,
+    CATBUS_INITIAL_STATE,
     CATBUS_STANDSTILL,
     CATBUS_RUNNING
 };
@@ -392,7 +392,7 @@ enum MotherState {
 };
 
 LittleGirlState currentGirlState = LITTLE_GIRL_FRONT_VIEW;
-TotoroState currentTotoroState = TOTORO_INVISIBLE;
+TotoroState currentTotoroState = TOTORO_INITIAL_STATE;
 CatbusState currentCatbusState = CATBUS_RUNNING;
 MotherState currentMotherState = MOTHER_FRONT_VIEW;
 
@@ -408,7 +408,7 @@ static void displayScene1() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     sound.playDoorSound();
-        sound.playThunderSoundWithDelay(3);
+    sound.playThunderSoundWithDelay(3);
     Background::Scene1();
 
     House house;
@@ -922,7 +922,7 @@ static void displayScene6_7() {
     }
     
     switch (currentTotoroState) {
-        case TOTORO_INVISIBLE:
+        case TOTORO_INITIAL_STATE:
             break;
         case TOTORO_FRONT_VIEW:
             totoroFront.draw(1080.0f, 450.0f, 300.0f);
@@ -1053,7 +1053,7 @@ static void displayScene8() {
     girl.drawFrontView();
 
     switch (currentCatbusState) {
-        case CATBUS_INVISIBLE:
+        case CATBUS_INITIAL_STATE:
             break;
         case CATBUS_RUNNING:
             catbus.drawRunningView();
@@ -1325,7 +1325,7 @@ static void displayScene11() {
     }
 
     switch (currentCatbusState) {
-        case CATBUS_INVISIBLE:
+        case CATBUS_INITIAL_STATE:
             break;
         case CATBUS_RUNNING:
             catbus.drawRunningView();
@@ -2517,7 +2517,7 @@ static void updateNextSubtitleScene11(int value) {
             isSubtitleChangedScene11_1 = true;
         }
         else if ((currentGirlState == LITTLE_GIRL_HUG) && (posXDiff <= 40.0f && posYDiff <= 40.0f)) {
-            subtitle.setText("You've hugged her! Well done!");
+            subtitle.setText("You have reunited the girl and her mother!");
             isSubtitleChangedScene11_1 = true;
             isSubtitleChangedScene11_2 = true;
         }
