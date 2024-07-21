@@ -104,9 +104,6 @@
     <ClInclude Include="Subtitle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sounds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DebugSounds.h">
       <Filter>Header Files</Filter>
     </ClInclude>

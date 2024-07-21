@@ -28,7 +28,7 @@
 #include "Subtitle.h"
 #include "Title.h"
 
-float currentScene = 1;
+float currentScene = 0;
 
 /////   Declare global variables    /////
 Sounds sounds;
@@ -56,12 +56,12 @@ Subtitle subtitle("This is the initial subtitle");
 
 std::map<std::string, bool> soundStates;
 
-void initializeSoundStates() {
+static void initializeSoundStates() {
     soundStates["teleport"] = false;
     soundStates["running"] = false;
 }
 
-void playAndStopSound(const std::string& soundName, int playDelay, int stopDuration) {
+static void playAndStopSound(const std::string& soundName, int playDelay, int stopDuration) {
     // Function to play the sound
     auto playSoundFunction = [](int soundValue) {
         std::string* soundName = reinterpret_cast<std::string*>(soundValue);
@@ -86,7 +86,6 @@ void playAndStopSound(const std::string& soundName, int playDelay, int stopDurat
     std::string* stopSoundName = new std::string(soundName);
     glutTimerFunc(playDelay + stopDuration, stopSoundFunction, reinterpret_cast<int>(stopSoundName));
 }
-
 
 // Function to play thunderstorm sound after a delay
 static void playThunderstormSound(int value) {
