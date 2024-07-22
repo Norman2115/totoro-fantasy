@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\Users\User\Downloads\openal-soft-1.23.1-bin\openal-soft-1.23.1-bin\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\User\Downloads\openal-soft-1.23.1-bin\openal-soft-1.23.1-bin\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,7 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\OpenAL\openal-soft-1.23.1-bin\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +149,6 @@
     <ClInclude Include="DebugSounds.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="Ellipse.h" />
-    <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="Flower.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="Island.h" />

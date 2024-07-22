@@ -23,7 +23,6 @@
 #include "Thunder.h"
 #include "Rain.h"
 #include "Sounds.h"
-#include "FadeEffect.h"
 #include "BusSignBoard.h"
 #include "Subtitle.h"
 #include "Title.h"
