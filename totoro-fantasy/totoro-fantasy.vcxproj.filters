@@ -98,11 +98,20 @@
     <ClInclude Include="BusSignBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FadeEffect.h">
+    <ClInclude Include="Subtitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugSounds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include=".gitattributes.txt" />
   </ItemGroup>
 </Project>

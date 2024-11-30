@@ -1,0 +1,29 @@
+Installation Instructions
+-------------------------
+Include Files
+-------------
+1. Navigate to the project directory: /openal-soft-1.23.1-bin.
+2. Open another File Explorer window.
+3. Go to C:/Program Files (x86)/Windows Kits/<latest number>/Include/<latest number>/um/ (the exact path may vary depending on your system).
+4. Copy the AL folder from the include folder in the first window and paste it into the location specified above.
+
+Library Files
+-------------
+1. Navigate to the project directory: /openal-soft-1.23.1-bin.
+2. Open another File Explorer window.
+3. Go to C:/Program Files (x86)/Windows Kits/<latest number>/Lib/<latest number>/um/x86/ (the exact path may vary depending on your system).
+4. Copy the OpenAL32.lib file from the libs folder in the first window and paste it into the location specified in step 3.
+
+Download OpenAL32.dll
+---------------------
+1. Visit the OpenAL downloads page: https://www.openal.org/downloads/.
+2. Download the "OpenAL 1.1 Windows Installer (zip)".
+3. Open the downloaded executable file.
+4. Follow the setup process to complete the installation.
+
+Notes
+-----
+1. The project is developed using Visual Studio. Ensure Visual Studio is installed.
+2. In Visual Studio, select the "Debug x86" configuration to run the project.
+3. The project assumes that the OpenGL library is already installed.
+4. File locations may vary from computer to computer; adjust paths accordingly.

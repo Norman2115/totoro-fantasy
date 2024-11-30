@@ -70,16 +70,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\OpenAL\openal-soft-1.23.1-bin\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,9 +146,9 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="DebugSounds.h" />
     <ClInclude Include="Elements.h" />
     <ClInclude Include="Ellipse.h" />
-    <ClInclude Include="FadeEffect.h" />
     <ClInclude Include="Flower.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="Island.h" />
@@ -150,15 +157,19 @@
     <ClInclude Include="Mushroom1.h" />
     <ClInclude Include="Rain.h" />
     <ClInclude Include="Rainbow.h" />
-    <ClInclude Include="Sound.h" />
     <ClInclude Include="Star.h" />
+    <ClInclude Include="Subtitle.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Thunder.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="totoro.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include=".gitattributes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
