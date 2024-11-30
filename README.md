@@ -14,7 +14,7 @@ This project is part of the **Graphic Animation Course (MMD2205)** for the **Bac
 6. **Reunion**: The girl reunites with her mother, and they make up.
 
 ## Features
-- Simple 2D animation with basic character movements and transitions.
+- Simple 2D animation with character movements and transitions.
 - Animated environment with mushroom houses and other whimsical elements.
 - Character interactions including Totoro providing comfort and the Catbus transporting the girl.
 - Emotional storytelling through visuals and character expressions.
@@ -27,8 +27,13 @@ This project is part of the **Graphic Animation Course (MMD2205)** for the **Bac
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/little-girl-adventure.git
+   git clone https://github.com/Norman2115/totoro-fantasy.git
 
 ## Acknowledgements
 - Studio Ghibli for the inspiration from "My Neighbor Totoro".
 - Any libraries, frameworks, or resources used in the project.
+
+## Contributors
+1. Teo Chung Henn
+2. Liew Wen Yen
+3. Chong Ken Ji
