@@ -37,3 +37,4 @@ This project is part of the **Graphic Animation Course (MMD2205)** for the **Bac
 1. Teo Chung Henn
 2. Liew Wen Yen
 3. Chong Ken Ji
+4. Tey Yu Yang
